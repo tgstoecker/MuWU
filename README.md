@@ -1,2 +1,2 @@
-# MuWU-v1.0
+# MuWU
 Mu-Seq Workflow Utility 
