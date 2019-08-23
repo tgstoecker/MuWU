@@ -36,3 +36,10 @@ e.g.:
 Col_01_1.fq
 Col_01_1.fq
 Row_01_1.fq
+
+
+
+
+In future updates I intend to increase the ease of use even more:
+already planned:
+- JSON file in which all options of all steps can be modified to the specific use case computional circumstance
