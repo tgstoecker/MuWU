@@ -29,6 +29,10 @@ For detailed options of snakemake see:
 
 Please note that at the moment the workflow still requires to adhere to the directory structure explained in the following.
 During the workflow new directories will be created however for easy usage please copy or move your sequencing data to the RawReads directory and assembly (.fa) and annotion (.gff3) to the FGS directory.
+E.g. currently used (23.08.19) latest maize reference assembly and annotation:
+  wget ftp://ftp.ensemblgenomes.org/pub/plants/release-44/fasta/zea_mays/dna/Zea_mays.B73_RefGen_v4.dna.toplevel.fa.gz
+  wget ftp://ftp.ensemblgenomes.org/pub/plants/release-44/gff3/zea_mays/Zea_mays.B73_RefGen_v4.44.gff3.gz
+
 
 It is also recommended to stick to the following naming scheme of the samples:
 column/row; sample number; left/right
