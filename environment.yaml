@@ -1,0 +1,20 @@
+channels:
+  - bioconda
+  - conda-forge
+  - r
+dependencies:
+  - snakemake-minimal =5.2.4
+  - python =3.6
+  - pandas =0.25.0
+  - numpy =1.16.4
+  - cutadapt =2.4
+  - trimmomatic =0.38
+  - gffread =0.11.4
+  - hisat2 =2.1.0
+  - samtools =1.9
+  - picard =2.18.7
+  - r =3.5.1
+  - bioconductor-chippeakanno =3.16.0
+  - bioconductor-genomicranges =1.34.0
+  - bioconductor-iranges =2.16.0
+  - r-data.table =1.11.6
