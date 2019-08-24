@@ -15,7 +15,7 @@ rule all:
         expand("removed_duplicates_alignments/{sample}_dedup.txt", sample=SAMPLES),
         expand("removed_duplicates_alignments/{sample}_dedup.bam.bai", sample=SAMPLES),
         expand("removed_duplicates_sam/{sample}_dedup.sam", sample=SAMPLES),
-        "removed_duplicates_sam/",
+#        "removed_duplicates_sam/",
         "MuSeq_table/SLI-MuSeq_FGS.csv",
         "MuSeq_table/SLI-MuSeq_FGS_annotated.csv"
 
@@ -106,7 +106,8 @@ rule hisat2_mapping:
         f_paired="trimmed_reads/{sample}_forward_paired.fq",
         f_unpaired="trimmed_reads/{sample}_forward_unpaired.fq",
         r_paired="trimmed_reads/{sample}_reverse_paired.fq",
-        r_unpaired="trimmed_reads/{sample}_reverse_unpaired.fq"
+        r_unpaired="trimmed_reads/{sample}_reverse_unpaired.fq",
+        index = expand("FGS/mays_tran.{indexCount}.ht2", indexCount=INDEX_COUNT_LIST)
      output:
            "alignments/{sample}.sam"
      threads: 16
@@ -164,7 +165,8 @@ rule convert bam_to_sam:
 
 rule MuSingle:
     input:
-        "removed_duplicates_sam/"
+#         "removed_duplicates_sam/"
+#        "removed_duplicates_sam/{sample}_dedup.sam"
     output:
         "MuSeq_table/SLI-MuSeq_FGS.csv"
     threads: 16
@@ -180,6 +182,6 @@ rule AssignGeneIDs:
     output:
         "MuSeq_table/SLI-MuSeq_FGS_annotated.csv"
     shell:
-        "Rscript AssignGeneIDs.R"
+        "Rscript AssignGeneandTranscriptIDs.R"
 
 
