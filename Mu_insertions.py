@@ -156,7 +156,7 @@ if options.single or options.both :
 
     intersection_chunks = split_list(intersection_list, wanted_parts=num_processors)
     
-        def f(args):
+    def f(args):
         ''' Perform computation and write
         to separate file for each '''
         x = args[0]
