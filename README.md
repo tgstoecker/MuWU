@@ -43,8 +43,8 @@ Row_01_1.fq
 
 
 
-![Alt text](https://raw.github.com/tgstoecker/MuWU/blob/master/dag3.svg??sanitize=true)
-<img src= "https://raw.github.com/tgstoecker/MuWU/blob/master/dag3.svg??sanitize=true">
+![Alt text](./dag3.svg)
+<img src= "./dag3.svg">
 
 https://github.com/tgstoecker/MuWU/blob/master/dag3.svg
 
