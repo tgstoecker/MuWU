@@ -130,7 +130,7 @@ rule sam_to_sorted_bam:
          "samtools sort -@ 16 -O BAM {input} -o {output}"
 
 
-rule remove duplicates picard:
+rule remove_duplicates_picard:
     input:
          "sorted_alignments/{sample}_sorted.bam"
     output:
@@ -163,7 +163,7 @@ rule convert bam_to_sam:
         "samtools view -@ 16 -o {output} {input}"
 
 
-rule MuSingle:
+rule Idemtify_Mu_insertions:
     input:
 #         "removed_duplicates_sam/"
 #        "removed_duplicates_sam/{sample}_dedup.sam"
@@ -176,7 +176,7 @@ rule MuSingle:
         "python ./Mu_insertions.py -c 16 --both -i removed_duplicates_sam/ -o MuSeq_FGS.csv"
 
 
-rule AssignGeneIDs:
+rule Assign_Gene_and_Transcript_IDs:
     input:
         "MuSeq_table/SLI-MuSeq_FGS.csv"
     output:
