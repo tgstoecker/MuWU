@@ -44,7 +44,6 @@ Row_01_1.fq
 
 
 ![Alt text](./dag3.svg)
-<img src= "./dag3.svg">
 
 https://github.com/tgstoecker/MuWU/blob/master/dag3.svg
 
