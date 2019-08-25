@@ -43,6 +43,9 @@ Row_01_1.fq
 
 
 
+![Alt text](https://github.com/tgstoecker/MuWU/blob/master/dag3.svg?raw=true "Title")
+
+https://github.com/tgstoecker/MuWU/blob/master/dag3.svg
 
 In future updates I intend to increase the ease of use even more:
 already planned:
