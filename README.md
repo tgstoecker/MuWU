@@ -32,6 +32,7 @@ During the workflow new directories will be created however for easy usage pleas
 E.g. currently used (23.08.19) latest maize reference assembly and annotation:
 
   `wget ftp://ftp.ensemblgenomes.org/pub/plants/release-44/fasta/zea_mays/dna/Zea_mays.B73_RefGen_v4.dna.toplevel.fa.gz`
+  
   `wget ftp://ftp.ensemblgenomes.org/pub/plants/release-44/gff3/zea_mays/Zea_mays.B73_RefGen_v4.44.gff3.gz`
 
 
