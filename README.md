@@ -1,7 +1,10 @@
 # MuWU
 ## Mu-Seq Workflow Utility 
 
-### Setup a conda environment: 
+- reference to publication and background information 
+- special focus on python script
+
+### Setting up the conda environment: 
 Install the Python 3 version of Miniconda.
 Answer yes to the question whether conda shall be put into your PATH.
 For detailed options concerning conda/bioconda see:
@@ -39,9 +42,10 @@ E.g. currently used (23.08.19) latest maize reference assembly and annotation:
 It is also recommended to stick to the following naming scheme of the samples:
 column/row; sample number; left/right
 e.g.:
-Col_01_1.fq
-Col_01_1.fq
-Row_01_1.fq
+Col_01_1.fq; 
+Col_01_1.fq; 
+Row_01_1.fq; 
+etc. 
 
 
 ### The workflow in the current release:
