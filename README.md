@@ -39,7 +39,7 @@ E.g. currently used (23.08.19) latest maize reference assembly and annotation:
   `wget ftp://ftp.ensemblgenomes.org/pub/plants/release-44/gff3/zea_mays/Zea_mays.B73_RefGen_v4.44.gff3.gz`
 
 
-It is also recommended to stick to the following naming scheme of the samples:
+It is also necessary to stick to the following naming scheme of the samples:
 column/row; sample number; left/right
 e.g.:
 Col_01_1.fq; 
