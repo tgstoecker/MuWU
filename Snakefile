@@ -3,17 +3,17 @@ INDEX_COUNT_LIST = range(1, 9)
 
 rule all:
     input:
-        expand("cut_reads/{sample}_{paired}.cut.fq", sample=SAMPLES, paired=[1, 2]),
-        expand("trimmed_reads/{sample}_{direction}_{pair}.fq", sample=SAMPLES, direction=["forward", "reverse"], pair=["paired", "unpaired"]),
-        "FGS/Zea_mays.B73_RefGen_v4.44.gtf",
-        "FGS/mays.ss",
-        "FGS/mays.exons",
-        expand("FGS/mays_tran.{indexCount}.ht2", indexCount=INDEX_COUNT_LIST),
-        expand("alignments/{sample}.sam", sample=SAMPLES),
-        expand("sorted_alignments/{sample}_sorted.bam", sample=SAMPLES),
-        expand("removed_duplicates_alignments/{sample}_dedup.bam", sample=SAMPLES),
-        expand("removed_duplicates_alignments/{sample}_dedup.txt", sample=SAMPLES),
-        expand("removed_duplicates_alignments/{sample}_dedup.bam.bai", sample=SAMPLES),
+#        expand("cut_reads/{sample}_{paired}.cut.fq", sample=SAMPLES, paired=[1, 2]),
+#        expand("trimmed_reads/{sample}_{direction}_{pair}.fq", sample=SAMPLES, direction=["forward", "reverse"], pair=["paired", "unpaired"]),
+#        "FGS/Zea_mays.B73_RefGen_v4.44.gtf",
+#        "FGS/mays.ss",
+#        "FGS/mays.exons",
+#        expand("FGS/mays_tran.{indexCount}.ht2", indexCount=INDEX_COUNT_LIST),
+#        expand("alignments/{sample}.sam", sample=SAMPLES),
+#        expand("sorted_alignments/{sample}_sorted.bam", sample=SAMPLES),
+#        expand("removed_duplicates_alignments/{sample}_dedup.bam", sample=SAMPLES),
+#        expand("removed_duplicates_alignments/{sample}_dedup.txt", sample=SAMPLES),
+#        expand("removed_duplicates_alignments/{sample}_dedup.bam.bai", sample=SAMPLES),
         expand("removed_duplicates_sam/{sample}_dedup.sam", sample=SAMPLES),
 #        "removed_duplicates_sam/",
         "MuSeq_table/SLI-MuSeq_FGS.csv",
@@ -163,7 +163,7 @@ rule convert bam_to_sam:
         "samtools view -@ 16 -o {output} {input}"
 
 
-rule Idemtify_Mu_insertions:
+rule Identify_Mu_insertions:
     input:
 #         "removed_duplicates_sam/"
 #        "removed_duplicates_sam/{sample}_dedup.sam"
