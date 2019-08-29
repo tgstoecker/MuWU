@@ -55,6 +55,6 @@ etc.
 #### Future updates will increase the ease of use even more:
 - make the Snakefile more robust expand over all samfiles and feed this to script OR use params to - ALSO Johannes told me using my shell solution is not optimal but I should rather stick to python here
 - switch between HISAT2 and Bowtie2 for either spliced/non-spliced alignments
-- JSON file in which all options of all steps can be modified to the specific use case and computional resources available
+- JSON of YAML file in which all options of all steps can be modified to the specific use case and computional resources available
 - piping directly into .bam files and using these for the Mu insertion characterization
 - additional final output files annotated with only geneID, for those uninterested in the corresponding transcripts
