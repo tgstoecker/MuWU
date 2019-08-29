@@ -53,6 +53,7 @@ etc.
 
 
 #### Future updates will increase the ease of use even more:
+- report generation (.html) and tar archive for ultimate everlasting reproducability
 - make the Snakefile more robust expand over all samfiles and feed this to script OR use params to - ALSO Johannes told me using my shell solution is not optimal but I should rather stick to python here
 - switch between HISAT2 and Bowtie2 for either spliced/non-spliced alignments
 - JSON of YAML file in which all options of all steps can be modified to the specific use case and computional resources available
