@@ -158,9 +158,9 @@ rule convert bam_to_sam:
         "removed_duplicates_alignments/{sample}_dedup.bam"
     output:
         "removed_duplicates_sam/{sample}_dedup.sam"
-    threads: 16
+    threads: 4
     shell:
-        "samtools view -@ 16 -o {output} {input}"
+        "samtools view -@ 4 -o {output} {input}"
 
 
 rule Identify_Mu_insertions:
