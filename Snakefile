@@ -125,7 +125,7 @@ rule sam_to_sorted_bam:
          "alignments/{sample}.sam"
     output:
          "sorted_alignments/{sample}_sorted.bam"
-    threads: 16
+    threads: 4
     shell:
          "samtools sort -@ 4 -O BAM {input} -o {output}"
 
