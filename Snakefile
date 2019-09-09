@@ -25,7 +25,7 @@ rule cutadapt:
     output:
         fq1="cut_reads/{sample}_1.cut.fq",
         fq2="cut_reads/{sample}_2.cut.fq"
-    threads: 16
+    threads: 4
     log:
         "logs/cutadapt/{sample}.log"
     shell:
@@ -39,7 +39,7 @@ rule cutadapt:
                 " -G ^CBCTCTTCKTCYATAATGGCAATTATCTC"
                 " -A CTGAGACTGCCAAGGC"
                 " -A AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT"
-                " --cores 8 -n 16 -o {output.fq1} -p {output.fq2} --minimum-length 12 -e 0.2 {input}"
+                " --cores 4 -n 4 -o {output.fq1} -p {output.fq2} --minimum-length 12 -e 0.2 {input}"
                 "> {log} "
 
 
@@ -52,10 +52,10 @@ rule trimmomatic:
         forward_unpaired="trimmed_reads/{sample}_forward_unpaired.fq",
         reverse_paired="trimmed_reads/{sample}_reverse_paired.fq",
         reverse_unpaired="trimmed_reads/{sample}_reverse_unpaired.fq"
-    threads: 16
+    threads: 4
     log: "logs/trimmomatic/{sample}.trimlog"
     shell:
-       "trimmomatic PE -threads 16 -trimlog {log} {input.cut1} {input.cut2}"
+       "trimmomatic PE -threads 4 -trimlog {log} {input.cut1} {input.cut2}"
        " {output.forward_paired} {output.forward_unpaired} {output.reverse_paired} {output.reverse_unpaired}"
        " SLIDINGWINDOW:4:15 MINLEN:12"
 
@@ -110,11 +110,11 @@ rule hisat2_mapping:
         index = expand("FGS/mays_tran.{indexCount}.ht2", indexCount=INDEX_COUNT_LIST)
      output:
            "alignments/{sample}.sam"
-     threads: 16
+     threads: 4
      log:
         "logs/hisat2-alignments/{sample}.alignment.log"
      shell:
-         "hisat2 -p 16 -x FGS/mays_tran"
+         "hisat2 -p 4 -x FGS/mays_tran"
          " -1 {input.f_paired} -2 {input.r_paired}"
          " -U {input.f_unpaired},{input.r_unpaired}"
          " -S {output} > {log} 2>&1"
@@ -127,7 +127,7 @@ rule sam_to_sorted_bam:
          "sorted_alignments/{sample}_sorted.bam"
     threads: 16
     shell:
-         "samtools sort -@ 16 -O BAM {input} -o {output}"
+         "samtools sort -@ 4 -O BAM {input} -o {output}"
 
 
 rule remove_duplicates_picard:
@@ -136,7 +136,7 @@ rule remove_duplicates_picard:
     output:
          bam="removed_duplicates_alignments/{sample}_dedup.bam",
          txt="removed_duplicates_alignments/{sample}_dedup.txt"
-    threads: 16
+    threads: 4
     log:
          "logs/picard/{sample}_dedup.log"
     shell:
@@ -148,7 +148,7 @@ rule index_final_bam:
         "removed_duplicates_alignments/{sample}_dedup.bam"
     output:
         "removed_duplicates_alignments/{sample}_dedup.bam.bai"
-    threads: 16
+    threads: 4
     shell:
         "samtools index {input}"
 
