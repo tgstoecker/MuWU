@@ -6,11 +6,11 @@ library(ChIPpeakAnno)
 options(warn=-1)
 
 ## Read table with identified Mu single line Insertions
-MuSingle <- read.csv("MuSeq_table/SLI-MuSeq_FGS.csv", header=T)
+MuSingle <- read.csv("MuSeq_table_final/SLI-MuSeq_FGS.csv", header=T)
 MuSingle$Insertionsites <- paste(MuSingle$Chr, MuSingle$Start, MuSingle$End)
 
 ## Read table with identified Mu single line Insertions
-MuAll <- read.csv("MuSeq_table/MuSeq_FGS.csv", header=T)
+MuAll <- read.csv("MuSeq_table_final/MuSeq_FGS.csv", header=T)
 MuAll$Insertionsites <- paste(MuAll$Chr, MuAll$Start, MuAll$End)
 
 ## Read GTF File
@@ -63,6 +63,6 @@ Mu_all_GeneIds <- merge(MuAll, Insertions_FGS_allinside_geneIDs, by="Insertionsi
 Mu_all_GeneIds <- unique(Mu_all_GeneIds[,c(2,3,4,5,6,7,9)])
 colnames(Mu_all_GeneIds) <- c("Chromosome", "Start", "End", "Sample", "StartReads", "EndReads", "GeneID")
 
-setwd("../MuSeq_table")
+setwd("../MuSeq_table_final")
 write.csv(Mu_single_GeneIds, "SLI-MuSeq_FGS_annotated.csv", row.names=F)
 write.csv(Mu_all_GeneIds, "MuSeq_FGS_annotated.csv", row.names=F)
