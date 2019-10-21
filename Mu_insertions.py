@@ -1,12 +1,11 @@
-
 #####################################################################
 # Identification of Mu Transposon insertion sites based on mapped   #
 # Mu-Seq reads in SAM format as part of the MuSeq workflow utility  #
 # MuWU                                                              #
-# Lena Altrogge & Tyll Stoecker                                     #
-# lena.altrogge@uni-bonn.de                                         #
+# Tyll Stoecker & Lena Altrogge                                     #
 # tyll.stoecker@uni-bonn.de                                         #
-# 23.08.2019                                                        #
+#                                                                   #
+# 21.10.2019                                                        #
 #                                                                   #
 #####################################################################
 
@@ -254,6 +253,3 @@ if options.both:
 
 if not options.single and not options.both:
     print("Finished creating output file :", OutputFile, "in directory ../MuSeq_table")
-
-
-
