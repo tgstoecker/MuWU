@@ -187,7 +187,5 @@ rule Assign_Gene_and_Transcript_IDs:
         "MuSeq_table_final/SLI-MuSeq_FGS_annotated.csv"
     shell:
         "Rscript AssignGeneandTranscriptIDs.R"
-~
-~
 
 
