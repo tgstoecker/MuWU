@@ -2,10 +2,10 @@
 # Identification of Mu Transposon insertion sites based on mapped   #
 # Mu-Seq reads in SAM format as part of the MuSeq workflow utility  #
 # MuWU                                                              #
-# Lena Altrogge & Tyll Stoecker                                     #
-# lena.altrogge@uni-bonn.de                                         #
+# Tyll Stoecker & Lena Altrogge                                     #
 # tyll.stoecker@uni-bonn.de                                         #
-# 23.08.2019                                                        #
+#                                                                   #
+# 21.10.2019                                                        #
 #                                                                   #
 #####################################################################
 
@@ -190,7 +190,7 @@ if options.single or options.both :
 
         p.close()
         p.join()
-    
+
 #define all tmp files outside of the loop
     extension = 'single.tmp.csv'
     all_single_tmp_files = [i for i in glob.glob('*.{}'.format(extension))]
@@ -212,18 +212,18 @@ if not os.path.exists('../MuSeq_table'):
 
 if options.single:
     combined_single_csv.to_csv('SLI-'+OutputFile, index = False)
-    shutil.move('SLI-'+OutputFile, "../MuSeq_table/",'SLI-'+OutputFile)
+#    shutil.move('SLI-'+OutputFile, "../MuSeq_table/",'SLI-'+OutputFile)
 
 if options.both:
     combined_single_csv.to_csv('SLI-'+OutputFile, index = False)
-    shutil.move('SLI-'+OutputFile, "../MuSeq_table/",'SLI-'+OutputFile)
+    shutil.move('SLI-'+OutputFile, "../MuSeq_table_final/",'SLI-'+OutputFile)
 #and
     combined_csv_option_both.to_csv(OutputFile,index = False)
-    shutil.move(OutputFile, "../MuSeq_table/",OutputFile)
-    
+    shutil.move(OutputFile, "../MuSeq_table_final/",OutputFile)
+
 if not options.single and not options.both:
     combined_csv.to_csv(OutputFile,index = False)
-    shutil.move(OutputFile, "../MuSeq_table/",OutputFile)
+#    shutil.move(OutputFile, "../MuSeq_table/",OutputFile)
 
 #delete all tmp_files
 
@@ -253,6 +253,3 @@ if options.both:
 
 if not options.single and not options.both:
     print("Finished creating output file :", OutputFile, "in directory ../MuSeq_table")
-
-
-

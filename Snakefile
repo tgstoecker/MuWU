@@ -1,23 +1,28 @@
 SAMPLES, = glob_wildcards("RawReads/{sample}_1.fq")
 INDEX_COUNT_LIST = range(1, 9)
+configfile: "config.yaml"
 
 rule all:
     input:
 #        expand("cut_reads/{sample}_{paired}.cut.fq", sample=SAMPLES, paired=[1, 2]),
 #        expand("trimmed_reads/{sample}_{direction}_{pair}.fq", sample=SAMPLES, direction=["forward", "reverse"], pair=["paired", "unpaired"]),
 #        "FGS/Zea_mays.B73_RefGen_v4.44.gtf",
-#        "FGS/mays.ss",
-#        "FGS/mays.exons",
-#        expand("FGS/mays_tran.{indexCount}.ht2", indexCount=INDEX_COUNT_LIST),
+        "FGS/bwa_index.amb",
+        "FGS/bwa_index.ann",
+        "FGS/bwa_index.bwt",
+        "FGS/bwa_index.pac",
+        "FGS/bwa_index.sa",
+        expand("mapped_and_sorted/{sample}.sorted.bam", sample=SAMPLES),
 #        expand("alignments/{sample}.sam", sample=SAMPLES),
 #        expand("sorted_alignments/{sample}_sorted.bam", sample=SAMPLES),
-#        expand("removed_duplicates_alignments/{sample}_dedup.bam", sample=SAMPLES),
-#        expand("removed_duplicates_alignments/{sample}_dedup.txt", sample=SAMPLES),
-#        expand("removed_duplicates_alignments/{sample}_dedup.bam.bai", sample=SAMPLES),
+        expand("removed_duplicates_alignments/{sample}_dedup.bam", sample=SAMPLES),
+        expand("removed_duplicates_alignments/{sample}_dedup.txt", sample=SAMPLES),
+        expand("removed_duplicates_alignments/{sample}_dedup.bam.bai", sample=SAMPLES),
         expand("removed_duplicates_sam/{sample}_dedup.sam", sample=SAMPLES),
-#        "removed_duplicates_sam/",
-        "MuSeq_table/SLI-MuSeq_FGS.csv",
-        "MuSeq_table/SLI-MuSeq_FGS_annotated.csv"
+##        "removed_duplicates_sam/",
+        "MuSeq_table",
+        "MuSeq_table_final/SLI-MuSeq_FGS.csv",
+        "MuSeq_table_final/SLI-MuSeq_FGS_annotated.csv"
 
 rule cutadapt:
     input:
@@ -53,11 +58,13 @@ rule trimmomatic:
         reverse_paired="trimmed_reads/{sample}_reverse_paired.fq",
         reverse_unpaired="trimmed_reads/{sample}_reverse_unpaired.fq"
     threads: 4
-    log: "logs/trimmomatic/{sample}.trimlog"
+    log: 
+        trimlog="logs/trimmomatic/{sample}.trimlog",
+        overall="logs/trimmomatic/{sample}.overall.log"
     shell:
-       "trimmomatic PE -threads 4 -trimlog {log} {input.cut1} {input.cut2}"
+       "trimmomatic PE -threads 4 -trimlog {log.trimlog} {input.cut1} {input.cut2}"
        " {output.forward_paired} {output.forward_unpaired} {output.reverse_paired} {output.reverse_unpaired}"
-       " SLIDINGWINDOW:4:15 MINLEN:12"
+       " SLIDINGWINDOW:4:15 MINLEN:12 > {log.overall} 2>&1"
 
 
 rule convert_gff3_to_gtf:
@@ -65,74 +72,52 @@ rule convert_gff3_to_gtf:
        "FGS/Zea_mays.B73_RefGen_v4.44.gff3"
     output:
         "FGS/Zea_mays.B73_RefGen_v4.44.gtf"
+    threads: 1
     shell:
         "gffread {input} -T -o {output}"
 
 
-rule extract_genome_splice_sites:
+rule bwa_index:
     input:
-        "FGS/Zea_mays.B73_RefGen_v4.44.gtf"
+        expand("FGS/{genome}.fa", genome=config["genome"])
     output:
-        "FGS/mays.ss"
-    shell:
-        "hisat2_extract_splice_sites.py {input} > {output}"
+        "FGS/bwa_index.amb",
+        "FGS/bwa_index.ann",
+        "FGS/bwa_index.bwt",
+        "FGS/bwa_index.pac",
+        "FGS/bwa_index.sa"
+    threads: 8
+    log:
+        "logs/bwa_index/bwa_index.log"
+    params:
+        prefix="FGS/bwa_index",
+        algorithm="bwtsw"
+    wrapper:
+        "0.38.0/bio/bwa/index"
 
 
-rule extract_genome_exons:
-     input:
-        "FGS/Zea_mays.B73_RefGen_v4.44.gtf"
-     output:
-        "FGS/mays.exons"
-     shell:
-        "hisat2_extract_exons.py {input} > {output}"
-
-
-rule hisat2_index:
-     input:
-         fa="FGS/Zea_mays.B73_RefGen_v4.dna.toplevel.fa",
-         splice_sites="FGS/mays.ss",
-         exons="FGS/mays.exons"
-     output:
-          ht2_index = expand("FGS/mays_tran.{indexCount}.ht2", indexCount=INDEX_COUNT_LIST)
-     threads: 16
-     log:
-         "logs/hisat2-index/hisat2-index.log"
-     shell:
-         "hisat2-build -p 16 {input.fa} --ss {input.splice_sites} --exon {input.exons} FGS/mays_tran > {log} 2>&1"
-
-
-rule hisat2_mapping:
-     input:
-        f_paired="trimmed_reads/{sample}_forward_paired.fq",
-        f_unpaired="trimmed_reads/{sample}_forward_unpaired.fq",
-        r_paired="trimmed_reads/{sample}_reverse_paired.fq",
-        r_unpaired="trimmed_reads/{sample}_reverse_unpaired.fq",
-        index = expand("FGS/mays_tran.{indexCount}.ht2", indexCount=INDEX_COUNT_LIST)
-     output:
-           "alignments/{sample}.sam"
-     threads: 4
-     log:
-        "logs/hisat2-alignments/{sample}.alignment.log"
-     shell:
-         "hisat2 -p 4 -x FGS/mays_tran"
-         " -1 {input.f_paired} -2 {input.r_paired}"
-         " -U {input.f_unpaired},{input.r_unpaired}"
-         " -S {output} > {log} 2>&1"
-
-
-rule sam_to_sorted_bam:
+rule bwa_mem_and_sorting:
     input:
-         "alignments/{sample}.sam"
+        reads=["trimmed_reads/{sample}_forward_paired.fq", "trimmed_reads/{sample}_reverse_paired.fq"],
+        idx="FGS/bwa_index.sa"
     output:
-         "sorted_alignments/{sample}_sorted.bam"
+        "mapped_and_sorted/{sample}.sorted.bam"
+    log:
+        "logs/bwa_mem/{sample}.log"
+    params:
+        index="FGS/bwa_index",
+        extra=r"-R '@RG\tID:{sample}\tSM:{sample}' -M -r 1 -k 12",
+        sort="samtools",             # Can be 'none', 'samtools' or 'picard'.
+        sort_order="coordinate",  # Can be 'queryname' or 'coordinate'.
+        sort_extra="-@ 4"            # Extra args for samtools/picard.
     threads: 4
-    shell:
-         "samtools sort -@ 4 -O BAM {input} -o {output}"
+    wrapper:
+        "0.38.0/bio/bwa/mem"
 
 
 rule remove_duplicates_picard:
     input:
-         "sorted_alignments/{sample}_sorted.bam"
+         "mapped_and_sorted/{sample}.sorted.bam"
     output:
          bam="removed_duplicates_alignments/{sample}_dedup.bam",
          txt="removed_duplicates_alignments/{sample}_dedup.txt"
@@ -163,24 +148,43 @@ rule convert bam_to_sam:
         "samtools view -@ 4 -o {output} {input}"
 
 
+rule prepare_MuSeq_table_folder:
+    input:
+        # Assuming this returns a list of your samples
+        #contigs="removed_duplicates_sam/{sample}_dedup.sam"
+         contigs=expand("removed_duplicates_sam/{sample}_dedup.sam", sample=SAMPLES)
+    output:
+        # Don't use the trailing "/" for directories in your rules
+        assembly=directory("MuSeq_table")
+    run:
+        os.makedirs(output.assembly)
+        for contig in input.contigs:
+            # Better to symlink than to copy to save some space
+            # Better to make relative links, fix if you want to
+            abspath = os.path.abspath(contig)
+            shell("ln -s {abspath} {output.assembly}")
+
+
 rule Identify_Mu_insertions:
     input:
 #         "removed_duplicates_sam/"
 #        "removed_duplicates_sam/{sample}_dedup.sam"
+         "MuSeq_table"
     output:
-        "MuSeq_table/SLI-MuSeq_FGS.csv"
-    threads: 16
+        one="MuSeq_table_final/MuSeq_FGS.csv",
+        two="MuSeq_table_final/SLI-MuSeq_FGS.csv"
+    threads: 4
     benchmark:
         "benchmarks/Mu_insertions-benchmark.txt"
     shell:
-        "python ./Mu_insertions.py -c 16 --both -i removed_duplicates_sam/ -o MuSeq_FGS.csv"
+        "python ./Mu_insertions.py -c 4 --both -i MuSeq_table -o MuSeq_FGS.csv"
 
 
 rule Assign_Gene_and_Transcript_IDs:
     input:
-        "MuSeq_table/SLI-MuSeq_FGS.csv"
+        "MuSeq_table_final/SLI-MuSeq_FGS.csv"
     output:
-        "MuSeq_table/SLI-MuSeq_FGS_annotated.csv"
+        "MuSeq_table_final/SLI-MuSeq_FGS_annotated.csv"
     shell:
         "Rscript AssignGeneandTranscriptIDs.R"
 
