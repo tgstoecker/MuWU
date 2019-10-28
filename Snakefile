@@ -177,7 +177,7 @@ rule Identify_Mu_insertions:
     benchmark:
         "benchmarks/Mu_insertions-benchmark.txt"
     shell:
-        "python ./Mu_insertions.py -c 4 --both -i MuSeq_table -o MuSeq_FGS.csv"
+        "python ./Mu_insertions.py -c 16 --both -i MuSeq_table -o MuSeq_FGS.csv"
 
 
 rule Assign_Gene_and_Transcript_IDs:
