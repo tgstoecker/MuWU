@@ -51,6 +51,7 @@ etc.
 
 
 ### The workflow in the current release:
+`snakemake --rulegraph | dot -Tsvg > rulegraph.svg`
 ![Alt text](./dag3.svg)
 
 
