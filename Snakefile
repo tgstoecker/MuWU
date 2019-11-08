@@ -58,7 +58,7 @@ rule trimmomatic:
         reverse_paired="trimmed_reads/{sample}_reverse_paired.fq",
         reverse_unpaired="trimmed_reads/{sample}_reverse_unpaired.fq"
     threads: 4
-    log: 
+    log:
         trimlog="logs/trimmomatic/{sample}.trimlog",
         overall="logs/trimmomatic/{sample}.overall.log"
     shell:
@@ -69,9 +69,9 @@ rule trimmomatic:
 
 rule convert_gff3_to_gtf:
     input:
-       "FGS/Zea_mays.B73_RefGen_v4.44.gff3"
+       expand("FGS/{annotation}.gff3", annotation=config["annotation"])
     output:
-        "FGS/Zea_mays.B73_RefGen_v4.44.gtf"
+        "FGS/Zea_mays.B73_RefGen_v4.gtf"
     threads: 1
     shell:
         "gffread {input} -T -o {output}"
@@ -86,11 +86,11 @@ rule bwa_index:
         "FGS/bwa_index.bwt",
         "FGS/bwa_index.pac",
         "FGS/bwa_index.sa"
-    threads: 8
+    threads: 2
     log:
         "logs/bwa_index/bwa_index.log"
     params:
-        prefix="FGS/bwa_index",
+        prefix="FGS/bwa_index -b 266885383",
         algorithm="bwtsw"
     wrapper:
         "0.38.0/bio/bwa/index"
@@ -135,7 +135,7 @@ rule index_final_bam:
         "removed_duplicates_alignments/{sample}_dedup.bam.bai"
     threads: 4
     shell:
-        "samtools index {input}"
+        "samtools index -@ 4 {input}"
 
 
 rule convert bam_to_sam:
@@ -182,10 +182,9 @@ rule Identify_Mu_insertions:
 
 rule Assign_Gene_and_Transcript_IDs:
     input:
-        "MuSeq_table_final/SLI-MuSeq_FGS.csv"
+        "MuSeq_table_final/SLI-MuSeq_FGS.csv",
+        "FGS/Zea_mays.B73_RefGen_v4.gtf"
     output:
         "MuSeq_table_final/SLI-MuSeq_FGS_annotated.csv"
     shell:
         "Rscript AssignGeneandTranscriptIDs.R"
-
-
