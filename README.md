@@ -32,13 +32,13 @@ To activate the snakemake-tutorial environment, execute
 Now you can use the installed tools and our workflow without any software dependency issues.
 For detailed options of snakemake see: 
 
-Please note that at the moment the workflow still requires to adhere to the directory structure explained in the following.
+Please note that at the moment the workflow requires to adhere to the directory structure explained in the following.
 During the workflow new directories will be created however for easy usage please copy or move your sequencing data to the RawReads directory and assembly (.fa) and annotion (.gff3) to the FGS directory.
-E.g. currently used (23.08.19) latest maize reference assembly and annotation:
+E.g. currently used (08.11.19) latest maize reference assembly and annotation:
 
-  `wget ftp://ftp.ensemblgenomes.org/pub/plants/release-44/fasta/zea_mays/dna/Zea_mays.B73_RefGen_v4.dna.toplevel.fa.gz`
+  `wget ftp://ftp.ensemblgenomes.org/pub/plants/release-45/fasta/zea_mays/dna/Zea_mays.B73_RefGen_v4.dna.toplevel.fa.gz`
   
-  `wget ftp://ftp.ensemblgenomes.org/pub/plants/release-44/gff3/zea_mays/Zea_mays.B73_RefGen_v4.44.gff3.gz`
+  `wget ftp://ftp.ensemblgenomes.org/pub/plants/release-45/gff3/zea_mays/Zea_mays.B73_RefGen_v4.44.gff3.gz`
 
 
 It is also necessary to stick to the following naming scheme of the samples:
@@ -58,7 +58,5 @@ etc.
 #### Future updates will increase the ease of use even more:
 - report generation (.html) and tar archive for ultimate everlasting reproducability
 - make the Snakefile more robust expand over all samfiles and feed this to script OR use params to - ALSO Johannes told me using my shell solution is not optimal but I should rather stick to python here
-- switch between HISAT2 and Bowtie2 for either spliced/non-spliced alignments
 - JSON of YAML file in which all options of all steps can be modified to the specific use case and computional resources available
 - piping directly into .bam files and using these for the Mu insertion characterization
-- additional final output files annotated with only geneID, for those uninterested in the corresponding transcripts
