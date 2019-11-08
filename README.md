@@ -38,7 +38,7 @@ E.g. currently used (08.11.19) latest maize reference assembly and annotation:
 
   `wget ftp://ftp.ensemblgenomes.org/pub/plants/release-45/fasta/zea_mays/dna/Zea_mays.B73_RefGen_v4.dna.toplevel.fa.gz`
   
-  `wget ftp://ftp.ensemblgenomes.org/pub/plants/release-45/gff3/zea_mays/Zea_mays.B73_RefGen_v4.44.gff3.gz`
+  `wget ftp://ftp.ensemblgenomes.org/pub/plants/release-45/gff3/zea_mays/Zea_mays.B73_RefGen_v4.45.gff3.gz`
 
 
 It is also necessary to stick to the following naming scheme of the samples:
