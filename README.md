@@ -33,7 +33,8 @@ Now you can use the installed tools and our workflow without any software depend
 For detailed options of snakemake see: 
 
 Please note that at the moment the workflow requires to adhere to the directory structure explained in the following.
-During the workflow new directories will be created however for easy usage please copy or move your sequencing data to the RawReads directory and assembly (.fa) and annotion (.gff3) to the FGS directory.
+During the workflow new directories will be created however for easy usage please copy or move your sequencing data to the RawReads directory and assembly (.fa) and annotion (.gff3) to the FGS directory and unzip them.
+
 E.g. currently used (08.11.19) latest maize reference assembly and annotation:
 
   `wget ftp://ftp.ensemblgenomes.org/pub/plants/release-45/fasta/zea_mays/dna/Zea_mays.B73_RefGen_v4.dna.toplevel.fa.gz`
