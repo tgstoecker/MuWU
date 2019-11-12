@@ -10,7 +10,7 @@ dependencies:
   - cutadapt =2.4
   - trimmomatic =0.38
   - gffread =0.11.4
-  - hisat2 =2.1.0
+  - bwa =0.7.17
   - samtools =1.9
   - picard =2.18.7
   - r =3.5.1
