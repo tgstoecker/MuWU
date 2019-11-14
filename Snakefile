@@ -61,13 +61,9 @@ rule trimmomatic:
         r1_unpaired="trimmed_reads/{sample}_forward_unpaired.fq.gz",
         r2_unpaired="trimmed_reads/{sample}_reverse_unpaired.fq.gz"
     log:
-        trimlog="logs/trimmomatic/{sample}.trimlog",
-        overall="logs/trimmomatic/{sample}.overall.log"
+        "logs/trimmomatic/{sample}.overall.log"
     params:
-        # list of trimmers (see manual)
         trimmer=["SLIDINGWINDOW:4:15 MINLEN:12"],
-        # optional parameters
-        extra="-trimlog {log.trimlog}",
         compression_level="-9"
     threads:
         4
