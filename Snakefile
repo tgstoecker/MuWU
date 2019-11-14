@@ -77,47 +77,57 @@ rule convert_gff3_to_gtf:
         "gffread {input} -T -o {output}"
 
 
-rule bwa_index:
+rule bowtie2_index:
     input:
         expand("FGS/{genome}.fa", genome=config["genome"])
     output:
-        "FGS/bwa_index.amb",
-        "FGS/bwa_index.ann",
-        "FGS/bwa_index.bwt",
-        "FGS/bwa_index.pac",
-        "FGS/bwa_index.sa"
-    threads: 2
+        "FGS/bowtie2_index.1.bt2",
+        "FGS/bowtie2_index.2.bt2",
+        "FGS/bowtie2_index.3.bt2",
+        "FGS/bowtie2_index.4.bt2",
+        "FGS/bowtie2_index.rev.1.bt2",
+        "FGS/bowtie2_index.rev.2.bt2",
+    threads: 16
     log:
-        "logs/bwa_index/bwa_index.log"
-    params:
-        prefix="FGS/bwa_index -b 266885383",
-        algorithm="bwtsw"
-    wrapper:
-        "0.38.0/bio/bwa/index"
+        "logs/bowtie2_index/bowtie2_index.log"
+    shell:
+        "bowtie2-build --threads 16 {input} FGS/bowtie2_index"
 
 
-rule bwa_mem_and_sorting:
+rule bowtie2:
     input:
-        reads=["trimmed_reads/{sample}_forward_paired.fq", "trimmed_reads/{sample}_reverse_paired.fq"],
-        idx="FGS/bwa_index.sa"
+        sample=["trimmed_reads/{sample}_forward_paired.fq", "trimmed_reads/{sample}_forward_paired.fq"],
+        idx1="FGS/bowtie2_index.1.bt2",
+        idx2="FGS/bowtie2_index.2.bt2",
+        idx3="FGS/bowtie2_index.3.bt2",
+        idx4="FGS/bowtie2_index.4.bt2",
+        idx5="FGS/bowtie2_index.rev.1.bt2",
+        idx6="FGS/bowtie2_index.rev.1.bt2"
     output:
-        "mapped_and_sorted/{sample}.sorted.bam"
+        "mapped/{sample}.sam"
     log:
-        "logs/bwa_mem/{sample}.log"
+        "logs/bowtie2_align/{sample}.log"
     params:
-        index="FGS/bwa_index",
-        extra=r"-R '@RG\tID:{sample}\tSM:{sample}' -M -r 1 -k 12",
-        sort="samtools",             # Can be 'none', 'samtools' or 'picard'.
-        sort_order="coordinate",  # Can be 'queryname' or 'coordinate'.
-        sort_extra="-@ 4"            # Extra args for samtools/picard.
+        index="FGS/bowtie2_index",  # prefix of reference genome index (built with bowtie2-build)
+        extra="-N 1"  # optional parameters
     threads: 4
     wrapper:
-        "0.38.0/bio/bwa/mem"
+        "0.38.0/bio/bowtie2/align"
+
+       
+rule sam_to_sorted_bam:
+    input:
+         "mapped/{sample}.sam"
+    output:
+         "sorted_alignments/{sample}_sorted.bam"
+    threads: 4
+    shell:
+         "samtools sort -@ 4 -O BAM {input} -o {output}"
 
 
 rule remove_duplicates_picard:
     input:
-         "mapped_and_sorted/{sample}.sorted.bam"
+         "sorted_alignments/{sample}_sorted.bam"
     output:
          bam="removed_duplicates_alignments/{sample}_dedup.bam",
          txt="removed_duplicates_alignments/{sample}_dedup.txt"
