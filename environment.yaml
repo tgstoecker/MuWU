@@ -3,7 +3,7 @@ channels:
   - conda-forge
   - r
 dependencies:
-  - snakemake-minimal =5.2.4
+  - snakemake-minimal =5.7.0
   - python =3.6
   - pandas =0.25.0
   - numpy =1.16.4
