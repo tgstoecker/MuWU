@@ -28,13 +28,11 @@ rule cutadapt:
     input:
         "RawReads/{sample}_1.fq", "RawReads/{sample}_2.fq"
     output:
-        fq1="cut_reads/{sample}_1.cut.fq",
-        fq2="cut_reads/{sample}_2.cut.fq"
-    threads: 4
-    log:
-        "logs/cutadapt/{sample}.log"
-    shell:
-        "cutadapt -g ^AATGATACGGCGACCACCGAGATCTACACTCTTTCCCTACACGACGCTCTTCCGATCT"
+        fastq1="cut_reads/{sample}.fq1.gz",
+        fastq2="cut_reads/{sample}.fq2.gz",
+        qc="cut_reads/{sample}.qc.txt"
+    params:
+        adapters = "g ^AATGATACGGCGACCACCGAGATCTACACTCTTTCCCTACACGACGCTCTTCCGATCT"
                 " -g ^GCCTTGGCAGTCTCAG"
                 " -a GAGATAATTGCCATTATRGAMGAAGAGVG"
                 " -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC"
@@ -44,29 +42,39 @@ rule cutadapt:
                 " -G ^CBCTCTTCKTCYATAATGGCAATTATCTC"
                 " -A CTGAGACTGCCAAGGC"
                 " -A AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT"
-                " --cores 4 -n 4 -o {output.fq1} -p {output.fq2} --minimum-length 12 -e 0.2 {input}"
-                "> {log} "
-
-
-rule trimmomatic:
+        others = "-n 4 --minimum-length 12 -e 0.2"
+    log:
+        "logs/cutadapt/{sample}.log"
+    threads: 4 
+    wrapper:
+        "0.42.0/bio/cutadapt/pe"
+                
+                
+rule trimmomatic_pe:
     input:
-        cut1="cut_reads/{sample}_1.cut.fq",
-        cut2="cut_reads/{sample}_2.cut.fq"
+        r1="cut_reads/{sample}.fq1.gz",
+        r2="cut_reads/{sample}.fq2.gz"
     output:
-        forward_paired="trimmed_reads/{sample}_forward_paired.fq",
-        forward_unpaired="trimmed_reads/{sample}_forward_unpaired.fq",
-        reverse_paired="trimmed_reads/{sample}_reverse_paired.fq",
-        reverse_unpaired="trimmed_reads/{sample}_reverse_unpaired.fq"
-    threads: 4
+        r1="trimmed_reads/{sample}_forward_paired.fq.gz",
+        r2="trimmed_reads/{sample}_reverse_paired.fq.gz",
+        # reads where trimming entirely removed the mate
+        r1_unpaired="trimmed_reads/{sample}_forward_unpaired.fq.gz",
+        r2_unpaired="trimmed_reads/{sample}_reverse_unpaired.fq.gz"
     log:
         trimlog="logs/trimmomatic/{sample}.trimlog",
         overall="logs/trimmomatic/{sample}.overall.log"
-    shell:
-       "trimmomatic PE -threads 4 -trimlog {log.trimlog} {input.cut1} {input.cut2}"
-       " {output.forward_paired} {output.forward_unpaired} {output.reverse_paired} {output.reverse_unpaired}"
-       " SLIDINGWINDOW:4:15 MINLEN:12 > {log.overall} 2>&1"
-
-
+    params:
+        # list of trimmers (see manual)
+        trimmer=["SLIDINGWINDOW:4:15 MINLEN:12"],
+        # optional parameters
+        extra="-trimlog {log.trimlog}",
+        compression_level="-9"
+    threads:
+        4
+    wrapper:
+        "0.42.0/bio/trimmomatic/pe"
+                
+            
 rule convert_gff3_to_gtf:
     input:
        expand("FGS/{annotation}.gff3", annotation=config["annotation"])
@@ -96,7 +104,7 @@ rule bowtie2_index:
 
 rule bowtie2:
     input:
-        sample=["trimmed_reads/{sample}_forward_paired.fq", "trimmed_reads/{sample}_forward_paired.fq"],
+        sample=["trimmed_reads/{sample}_forward_paired.fq.gz", "trimmed_reads/{sample}_forward_paired.fq.gz"],
         idx1="FGS/bowtie2_index.1.bt2",
         idx2="FGS/bowtie2_index.2.bt2",
         idx3="FGS/bowtie2_index.3.bt2",
