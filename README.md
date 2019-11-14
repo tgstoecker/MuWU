@@ -32,6 +32,10 @@ To activate the snakemake-tutorial environment, execute
 Now you can use the installed tools and our workflow without any software dependency issues.
 For detailed options of snakemake see: 
 
+Should you want to remove the conda environment, execute
+`conda env remove -n snakemake-MuWU`
+
+
 Please note that at the moment the workflow requires to adhere to the directory structure explained in the following.
 During the workflow new directories will be created however for easy usage please copy or move your sequencing data to the RawReads directory and assembly (.fa) and annotion (.gff3) to the FGS directory and unzip them.
 
