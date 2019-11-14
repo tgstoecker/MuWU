@@ -41,7 +41,7 @@ rule cutadapt:
                 " -G ^GTGACTGGAGTTCAGACGTGTGCTCTTCCGATCTC"
                 " -G ^CBCTCTTCKTCYATAATGGCAATTATCTC"
                 " -A CTGAGACTGCCAAGGC"
-                " -A AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT"
+                " -A AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT",
         others = "-n 4 --minimum-length 12 -e 0.2"
     log:
         "logs/cutadapt/{sample}.log"
@@ -50,7 +50,7 @@ rule cutadapt:
         "0.42.0/bio/cutadapt/pe"
                 
                 
-rule trimmomatic_pe:
+rule trimmomatic:
     input:
         r1="cut_reads/{sample}.fq1.gz",
         r2="cut_reads/{sample}.fq2.gz"
