@@ -32,7 +32,7 @@ rule cutadapt:
         fastq2="cut_reads/{sample}.fq2.gz",
         qc="cut_reads/{sample}.qc.txt"
     params:
-        adapters = "g ^AATGATACGGCGACCACCGAGATCTACACTCTTTCCCTACACGACGCTCTTCCGATCT"
+        adapters = "-g ^AATGATACGGCGACCACCGAGATCTACACTCTTTCCCTACACGACGCTCTTCCGATCT"
                 " -g ^GCCTTGGCAGTCTCAG"
                 " -a GAGATAATTGCCATTATRGAMGAAGAGVG"
                 " -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC"
