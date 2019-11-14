@@ -186,8 +186,7 @@ rule Identify_Mu_insertions:
 
 rule Assign_Gene_and_Transcript_IDs:
     input:
-        "MuSeq_table_final/SLI-MuSeq_FGS.csv",
-        "FGS/Zea_mays.B73_RefGen_v4.gtf"
+        "MuSeq_table_final/SLI-MuSeq_FGS.csv"
     output:
         "MuSeq_table_final/SLI-MuSeq_FGS_annotated.csv"
     shell:
