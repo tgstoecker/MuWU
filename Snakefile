@@ -70,16 +70,6 @@ rule trimmomatic:
     wrapper:
         "0.42.0/bio/trimmomatic/pe"
                 
-            
-rule convert_gff3_to_gtf:
-    input:
-       expand("FGS/{annotation}.gff3", annotation=config["annotation"])
-    output:
-        "FGS/Zea_mays.B73_RefGen_v4.gtf"
-    threads: 1
-    shell:
-        "gffread {input} -T -o {output}"
-
 
 rule bowtie2_index:
     input:
