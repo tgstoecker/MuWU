@@ -91,7 +91,7 @@ rule bowtie2_index:
 
 rule bowtie2:
     input:
-        sample=["trimmed_reads/{sample}_forward_paired.fq.gz", "trimmed_reads/{sample}_forward_paired.fq.gz"],
+        sample=["trimmed_reads/{sample}_forward_paired.fq.gz", "trimmed_reads/{sample}_reverse_paired.fq.gz"],
         idx1="FGS/bowtie2_index.1.bt2",
         idx2="FGS/bowtie2_index.2.bt2",
         idx3="FGS/bowtie2_index.3.bt2",
