@@ -49,9 +49,9 @@ E.g. currently used (08.11.19) latest maize reference assembly and annotation:
 It is also necessary to stick to the following naming scheme of the samples:
 column/row; sample number; left/right
 e.g.:
-Col_01_1.fq; 
-Col_01_1.fq; 
-Row_01_1.fq; 
+Col_01.1.fq; 
+Col_01.2.fq; 
+Row_01.1.fq; 
 etc. 
 
 
