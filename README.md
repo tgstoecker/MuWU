@@ -37,7 +37,7 @@ Should you want to remove the conda environment, execute
 
 
 Please note that at the moment the workflow requires to adhere to the directory structure explained in the following.
-During the workflow new directories will be created however for easy usage please copy or move your sequencing data to the RawReads directory and assembly (.fa) and annotion (.gff3) to the FGS directory and unzip them.
+During the workflow new directories will be created however for easy usage please copy or move your sequencing data to the RawReads directory and assembly (.fa) and annotion (.gtf) to the FGS directory and (g)unzip them. You may be also required to edit the config.yaml, so that the base names refer to the files you downloaded.
 
 E.g. currently used (08.11.19) latest maize reference assembly and annotation:
 
