@@ -43,7 +43,7 @@ rule cutadapt:
                 " -G ^CBCTCTTCKTCYATAATGGCAATTATCTC"
                 " -A CTGAGACTGCCAAGGC"
                 " -A AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT",
-        others = "-n 4 --minimum-length 12 -e 0.2"
+        others = "-n 8 --minimum-length 12 -e 0.2"
     log:
         "logs/cutadapt/{sample}.log"
     threads: 4 
