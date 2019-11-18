@@ -132,8 +132,6 @@ rownames(stock) <- stock$X__1
 stock <- stock[, -1]
 stock <- as.matrix(stock)
 
-stock["Row_01", "Col_02"]
-
 #have to use the gene id otherwise run into problems with genes that are on top of each other (share the same loci)
 #perform additional sorting as to circumvent wrong order
 Mu_single_GeneIds_gene_lengths <- Mu_single_GeneIds_gene_lengths[order(Mu_single_GeneIds_gene_lengths[,1],
