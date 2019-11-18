@@ -9,7 +9,8 @@ rule all:
         "multiqc/multiqc.html",
         expand("sorted_alignments/{sample}.sorted.bam.bai", sample=SAMPLES),
         expand("removed_duplicates_alignments/{sample}.dedup.bam.bai", sample=SAMPLES),
-        "MuSeq_table_final/SLI-MuSeq_FGS_annotated.csv"
+        "MuSeq_table_final/Mu_single_GeneIds_gene_lengths_and_stock.csv",
+        "MuSeq_table_final/Mu_single_TranscriptIds_transcript_lengths_and_stock.csv"
 
 
 rule fastqc:
@@ -217,5 +218,5 @@ rule Assign_Gene_and_Transcript_IDs:
     output:
         "MuSeq_table_final/SLI-MuSeq_FGS_annotated.csv"
     shell:
-        "Rscript AssignGeneandTranscriptIDs.R"
+        "Rscript Annotation_of_Insertions.R"
 
