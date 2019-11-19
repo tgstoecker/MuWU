@@ -32,22 +32,28 @@ To activate the snakemake-tutorial environment, execute
 Now you can use the installed tools and our workflow without any software dependency issues.
 For detailed options of snakemake see: 
 
-Please note that at the moment the workflow requires to adhere to the directory structure explained in the following.
-During the workflow new directories will be created however for easy usage please copy or move your sequencing data to the RawReads directory and assembly (.fa) and annotion (.gff3) to the FGS directory and unzip them.
+Should you want to remove the conda environment, execute
+`conda env remove -n snakemake-MuWU`
 
-E.g. currently used (08.11.19) latest maize reference assembly and annotation:
+
+Please note that at the moment the workflow requires to adhere to the directory structure explained in the following.
+During the workflow new directories will be created however for easy usage please copy or move your sequencing data to the RawReads directory and assembly (.fa) and annotion (.gtf) to the FGS directory and (g)unzip them. You may be also required to edit the config.yaml, so that the base names refer to the files you downloaded.
+
+E.g. currently used (18.11.19) latest maize reference assembly and annotation:
 
   `wget ftp://ftp.ensemblgenomes.org/pub/plants/release-45/fasta/zea_mays/dna/Zea_mays.B73_RefGen_v4.dna.toplevel.fa.gz`
   
   `wget ftp://ftp.ensemblgenomes.org/pub/plants/release-45/gff3/zea_mays/Zea_mays.B73_RefGen_v4.45.gff3.gz`
+  
+  `wget ftp://ftp.ensemblgenomes.org/pub/plants/release-45/gtf/zea_mays/Zea_mays.B73_RefGen_v4.45.gtf.gz`
 
 
 It is also necessary to stick to the following naming scheme of the samples:
 column/row; sample number; left/right
 e.g.:
-Col_01_1.fq; 
-Col_01_1.fq; 
-Row_01_1.fq; 
+Col_01.1.fq; 
+Col_01.2.fq; 
+Row_01.1.fq; 
 etc. 
 
 
