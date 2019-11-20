@@ -51,6 +51,8 @@ Mu_single_Ids$Ids<-gsub("ID=","",Mu_single_Ids$Ids)
 
 #create good gene id column
 GeneID<-gsub("_T0.*","",Mu_single_Ids$Ids)
+GeneID<-gsub("_T1.*","",GeneID)
+GeneID<-gsub("_T2.*","",GeneID)
 GeneID<-gsub("CDS:","",GeneID)
 GeneID<-gsub("transcript:","",GeneID)
 GeneID<-gsub("_P.*","",GeneID)
