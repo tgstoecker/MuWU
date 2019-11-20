@@ -90,7 +90,7 @@ short_GFF3_genes$V9 <- gsub("ID=gene:", "", short_GFF3_genes$V9)
 short_GFF3_genes$V9 <- gsub("\\;.*", "", short_GFF3_genes$V9)
 
 #compute gene length
-Gene_length <- (short_GFF3_genes$V5 - short_GFF3_genes$V4)
+Gene_length <- (short_GFF3_genes$V5 - short_GFF3_genes$V4 + 1)
 short_GFF3_genes$Gene_length <- Gene_length
 
 #write dataframe just with gene id and gene length and then merge it into the the Mu_single_gene_id dataframe
@@ -115,7 +115,7 @@ short_GTF_transcripts$V9 <- gsub("gene_id.*transcript_id ", "", short_GTF_transc
 short_GTF_transcripts$V9 <- gsub("\\;.*", "", short_GTF_transcripts$V9)
 
 #compute Transcript length
-Transcript_length <- (short_GTF_transcripts$V5 - short_GTF_transcripts$V4)
+Transcript_length <- (short_GTF_transcripts$V5 - short_GTF_transcripts$V4 + 1)
 short_GTF_transcripts$Transcript_length <- Transcript_length
 
 #write dataframe just with gene id and gene length and then merge it into the the Mu_single_gene_id dataframe
