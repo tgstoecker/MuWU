@@ -159,7 +159,7 @@ df_list <- as.list(df)
 
 full <- c()
 for (i in 1:nrow(test))  {
-  full[i] <- stock[df_list$Row[i], df$Column[i]]
+  full[i] <- stock[df_list$Row[i], df_list$Column[i]]
 }
 
 just_col$stock <- full
