@@ -13,8 +13,8 @@ Answer yes to the question whether conda shall be put into your PATH environment
 Then, you can install Snakemake with
 
 `conda install -c bioconda -c conda-forge snakemake`
-
 <br>  
+
 ### Preparing the working directory:
 
 Download/Clone the current release of the MuWU pipeline.
@@ -50,8 +50,8 @@ This will assign the mutation to the corresponding stock automatically at the en
 Change thread options for individual rules in the config.yaml file.  
 Then specifiy overall threads and start MuWU via:  
 `snakemake --cores xx --use-conda`
-
 <br>  
+
 ### The workflow in the current release:
 `snakemake --rulegraph | dot -Tsvg > rulegraph.svg`
 ![Alt text](./rulegraph.svg)
