@@ -1,7 +1,7 @@
 # MuWU
 ## Mu-Seq Workflow Utility 
 
-- Automated workflow for the identification of Mutator insertion sites used in the creation of the BonnMu resource
+- Automated workflow for the identification of Mutator insertion sites used in the creation of the BonnMu resource  
 <br>  
 
 ### Setting up the conda environment: 
@@ -12,7 +12,7 @@ Answer yes to the question whether conda shall be put into your PATH environment
 
 Then, you can install Snakemake with
 
-`conda install -c bioconda -c conda-forge snakemake`
+`conda install -c bioconda -c conda-forge snakemake`  
 <br>  
 
 ### Preparing the working directory:
