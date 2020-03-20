@@ -13,7 +13,7 @@ Then, you can install Snakemake with
 
 `conda install -c bioconda -c conda-forge snakemake`
 
-\\
+
 \\
 ### Preparing the working directory:
 
