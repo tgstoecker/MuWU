@@ -8,7 +8,6 @@ Install the Python 3 version of Miniconda.
 you can get it here: https://docs.conda.io/en/latest/miniconda.html
 
 Answer yes to the question whether conda shall be put into your PATH environment variable.
-For detailed options concerning conda/bioconda see:
 
 Then, you can install Snakemake with
 
