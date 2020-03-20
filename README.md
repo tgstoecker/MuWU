@@ -20,32 +20,15 @@ First, create a new directory and change into that directory in your terminal.
 
 Download/Clone the current release of the MuWU pipeline into the directory.
 
-The included environment.yaml file can be used to install all required software into an isolated Conda environment with a name of your choice - in the following we will call it "snakemake-MuWU":
+With conda and the included YAML files all required software and dependencies are downloaded and prepared into conda environment during runtime of the workflow.
 
-`conda env create --name snakemake-MuWU --file environment.yaml`
+MuWU requires to adhere to the directory structure explained in the following.
+During the workflow new directories will be created however for easy usage please copy or move your sequencing data to the RawReads directory. 
+Fasta and annotation files are downloaded automatically; e.g. currently used v4 maize reference assembly and annotation:
 
-Activating the environment
-To activate the snakemake-tutorial environment, execute
-
-`conda activate snakemake-MuWU`
-
-Now you can use the installed tools and our workflow without any software dependency issues.
-For detailed options of snakemake see: 
-
-Should you want to remove the conda environment, execute
-`conda env remove -n snakemake-MuWU`
-
-
-Please note that at the moment the workflow requires to adhere to the directory structure explained in the following.
-During the workflow new directories will be created however for easy usage please copy or move your sequencing data to the RawReads directory and assembly (.fa) and annotion (.gtf) to the FGS directory and (g)unzip them. You may be also required to edit the config.yaml, so that the base names refer to the files you downloaded.
-
-E.g. currently used (18.11.19) latest maize reference assembly and annotation:
-
-  `wget ftp://ftp.ensemblgenomes.org/pub/plants/release-45/fasta/zea_mays/dna/Zea_mays.B73_RefGen_v4.dna.toplevel.fa.gz`
-  
-  `wget ftp://ftp.ensemblgenomes.org/pub/plants/release-45/gff3/zea_mays/Zea_mays.B73_RefGen_v4.45.gff3.gz`
-  
-  `wget ftp://ftp.ensemblgenomes.org/pub/plants/release-45/gtf/zea_mays/Zea_mays.B73_RefGen_v4.45.gtf.gz`
+fasta: ftp://ftp.ensemblgenomes.org/pub/plants/release-46/fasta/zea_mays/dna/Zea_mays.B73_RefGen_v4.dna.toplevel.fa.gz
+gtf: ftp://ftp.ensemblgenomes.org/pub/plants/release-46/gtf/zea_mays/Zea_mays.B73_RefGen_v4.46.gtf.gz
+gff3: ftp://ftp.ensemblgenomes.org/pub/plants/release-46/gff3/zea_mays/Zea_mays.B73_RefGen_v4.46.gff3.gz
 
 
 It is also necessary to stick to the following naming scheme of the samples:
@@ -60,10 +43,3 @@ etc.
 ### The workflow in the current release:
 `snakemake --rulegraph | dot -Tsvg > rulegraph.svg`
 ![Alt text](./rulegraph.svg)
-
-
-#### Future updates will increase the ease of use even more:
-- report generation (.html) and tar archive for ultimate everlasting reproducability
-- make the Snakefile more robust expand over all samfiles and feed this to script OR use params to - ALSO Johannes told me using my shell solution is not optimal but I should rather stick to python here
-- JSON of YAML file in which all options of all steps can be modified to the specific use case and computional resources available
-- piping directly into .bam files and using these for the Mu insertion characterization
