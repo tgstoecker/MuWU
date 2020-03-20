@@ -13,8 +13,8 @@ Then, you can install Snakemake with
 
 `conda install -c bioconda -c conda-forge snakemake`
 
-
-
+\\
+\\
 ### Preparing the working directory:
 
 Download/Clone the current release of the MuWU pipeline.
