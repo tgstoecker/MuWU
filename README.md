@@ -47,7 +47,8 @@ This will assign the mutation to the corresponding stock automatically at the en
 
 <br><br>
 ### Starting MuWU:
-Change thread options for individual rules in the config.yaml file. Then specifiy overall threads and start MuWU via:
+Change thread options for individual rules in the config.yaml file.  
+Then specifiy overall threads and start MuWU via:  
 `snakemake --cores xx --use-conda`
 
 
