@@ -14,7 +14,7 @@ Then, you can install Snakemake with
 `conda install -c bioconda -c conda-forge snakemake`
 
 
-<br>
+<br><br>
 ### Preparing the working directory:
 
 Download/Clone the current release of the MuWU pipeline.
@@ -45,14 +45,14 @@ Lastly, copy/link a stock matrix .xlsx table (example file given) into the stock
 This will assign the mutation to the corresponding stock automatically at the end of the workflow.
 
 
-<br>
+<br><br>
 ### Starting MuWU:
 Change thread options for individual rules in the config.yaml file.  
 Then specifiy overall threads and start MuWU via:  
 `snakemake --cores xx --use-conda`
 
 
-<br>
+<br><br>
 ### The workflow in the current release:
 `snakemake --rulegraph | dot -Tsvg > rulegraph.svg`
 ![Alt text](./rulegraph.svg)
