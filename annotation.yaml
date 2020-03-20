@@ -1,0 +1,14 @@
+channels:
+  - r
+  - conda-forge
+dependencies:
+  - r
+  - r-base
+  - bioconductor-biocgenerics
+  - bioconductor-chippeakanno
+  - bioconductor-genomicranges
+  - bioconductor-iranges
+  - r-data.table
+  - r-reshape2
+  - r-readxl
+  - r-vctrs

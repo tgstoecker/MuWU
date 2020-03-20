@@ -1,3 +1,13 @@
+#####################################################################
+# Annotation of previously identified Mutator insertion sites       #
+# MuWU                                                              #
+# Tyll Stoecker & Lena Altrogge                                     #
+# tyll.stoecker@uni-bonn.de                                         #
+#                                                                   #
+# 20.03.2020                                                        #
+#                                                                   #
+#####################################################################
+
 ## This script adds various annoations to the previously created MuSeq SLI- .csv table
 ## It will create one file with gene level annotation and one with transcript level annotation
 ## It will further calculate the gene/transcript length and append this to the tables
@@ -127,6 +137,7 @@ Mu_single_TranscriptIds_transcript_lengths <- merge(Mu_single_TranscriptIds, sho
 
 ####################
 #add stock information
+setwd("../stock_matrix")
 MY_STOCK <- list.files(getwd(), pattern="\\.xlsx$")
 stock <- as.data.frame(read_excel(MY_STOCK))
 names(stock)[1] <- "X__1"

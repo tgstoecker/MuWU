@@ -1,2 +1,22 @@
 genome: Zea_mays.B73_RefGen_v4.dna.toplevel
-annotation: Zea_mays.B73_RefGen_v4.45
+annotation: Zea_mays.B73_RefGen_v4.46
+
+#### download of fasta and annotation files #####
+fasta: ftp://ftp.ensemblgenomes.org/pub/plants/release-46/fasta/zea_mays/dna/Zea_mays.B73_RefGen_v4.dna.toplevel.fa.gz
+gtf: ftp://ftp.ensemblgenomes.org/pub/plants/release-46/gtf/zea_mays/Zea_mays.B73_RefGen_v4.46.gtf.gz
+gff3: ftp://ftp.ensemblgenomes.org/pub/plants/release-46/gff3/zea_mays/Zea_mays.B73_RefGen_v4.46.gff3.gz
+
+
+#### define options of your individual rules here: #####
+### number of maximum threads for each run of sample during a specfifc rule: ###
+### for fastqc and trimmomatic the thread usage is put to 2 and 4 respectively - IMO best in most cases ###
+
+threads_cutadapt: 4
+threads_trimmomatic: 4
+threads_bowtie_index: 8
+threads_bowtie_align: 4
+threads_sam_to_sorted_bam: 4
+threads_index_sorted_bams_with_dups: 4
+threads_index_sorted_bams_without_dups: 4
+threads_convert_bam_to_sam: 4
+threads_identify_Mu_insertions: 24

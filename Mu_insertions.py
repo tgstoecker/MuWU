@@ -35,9 +35,12 @@ parser.add_option('--both', dest="both", action='store_true',
     help="Output all AND Single line insertions in two seperate files")
 parser.add_option('--threshold', default=2,
     dest="int", type="int", metavar="INT",
-    help="How many reads are required to support an insertion site on each side? (default=2)")
+    help="How many reads are required to support an insertion site \
+            on each side? (default=2)")
 parser.add_option('-c', '--cores', default=4,
-    metavar="NUM_PROCESSORS", dest="num_processors",help="How many processing cores to use (default=4)")
+    metavar="NUM_PROCESSORS",
+            dest="num_processors",
+            help="How many processing cores to use (default=4)")
 
 
 options, args = parser.parse_args()
@@ -65,10 +68,14 @@ def read_and_process_parallel(files):
     for i in files:
         tmp_files = i.replace(".sam",".csv.tmp")
         print ("Started to create:",tmp_files)
-        f = pd.read_csv(i, header=None, delim_whitespace=True,low_memory=False,usecols=[0,2,3,9])
+        f = pd.read_csv(i, header=None,
+                            delim_whitespace=True,
+                            low_memory=False,
+                            usecols=[0,2,3,9])
         f.columns = ['Read', 'Chr' , 'Start' , 'Seq']
         f = f[f['Start'] > 0]
-        df =  pd.DataFrame(columns=['Chr','Start','End','Sample','StartReads','EndReads'])
+        df =  pd.DataFrame(columns=['Chr','Start','End',
+                                    'Sample','StartReads','EndReads'])
 
 # define empty variables
 
@@ -85,7 +92,8 @@ def read_and_process_parallel(files):
 
 # create empty dataframe and process each Chromosome individually
 
-        df =  pd.DataFrame(columns=['Chr','Start','End','Sample','StartReads','EndReads'])
+        df =  pd.DataFrame(columns=['Chr','Start','End',
+                                    'Sample','StartReads','EndReads'])
         for x in f.Chr.drop_duplicates():
             ftable= f.loc[f['Chr'] == x]
 
@@ -101,7 +109,12 @@ def read_and_process_parallel(files):
                         ftableStart['End'] = End
                         ftableStart['EndReads'] = len(ftableStartEnd.index)
                         ftableStart = ftableStart.drop_duplicates()
-                        ftableStartfinish = ftableStart[['Chr','Start','End','Sample','StartReads','EndReads']]
+                        ftableStartfinish = ftableStart[['Chr',
+                                                            'Start',
+                                                            'End',
+                                                            'Sample',
+                                                            'StartReads',
+                                                            'EndReads']]
                         df = df.append(ftableStartfinish)
                 else:
                         continue
@@ -124,7 +137,8 @@ all_tmp_files = [i for i in glob.glob('*.{}'.format(extension))]
 print("Concatenation of all temporary files...")
 combined_csv = pd.concat([pd.read_csv(f) for f in all_tmp_files])
 
-#remove file extensions from sample column in the OutputFile (_dedup.csv.tmp gets removed in the dataframe = 14)
+#remove file extensions from sample column in the OutputFile
+#(_dedup.csv.tmp gets removed in the dataframe = 14)
 
 print("Removal of file extensions...")
 combined_csv['Sample'] = [x[:-14] for x in combined_csv['Sample']]
@@ -140,8 +154,11 @@ combined_csv_option_both = combined_csv.sort_values(['Sample','Chr', 'Start'])
 
 if options.single or options.both :
     print ('Identifying Single Line Insertions...')
-    MuTableSingle = pd.DataFrame(columns=['Chr','Start','End','Sample','StartReads','EndReads'])
-    combined_csv['combined'] = list(zip(combined_csv.Chr, combined_csv.Start, combined_csv.End))
+    MuTableSingle = pd.DataFrame(columns=['Chr','Start','End',
+                                            'Sample','StartReads','EndReads'])
+    combined_csv['combined'] = list(zip(combined_csv.Chr,
+                                        combined_csv.Start,
+                                        combined_csv.End))
     fRow=combined_csv[combined_csv['Sample'].str.match('Row')]
     fCol=combined_csv[combined_csv['Sample'].str.match('Col')]
     intersection=set(fRow.combined).intersection(fCol.combined)
@@ -154,21 +171,29 @@ if options.single or options.both :
         return [ alist[i*length // wanted_parts: (i+1)*length // wanted_parts]
                  for i in range(wanted_parts) ]
 
-    intersection_chunks = split_list(intersection_list, wanted_parts=num_processors)
-    
+    intersection_chunks = split_list(intersection_list,
+                                        wanted_parts=num_processors)
+
     def f(args):
         ''' Perform computation and write
         to separate file for each '''
         x = args[0]
         fname = args[1]
-        df2 = pd.DataFrame(columns=['Chr','Start','End','Sample','StartReads','EndReads','combined'])
-        df3 = pd.DataFrame(columns=['Chr','Start','End','Sample','StartReads','EndReads'])
+        df2 = pd.DataFrame(columns=['Chr','Start','End','Sample',
+                                    'StartReads','EndReads','combined'])
+        df3 = pd.DataFrame(columns=['Chr','Start','End',
+                                    'Sample','StartReads','EndReads'])
         for i in x:
-            if len(fCol.loc[fCol['combined'] == i].index) == 1 and len(fRow.loc[fRow['combined'] == i].index) ==1:
+            if len(fCol.loc[fCol['combined'] == i].index) == 1 \
+            and len(fRow.loc[fRow['combined'] == i].index) ==1:
                 df2Col = fCol.loc[fCol['combined'] == i]
                 df2Row = fRow.loc[fRow['combined'] == i]
-                df2 = df2.append(df2Col[['Chr','Start','End','Sample','StartReads','EndReads']], sort=True)
-                df2 = df2.append(df2Row[['Chr','Start','End','Sample','StartReads','EndReads']], sort=True)
+                df2 = df2.append(df2Col[['Chr','Start','End',
+                                        'Sample','StartReads','EndReads']],
+                                        sort=True)
+                df2 = df2.append(df2Row[['Chr','Start','End',
+                                        'Sample','StartReads','EndReads']],
+                                        sort=True)
             else:
                 continue
         df3 = df3.append(df2, sort=True)
@@ -203,7 +228,9 @@ if options.single or options.both :
 #perform column sorting - 1.sample, 2.chromosome, 3.start coordinate
 
     print("Sorting by sample, chromosome and start position...")
-    combined_single_csv = combined_single_csv.sort_values(['Sample','Chr', 'Start'])
+    combined_single_csv = combined_single_csv.sort_values(['Sample',
+                                                            'Chr',
+                                                            'Start'])
 
 #export to csv, create Output file and move to new directory
 if not os.path.exists('../MuSeq_table'):
@@ -246,10 +273,17 @@ if 'all_single_tmp_files' in globals():
 #Final message
 
 if options.single:
-    print("Finished creating output file :", 'SLI-'+OutputFile, "in directory ../MuSeq_table")
+    print("Finished creating output file :",
+            'SLI-'+OutputFile,
+                "in directory ../MuSeq_table")
 
 if options.both:
-    print("Finished creating output files :", 'SLI-'+OutputFile, "and", OutputFile, "in directory ../MuSeq_table")
+    print("Finished creating output files :",
+            'SLI-'+OutputFile,
+                "and", OutputFile,
+                    "in directory ../MuSeq_table")
 
 if not options.single and not options.both:
-    print("Finished creating output file :", OutputFile, "in directory ../MuSeq_table")
+    print("Finished creating output file :",
+            OutputFile,
+                "in directory ../MuSeq_table")
