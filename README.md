@@ -42,10 +42,9 @@ etc.
 
 Lastly, copy/link a stock matrix .xlsx table (example file given) into the stock_matrix directory.
 
-This will assign the mutation to the corresponding stock automatically at the end of the workflow.
-
-
+This will assign the mutation to the corresponding stock automatically at the end of the workflow.  
 <br>  
+
 ### Starting MuWU:
 Change thread options for individual rules in the config.yaml file.  
 Then specifiy overall threads and start MuWU via:  
