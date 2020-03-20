@@ -1,7 +1,7 @@
 # MuWU
 ## Mu-Seq Workflow Utility 
 
-- reference to publication and background information 
+- Automated workflow for the identification of Mutator insertion sites used in the BonnMu resource creation
 
 ### Setting up the conda environment: 
 Install the Python 3 version of Miniconda.
@@ -14,7 +14,7 @@ Then, you can install Snakemake with
 
 `conda install -c bioconda -c conda-forge snakemake`
 
-Preparing a working directory
+### Preparing a working directory:
 
 Download/Clone the current release of the MuWU pipeline.
 
@@ -38,6 +38,11 @@ Col_01.1.fq;
 Col_01.2.fq; 
 Row_01.1.fq; 
 etc. 
+
+### Starting MuWU:
+Change thread options for individual rules in the config.yaml file then specifiy overall threads and start MuWU via:
+`snakemake --cores xx --use-conda
+
 
 
 ### The workflow in the current release:
