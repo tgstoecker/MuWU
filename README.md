@@ -24,11 +24,11 @@ MuWU requires to adhere to the directory structure explained in the following.
 During the workflow new directories will be created however for easy usage please copy or move your sequencing data to the RawReads directory. 
 Fasta and annotation files are downloaded automatically from ensembl; e.g. currently used v4 maize reference assembly and annotation:
 
-Zea_mays.B73_RefGen_v4.dna.toplevel.fa
+- Zea_mays.B73_RefGen_v4.dna.toplevel.fa
 
-Zea_mays.B73_RefGen_v4.46.gtf
+- Zea_mays.B73_RefGen_v4.46.gtf
 
-Zea_mays.B73_RefGen_v4.46.gff3
+- Zea_mays.B73_RefGen_v4.46.gff3
 
 
 It is also necessary to stick to the following naming scheme of the samples:
