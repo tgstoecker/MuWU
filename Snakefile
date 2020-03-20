@@ -108,23 +108,23 @@ rule trimmed_fastqc:
         "0.42.0/bio/fastqc"
 
 
-#rule bowtie2_index:
-#    input:
-#        one=expand("FGS/{genome}.fa", genome=config["genome"]),
-#        two="FGS/Zea_mays.B73_RefGen_v4.dna.toplevel.fa",
-#    output:
-#        "FGS/bowtie2_index.1.bt2",
-#        "FGS/bowtie2_index.2.bt2",
-#        "FGS/bowtie2_index.3.bt2",
-#        "FGS/bowtie2_index.4.bt2",
-#        "FGS/bowtie2_index.rev.1.bt2",
-#        "FGS/bowtie2_index.rev.2.bt2",
-#    threads: config["threads_bowtie_index"]
-#    log:
-#        "logs/bowtie2_index/bowtie2_index.log"
-#    conda: "identification.yaml"
-#    shell:
-#        "bowtie2-build --threads {threads} {input.one} FGS/bowtie2_index"
+rule bowtie2_index:
+    input:
+        one=expand("FGS/{genome}.fa", genome=config["genome"]),
+        two="FGS/Zea_mays.B73_RefGen_v4.dna.toplevel.fa",
+    output:
+        "FGS/bowtie2_index.1.bt2",
+        "FGS/bowtie2_index.2.bt2",
+        "FGS/bowtie2_index.3.bt2",
+        "FGS/bowtie2_index.4.bt2",
+        "FGS/bowtie2_index.rev.1.bt2",
+        "FGS/bowtie2_index.rev.2.bt2",
+    threads: config["threads_bowtie_index"]
+    log:
+        "logs/bowtie2_index/bowtie2_index.log"
+    conda: "identification.yaml"
+    shell:
+        "bowtie2-build --threads {threads} {input.one} FGS/bowtie2_index"
 
 
 rule bowtie2_align:
