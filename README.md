@@ -2,7 +2,8 @@
 ## Mu-Seq Workflow Utility 
 
 - Automated workflow for the identification of Mutator insertion sites used in the creation of the BonnMu resource
-<br>
+<br>  
+
 ### Setting up the conda environment: 
 Install the Python 3 version of Miniconda.
 you can get it here: https://docs.conda.io/en/latest/miniconda.html
