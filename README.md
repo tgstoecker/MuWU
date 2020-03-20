@@ -1,7 +1,7 @@
 # MuWU
 ## Mu-Seq Workflow Utility 
 
-- Automated workflow for the identification of Mutator insertion sites used in the BonnMu resource creation
+- Automated workflow for the identification of Mutator insertion sites used in the creation of the BonnMu resource
 
 ### Setting up the conda environment: 
 Install the Python 3 version of Miniconda.
@@ -21,8 +21,8 @@ Download/Clone the current release of the MuWU pipeline.
 With conda and the included YAML files all required software and dependencies are downloaded and prepared into conda environment during runtime of the workflow.
 
 MuWU requires to adhere to the directory structure explained in the following.
-During the workflow new directories will be created however for easy usage please copy or move your sequencing data to the RawReads directory. 
-Fasta and annotation files are downloaded automatically from ensembl; e.g. currently used v4 maize reference assembly and annotation:
+During the workflow new directories will be created, however for easy usage please copy or move your sequencing data to the RawReads directory. 
+Fasta and annotation files are downloaded automatically from ensembl; e.g. currently used: v4 maize reference assembly and annotations:
 
 - Zea_mays.B73_RefGen_v4.dna.toplevel.fa
 
@@ -40,7 +40,7 @@ Row_01.1.fq;
 etc. 
 
 ### Starting MuWU:
-Change thread options for individual rules in the config.yaml file then specifiy overall threads and start MuWU via:
+Change thread options for individual rules in the config.yaml file. Then specifiy overall threads and start MuWU via:
 `snakemake --cores xx --use-conda
 
 
