@@ -1,7 +1,8 @@
 # MuWU
 ## Mu-Seq Workflow Utility 
 
-- Automated workflow for the identification of Mutator insertion sites used in the creation of the BonnMu resource  
+- Automated workflow for the identification of Mutator insertion sites used in the creation of the BonnMu resource
+- Requires as input Mu-seq reads in grid design as outlined by McCarty et al. 2013 and Liu et al. 2016 
 <br>  
 
 ### Setting up the conda environment: 
