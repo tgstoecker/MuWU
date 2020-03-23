@@ -5,7 +5,7 @@
 - Requires as input Mu-seq reads in grid design as outlined by McCarty et al. 2013 and Liu et al. 2016 
 <br>  
 
-### Setting up the conda environment: 
+### Set up conda and snakemake: 
 Install the Python 3 version of Miniconda.
 you can get it here: https://docs.conda.io/en/latest/miniconda.html
 
