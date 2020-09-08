@@ -1,6 +1,6 @@
 # MuWU
 ## Mu-Seq Workflow Utility 
-[![Snakemake](https://img.shields.io/badge/snakemake-≥5.7.0-brightgreen.svg)](https://snakemake.readthedocs.io)
+[![Snakemake](https://img.shields.io/badge/snakemake-=5.7.0-brightgreen.svg)](https://snakemake.readthedocs.io)
 
 - Automated workflow for the identification of Mutator insertion sites used in the creation of the BonnMu resource
 - Requires as input Mu-seq reads in grid design as outlined by McCarty et al. 2013 and Liu et al. 2016 
