@@ -14,7 +14,7 @@ Answer yes to the question whether conda shall be put into your PATH environment
 
 Then, you can install Snakemake with
 
-`conda install -c bioconda -c conda-forge snakemake`  
+`conda install -c bioconda -c conda-forge snakemake=5.7.0`  
 <br>  
 
 ### Preparing the working directory:
