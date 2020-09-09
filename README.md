@@ -11,8 +11,50 @@ There are 2 ways of using MuWU:
 * via cloning this repo and then using conda installation of necessary software at runtime  
 
 
-## Singularity container (incl. working example)
+## Option 1. Singularity container (incl. working example)
+### Step 1 - Set up Singularity on your system: 
+Install the Python 3 version of Miniconda.
+you can get it here: https://docs.conda.io/en/latest/miniconda.html
 
+Answer yes to the question whether conda shall be put into your PATH environment variable.
+
+Then, you can install Singularity with
+`conda install -c conda-forge singularity=3.6.1`  
+<br>  
+Alternatively install Singularity based on these instructions: https://singularity.lbl.gov/install-linux  
+
+### Step 2 - set up the container to run the workflow  ####
+
+Download the MuWU-example.sif file.  
+  
+Create a sandbox from the .sif file.  
+This can take a while (on Intel(R) Xeon(R) CPU E5-2690 v4@ 2.60GHz roughly 30 min!), since the sandbox will be over 20Gb in size.  
+It is might be necessary to set SINGULARITY_TMPDIR to a particular (or newly created) tmp directroy as singularity on some systems uses `/tmp` directory as standard while building. This can lead to storage errors if the space is limited by your admin.  
+Easy workaround - set SINGULARITY_TMPDIR to a directory where space is plenty:  
+`export SINGULARITY_TMPDIR=/path/to/where/tmp/should/be`  
+  
+`singularity build --sandbox MuWU-example MuWU-example.sif`  
+  
+Access the sandbox:  
+`singularity shell --writable --no-home MuWU-example`
+  
+Once "inside", navigate to the MuWU directory  
+`cd /MuWU/`  
+  
+Activate conda environment (snakemake is already installed):  
+`source activate snakemake`  
+
+### Step 3 - run the workflow and inspect results  
+
+Check the workflow (dryrun; testbuild of DAG):  
+`snakemake --use-conda --cores 24 --conda-prefix conda_envs -np`
+  
+Run the workflow:  
+(on Intel(R) Xeon(R) CPU E5-2690 v4@ 2.60GHz with 24 cores it takes ~ 10min)  
+`snakemake --use-conda --cores 24 --conda-prefix conda_envs`  
+
+
+## Option 2. Cloning of this repo and download/installation of software at runtime
 ### Set up conda and snakemake: 
 Install the Python 3 version of Miniconda.
 you can get it here: https://docs.conda.io/en/latest/miniconda.html
