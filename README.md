@@ -5,7 +5,8 @@
 - Automated workflow for the identification of Mutator insertion sites used in the creation of the BonnMu resource
 - Requires as input Mu-seq reads in grid design as outlined by McCarty et al. 2013 and Liu et al. 2016 
 <br>  
-- There are 2 ways of using MuWU:  
+
+There are 2 ways of using MuWU:  
 * a singularity container, which includes a **working example with exemplary data** and requires no further downloads except for the container itself  
 * via cloning this repo and then using conda installation of necessary software at runtime  
 
