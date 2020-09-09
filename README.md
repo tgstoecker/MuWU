@@ -9,7 +9,7 @@
 There are 2 ways of using MuWU:  
 * a singularity container, which includes a **working example with exemplary data** and requires no further downloads except for the container itself  
 * via cloning this repo and then using conda installation of necessary software at runtime  
-
+<br>  
 
 ## Option 1. Singularity container (incl. working example)
 ### Step 1 - Set up Singularity on your system: 
@@ -52,6 +52,7 @@ Check the workflow (dryrun; testbuild of DAG):
 Run the workflow:  
 (on Intel(R) Xeon(R) CPU E5-2690 v4@ 2.60GHz with 24 cores it takes ~ 10min)  
 `snakemake --use-conda --cores 24 --conda-prefix conda_envs`  
+<br>  
 
 
 ## Option 2. Cloning of this repo and download/installation of software at runtime
