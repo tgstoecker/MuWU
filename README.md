@@ -40,7 +40,7 @@ Download the MuWU-example.sif file, hosted here:
   
 Create a sandbox from the .sif file:  
 This can take a while (on Intel(R) Xeon(R) CPU E5-2690 v4@ 2.60GHz roughly 30 min!), since the sandbox will be over 20Gb in size.  
-It is might be necessary to set SINGULARITY_TMPDIR to a particular (or newly created) tmp directroy as singularity on some systems uses `/tmp` directory as standard while building. This can lead to storage errors if the space is limited by your admin.  
+It is might be necessary to set SINGULARITY_TMPDIR to a particular (or newly created) tmp directroy as singularity on some systems uses `/tmp` directory as standard while building. This can lead to storage errors if the space is limited by your sysadmin.  
 Easy workaround - set SINGULARITY_TMPDIR to a directory where space is plenty:  
 `export SINGULARITY_TMPDIR=/path/to/where/tmp/should/be`  
   
