@@ -20,9 +20,9 @@ Answer yes to the question whether conda shall be put into your PATH environment
 
 Then, you can install Singularity with
 `conda install -c conda-forge singularity=3.6.1`  
-<br>  
+  
 Alternatively install Singularity based on these instructions: https://singularity.lbl.gov/install-linux  
-
+  
 ### Step 2 - set up the container to run the workflow  ####
 
 Download the MuWU-example.sif file.  
@@ -44,7 +44,7 @@ Once "inside", navigate to the MuWU directory
 Activate conda environment (snakemake is already installed):  
 `source activate snakemake`  
 
-### Step 3 - run the workflow and inspect results  
+### Step 3 - run the workflow:  
 
 Check the workflow (dryrun; testbuild of DAG):  
 `snakemake --use-conda --cores 24 --conda-prefix conda_envs -np`
