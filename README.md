@@ -2,13 +2,24 @@
 ## Mu-Seq Workflow Utility 
 [![Snakemake](https://img.shields.io/badge/snakemake-=5.7.0-brightgreen.svg)](https://snakemake.readthedocs.io)
 
-- Automated workflow for the identification of Mutator insertion sites used in the creation of the BonnMu resource
+- Automated workflow for the identification and annotation of *Mutator* insertion sites used in the creation of the BonnMu resource
 - Requires as input Mu-seq reads in grid design as outlined by McCarty et al. 2013 and Liu et al. 2016 
 <br>  
 
 There are 2 ways of using MuWU:  
 * a singularity container, which includes a **working example with exemplary data** and requires no further downloads except for the container itself  
 * via cloning this repo and then using conda installation of necessary software at runtime  
+  
+The main output files are:  
+
+1. MultiQC HTML output (open in browser):  
+`/MuWU/multiqc/multiqc.html`  
+  
+2. Gene & Transcript level final output tables:  
+```
+/MuWU/MuSeq_table_final/Mu_single_GeneIds_gene_lengths_and_stock.csv
+/MuWU/MuSeq_table_final/Mu_single_TranscriptIds_transcript_lengths_and_stock.csv
+```
 <br>  
 
 ## Option 1. Singularity container (incl. working example)
@@ -25,9 +36,9 @@ Alternatively install Singularity based on these instructions: https://singulari
   
 ### Step 2 - set up the container to run the workflow  ####
 
-Download the MuWU-example.sif file.  
+Download the MuWU-example.sif file, hosted here:    
   
-Create a sandbox from the .sif file.  
+Create a sandbox from the .sif file:  
 This can take a while (on Intel(R) Xeon(R) CPU E5-2690 v4@ 2.60GHz roughly 30 min!), since the sandbox will be over 20Gb in size.  
 It is might be necessary to set SINGULARITY_TMPDIR to a particular (or newly created) tmp directroy as singularity on some systems uses `/tmp` directory as standard while building. This can lead to storage errors if the space is limited by your admin.  
 Easy workaround - set SINGULARITY_TMPDIR to a directory where space is plenty:  
