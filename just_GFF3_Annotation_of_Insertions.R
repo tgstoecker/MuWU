@@ -175,6 +175,18 @@ colnames(df) <- c("Row", "Column")
 
 df_list <- as.list(df)
 
+#this code has one drawback:
+#if for some reason a row or column is never used it won't be part of the df_list
+#this becomes obvious once the stock matrix and annotation is compared after MuWU is done
+#> stock matrix annotation won't be corrected and everything is shifted
+#this shouldn't be the case; however IF this should happen;
+#check the factor level with str(df_list)
+#and then add the missing factor level (at the right position)
+#example: Row_01 never used; then we can insert easily in the beginning with the handy factor(levels()) funtion
+#after that rerun this step of the workflow
+#df_list$Row <- factor(df_list$Row, levels = c("\"Row_01\"", levels(df_list$Row)))
+
+
 full <- c()
 for (i in 1:nrow(test))  {
   full[i] <- stock[df_list$Row[i], df_list$Column[i]]
