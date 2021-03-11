@@ -15,8 +15,8 @@ rule fasta_annotation_download:
     input: "FGS/"
     output:
         fa="FGS/Zea_mays.B73_RefGen_v4.dna.toplevel.fa",
-        gtf="FGS/Zea_mays.B73_RefGen_v4.46.gtf",
-        gff3="FGS/Zea_mays.B73_RefGen_v4.46.gff3",
+        gtf="FGS/Zea_mays.B73_RefGen_v4.50.gtf",
+        gff3="FGS/Zea_mays.B73_RefGen_v4.50.gff3",
     params: #under these locations in the config file the links to the respective files are listed
         fasta=config["fasta"],
         gtf=config["gtf"],

@@ -67,6 +67,9 @@ Run the workflow:
 `snakemake --use-conda --cores 24 --conda-prefix conda_envs`  
 <br>  
 
+#### Output  
+Final outputs are generated in the directory `./MuSeq_table_final`  
+  
 
 ## Option 2. Cloning of this repo and download/installation of software at runtime
 ### Set up conda and snakemake: 
