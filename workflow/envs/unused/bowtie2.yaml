@@ -1,0 +1,10 @@
+channels:
+  - bioconda
+  - conda-forge
+  - defaults
+dependencies:
+  - tbb ==2020.2
+  - bowtie2 ==2.4.1  # Keep consistent with version specified in bowtie2/align
+  - samtools ==1.10
+
+#https://www.biostars.org/p/494922/
