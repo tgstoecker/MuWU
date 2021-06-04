@@ -8,4 +8,4 @@ rule remove_duplicates_picard:
          "logs/picard/{sample}.dedup.log"
     conda: "identification.yaml"
     shell:
-         "picard MarkDuplicates I={input} O={output.bam} M={output.txt} REMOVE_DUPLICATES=true > {log} 2>&1"
+         "picard MarkDuplicates I={input} O={output.bam} M={output.txt} REMOVE_DUPLICATES=true VALIDATION_STRINGENCY=LENIENT > {log} 2>&1"
