@@ -2,15 +2,45 @@ genome: Zea_mays.B73_RefGen_v4.dna.toplevel
 annotation: Zea_mays.B73_RefGen_v4.50
 
 #### download of fasta and annotation files #####
+### should reference assembly (.fasta/.fa) and annotation (.gff3) be downloaded at runtime?
+download_fasta: yes or no
+download_annotation: yes or no
+
+## provide the links for download here ##
 fasta: ftp://ftp.ensemblgenomes.org/pub/plants/release-50/fasta/zea_mays/dna/Zea_mays.B73_RefGen_v4.dna.toplevel.fa.gz
 gtf: ftp://ftp.ensemblgenomes.org/pub/plants/release-50/gtf/zea_mays/Zea_mays.B73_RefGen_v4.50.gtf.gz
 gff3: ftp://ftp.ensemblgenomes.org/pub/plants/release-50/gff3/zea_mays/Zea_mays.B73_RefGen_v4.50.gff3.gz
+genbank: 
+
+#### Grid design or generic insertion identification approach - choices: 'GRID' or 'GENERIC'  ####
+### using the GRID approach requires a suitable stock matrix .xlsx file (under config/stock_matrix), with which design and sample names are inferred
+### using the GENERIC approach requires a samples.tsv file (under config/), with which sample names, SE vs. PE read type and optionally different conditions are inferred
+### conditions in the generic approach allow for the parallel analysis of different sets of input data that should be kept seperate - seperate final output files (e.g. different treatments etc.)
+## in either case please also provide location of your reads in your file system - read_dir:
+approach: GRID
+#approach: GENERIC
+reads_dir:
 
 
-#### define options of your individual rules here: #####
-### number of maximum threads for each run of sample during a specfifc rule: ###
+#### change adapter and transposon sequences that should be removed  ####
+# removal will be performed by cutadapt - explain how to enter + link to manual
+# in the MuSeq approach what should remain is TSD+genomic DNA; modify to your needs
+# choices here reflect BonnMu requirements - https://academic.oup.com/plphys/article/184/2/620/6117865:
+
+
+#### change TSD length used for identification algorithm - default is 9 = Mutator transposons  ####
+
+
+#### change amount of support needed to call insertion - default: 2  ####
+
+
+#### add upstream or downstream bases to gene models to include regulatory regions, promoter sequences etc. ####
+### leave empty if this is not wished:
+extension:
+
+
+#### Thread options: ####
 ### for fastqc and trimmomatic the thread usage is put to 2 and 4 respectively - IMO best in most cases ###
-
 threads_cutadapt: 4
 threads_trimmomatic: 4
 threads_bowtie_index: 8
