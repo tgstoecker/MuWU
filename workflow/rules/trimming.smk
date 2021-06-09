@@ -1,29 +1,22 @@
-rule cutadapt_PE:
-    input:
-        get_PE_fastqs_GRID,
-    output:
-        fastq1="cut_reads/{sample}.fq1.gz",
-        fastq2="cut_reads/{sample}.fq2.gz",
-        qc="cut_reads/{sample}.qc.txt"
-    params:
-        adapters = config["adapters"],
-#        adapters = "-g ^AATGATACGGCGACCACCGAGATCTACACTCTTTCCCTACACGACGCTCTTCCGATCT"
-#                " -g ^GCCTTGGCAGTCTCAG"
-#                " -a GAGATAATTGCCATTATRGAMGAAGAGVG"
-#                " -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC"
-#                " -a ATCTCGTATGCCGTCTTCTGCTTG"
-#                " -G ^CAAGCAGAAGACGGCATACGAGAT"
-#                " -G ^GTGACTGGAGTTCAGACGTGTGCTCTTCCGATCTC"
-#                " -G ^CBCTCTTCKTCYATAATGGCAATTATCTC"
-#                " -A CTGAGACTGCCAAGGC"
-#                " -A AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT",
-        extra = "-n 8 --minimum-length 12 -e 0.2"
-    log:
-        "logs/cutadapt/{sample}.log"
-    threads: config["threads_cutadapt"]
+#### ONLY FOR GRID DESIGN (STOCK MATRIX) BASED ANALYSIS ####
+if config["approach"] == "GRID":
+
+    rule cutadapt_PE_GRID:
+        input:
+            get_PE_fastqs_GRID,
+        output:
+            fastq1="cut_reads/{sample}.fq1.gz",
+            fastq2="cut_reads/{sample}.fq2.gz",
+            qc="cut_reads/{sample}.qc.txt"
+        params:
+            adapters = config["adapters"],
+            extra = config["cutadapt_extra"],
+        log:
+            "logs/cutadapt/{sample}.log"
+        threads: config["threads_cutadapt"]
 #    conda: "identification.yaml"
-    wrapper:
-        "0.74.0/bio/cutadapt/pe"
+        wrapper:
+            "0.74.0/bio/cutadapt/pe"
 #    shell:
 #        "{params.adapters}"
 
