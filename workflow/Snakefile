@@ -1,11 +1,35 @@
-AMPLES, = glob_wildcards("RawReads/{sample}_1.fq.gz")
-INDEX_COUNT_LIST = range(1, 9)
-configfile: "config.yaml"
+from snakemake.utils import min_version
+
+min_version("6.3.0")
+
+import pandas as pd
+
+
+configfile: "config/config.yaml"
+
+
+# assign directory containing sequencing reads as specified in config.yaml
+reads_dir = config["reads_dir"]
+
+
+include: "rules/common.smk"
+#include: "rules/ref.smk"
+#include: "rules/quality_control.smk"
+include: "rules/trimming.smk"
+#include: "rules/mapping.smk"
 
 rule all:
     input:
-        "multiqc/multiqc.html",
-        expand("sorted_alignments/{sample}.sorted.bam.bai", sample=SAMPLES),
-        expand("removed_duplicates_alignments/{sample}.dedup.bam.bai", sample=SAMPLES),
-        "MuSeq_table_final/Mu_single_GeneIds_gene_lengths_and_stock.csv",
-        "MuSeq_table_final/Mu_single_TranscriptIds_transcript_lengths_and_stock.csv"
+#OLD pipeline
+#        "multiqc/multiqc.html",
+#        expand("sorted_alignments/{sample}.sorted.bam.bai", sample=SAMPLES),
+#        expand("removed_duplicates_alignments/{sample}.dedup.bam.bai", sample=SAMPLES),
+#        "MuSeq_table_final/Mu_single_GeneIds_gene_lengths_and_stock.csv",
+#        "MuSeq_table_final/Mu_single_TranscriptIds_transcript_lengths_and_stock.csv"
+        #cutadapt
+        Checkpoint_MakePattern("cut_reads/{sample}.fq1.gz"),
+        Checkpoint_MakePattern("cut_reads/{sample}.fq2.gz"),
+        Checkpoint_MakePattern("cut_reads/{sample}.qc.txt"),
+        #fastqc
+        #"fastqc/raw/{sample}_{paired}.html",
+        #"fastqc/raw/{sample}_{paired}_fastqc.zip"

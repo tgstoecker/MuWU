@@ -1,49 +1,31 @@
-import pandas as pd
-
-samples = pd.read_csv("config/grid_sample_sheet.tsv", dtype=str, sep="\t").set_index(["base_name"], drop=False)
-
-SAMPLES=samples["base_name"].tolist()
-
-##PE_samples
-def get_PE_fastqs(wildcards):
-    """Get raw FASTQ files based on automatically generated grid_sample_sheet.tsv."""
-    s = samples.loc[ (wildcards.sample), ["base_name", "fq_1_end", "fq_2_end"] ].dropna()
-    return [ f"rawreads/{s.base_name}{s.fq_1_end}", f"rawreads/{s.base_name}{s.fq_2_end}"  ]
-
-
-rule all:
+rule cutadapt_PE:
     input:
-        expand("cut_reads/{sample}.fq1.gz", sample=SAMPLES),
-        expand("cut_reads/{sample}.fq2.gz", sample=SAMPLES)
-
-rule cutadapt:
-    input:
-#        ["RawReads/{sample}_1.fq.gz", "RawReads/{sample}_2.fq.gz"]
-#        ["rawreads/{sample_base_name}", "rawreads/{sample_base_name}{sample_fq_2_end}"]
-        get_PE_fastqs,
+        get_PE_fastqs_GRID,
     output:
         fastq1="cut_reads/{sample}.fq1.gz",
         fastq2="cut_reads/{sample}.fq2.gz",
-#        qc="cut_reads/{sample_base_name}.qc.txt"
+        qc="cut_reads/{sample}.qc.txt"
     params:
-        adapters = "-g ^AATGATACGGCGACCACCGAGATCTACACTCTTTCCCTACACGACGCTCTTCCGATCT"
-                " -g ^GCCTTGGCAGTCTCAG"
-                " -a GAGATAATTGCCATTATRGAMGAAGAGVG"
-                " -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC"
-                " -a ATCTCGTATGCCGTCTTCTGCTTG"
-                " -G ^CAAGCAGAAGACGGCATACGAGAT"
-                " -G ^GTGACTGGAGTTCAGACGTGTGCTCTTCCGATCTC"
-                " -G ^CBCTCTTCKTCYATAATGGCAATTATCTC"
-                " -A CTGAGACTGCCAAGGC"
-                " -A AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT",
+        adapters = config["adapters"],
+#        adapters = "-g ^AATGATACGGCGACCACCGAGATCTACACTCTTTCCCTACACGACGCTCTTCCGATCT"
+#                " -g ^GCCTTGGCAGTCTCAG"
+#                " -a GAGATAATTGCCATTATRGAMGAAGAGVG"
+#                " -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC"
+#                " -a ATCTCGTATGCCGTCTTCTGCTTG"
+#                " -G ^CAAGCAGAAGACGGCATACGAGAT"
+#                " -G ^GTGACTGGAGTTCAGACGTGTGCTCTTCCGATCTC"
+#                " -G ^CBCTCTTCKTCYATAATGGCAATTATCTC"
+#                " -A CTGAGACTGCCAAGGC"
+#                " -A AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT",
         extra = "-n 8 --minimum-length 12 -e 0.2"
     log:
         "logs/cutadapt/{sample}.log"
-#    threads: config["threads_cutadapt"]
+    threads: config["threads_cutadapt"]
 #    conda: "identification.yaml"
     wrapper:
         "0.74.0/bio/cutadapt/pe"
-
+#    shell:
+#        "{params.adapters}"
 
 
 #rule trimmomatic:
