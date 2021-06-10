@@ -18,6 +18,7 @@ include: "rules/common.smk"
 include: "rules/trimming.smk"
 #include: "rules/mapping.smk"
 
+
 rule all:
     input:
 #OLD pipeline
@@ -26,10 +27,15 @@ rule all:
 #        expand("removed_duplicates_alignments/{sample}.dedup.bam.bai", sample=SAMPLES),
 #        "MuSeq_table_final/Mu_single_GeneIds_gene_lengths_and_stock.csv",
 #        "MuSeq_table_final/Mu_single_TranscriptIds_transcript_lengths_and_stock.csv"
+#        "works.txt",
+#        Checkpoint_GetReadType("checks/determine_read_type_check.{rt}.txt"),
+#        Checkpoint_GetReadType("{rt}.works.txt"),
         #cutadapt
         Checkpoint_MakePattern("cut_reads/{sample}.fq1.gz"),
-        Checkpoint_MakePattern("cut_reads/{sample}.fq2.gz"),
+#        Checkpoint_MakePattern("cut_reads/{sample}.fq2.gz") 
+#if Checkpoint_GetReadType("{rt}") == "PE" else [],
         Checkpoint_MakePattern("cut_reads/{sample}.qc.txt"),
         #fastqc
         #"fastqc/raw/{sample}_{paired}.html",
         #"fastqc/raw/{sample}_{paired}_fastqc.zip"
+#        Checkpoint_MakePattern("checks/{sample}.txt"),
