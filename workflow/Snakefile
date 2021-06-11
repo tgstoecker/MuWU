@@ -3,7 +3,9 @@ from snakemake.utils import min_version
 min_version("6.3.0")
 
 import pandas as pd
-
+import yaml
+import os.path
+from os import path
 
 configfile: "config/config.yaml"
 
@@ -31,11 +33,9 @@ rule all:
 #        Checkpoint_GetReadType("checks/determine_read_type_check.{rt}.txt"),
 #        Checkpoint_GetReadType("{rt}.works.txt"),
         #cutadapt
-        Checkpoint_MakePattern("cut_reads/{sample}.fq1.gz"),
-#        Checkpoint_MakePattern("cut_reads/{sample}.fq2.gz") 
-#if Checkpoint_GetReadType("{rt}") == "PE" else [],
-        Checkpoint_MakePattern("cut_reads/{sample}.qc.txt"),
+        Checkpoint_ReadSampleSheet_GRID("cut_reads/{sample}.fq1.gz"),
+        #
+        Checkpoint_ReadSampleSheet_GRID("cut_reads/{sample}.qc.txt"),
         #fastqc
         #"fastqc/raw/{sample}_{paired}.html",
         #"fastqc/raw/{sample}_{paired}_fastqc.zip"
-#        Checkpoint_MakePattern("checks/{sample}.txt"),
