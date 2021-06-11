@@ -32,6 +32,8 @@ if config["approach"] == "GRID":
         output:
             "config/grid_sample_sheet.tsv",
             "config/read_type.yaml",
+        conda: 
+            "../envs/gridsamplesheet.yaml"
         script:
             "../scripts/grid_sample_preprocessing.R"
 

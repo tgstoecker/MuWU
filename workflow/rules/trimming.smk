@@ -1,15 +1,3 @@
-#rule create_read_type_check:
-#    output:
-#        touch("checks/read_type.check")
-#    run:
-#        with open("config/read_type.yaml") as file:
-#            read_type_file = yaml.load(file, Loader=yaml.FullLoader)
-#            print(read_type_file["read_type"])
-#            rt = read_type_file["read_type"]
-#            filename = "checks/read_type_is.%s" % rt
-#            f = open(filename, "x")
-
-
 #### ONLY FOR GRID DESIGN (STOCK MATRIX) BASED ANALYSIS ####
 if config["approach"] == "GRID":
 
@@ -19,7 +7,6 @@ if config["approach"] == "GRID":
         run:
             with open("config/read_type.yaml") as file:
                 read_type_file = yaml.load(file, Loader=yaml.FullLoader)
-                print(read_type_file["read_type"])
                 rt = read_type_file["read_type"]
                 filename = "checks/read_type_is.%s" % rt
                 f = open(filename, "x")
@@ -44,22 +31,23 @@ if config["approach"] == "GRID":
             "file:workflow/builds/MuWU_cutadapt"
 
 
-#rule trimmomatic:
-#    input:
-#        r1="cut_reads/{sample}.fq1.gz",
+    rule trimmomatic_GRID:
+        input:
+            check="checks/read_type.check",
+            r1="cut_reads/{sample}.fq1.gz",
 #        r2="cut_reads/{sample}.fq2.gz"
-#    output:
-#        r1="trimmed_reads/{sample}.forward_paired.fq.gz",
-#        r2="trimmed_reads/{sample}.reverse_paired.fq.gz",
-#        # reads where trimming entirely removed the mate
-#        r1_unpaired="trimmed_reads/{sample}.forward_unpaired.fq.gz",
-#        r2_unpaired="trimmed_reads/{sample}.reverse_unpaired.fq.gz"
-#    log:
-#        "logs/trimmomatic/{sample}.overall.log"
-#    params:
-#        trimmer=["SLIDINGWINDOW:4:15 MINLEN:12"],
-#        compression_level="-9"
-#    threads: config["threads_trimmomatic"]
+        output:
+            r1="trimmed_reads/{sample}.forward_paired.fq.gz",
+#            r2="trimmed_reads/{sample}.reverse_paired.fq.gz",
+            # reads where trimming entirely removed the mate
+#            r1_unpaired="trimmed_reads/{sample}.forward_unpaired.fq.gz",
+#            r2_unpaired="trimmed_reads/{sample}.reverse_unpaired.fq.gz"
+        log:
+            "logs/trimmomatic/{sample}.overall.log"
+        params:
+            trimmer=["SLIDINGWINDOW:4:15 MINLEN:12"],
+            compression_level="-9"
+        threads: config["threads_trimmomatic"]
 #    conda: "identification.yaml"
-#    wrapper:
-#        "0.42.0/bio/trimmomatic/pe"
+        wrapper:
+            "file:workflow/builds/MuWU_trimmomatic"
