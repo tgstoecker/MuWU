@@ -15,7 +15,7 @@ reads_dir = config["reads_dir"]
 
 
 include: "rules/common.smk"
-#include: "rules/ref.smk"
+include: "rules/ref.smk"
 #include: "rules/quality_control.smk"
 include: "rules/trimming.smk"
 #include: "rules/mapping.smk"
