@@ -17,9 +17,9 @@ if config["approach"] == "GRID":
             check="checks/read_type.check",
             fastq_files=get_fastqs_GRID,
         output:
-            fastq1="cut_reads/{sample}.fq1.gz",
+            fastq1="results/cut_reads/{sample}.fq1.gz",
             # if samples are paired-end the second file is referred to in the wrapper
-            qc="cut_reads/{sample}.qc.txt"
+            qc="results/cut_reads/{sample}.qc.txt"
         params:
             adapters = config["adapters"],
             extra = config["cutadapt_extra"],
@@ -34,10 +34,10 @@ if config["approach"] == "GRID":
     rule trimmomatic_GRID:
         input:
             check="checks/read_type.check",
-            r1="cut_reads/{sample}.fq1.gz",
+            r1="results/cut_reads/{sample}.fq1.gz",
 #        r2="cut_reads/{sample}.fq2.gz"
         output:
-            r1="trimmed_reads/{sample}.forward_paired.fq.gz",
+            r1="results/trimmed_reads/{sample}.forward_paired.fq.gz",
 #            r2="trimmed_reads/{sample}.reverse_paired.fq.gz",
             # reads where trimming entirely removed the mate
 #            r1_unpaired="trimmed_reads/{sample}.forward_unpaired.fq.gz",
@@ -48,6 +48,5 @@ if config["approach"] == "GRID":
             trimmer=["SLIDINGWINDOW:4:15 MINLEN:12"],
             compression_level="-9"
         threads: config["threads_trimmomatic"]
-#    conda: "identification.yaml"
         wrapper:
             "file:workflow/builds/MuWU_trimmomatic"

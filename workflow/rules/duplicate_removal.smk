@@ -1,11 +1,23 @@
-rule remove_duplicates_picard:
-    input:
-         "sorted_alignments/{sample}.sorted.bam"
-    output:
-         bam="removed_duplicates_alignments/{sample}.dedup.bam",
-         txt="removed_duplicates_alignments/{sample}.dedup.txt"
-    log:
-         "logs/picard/{sample}.dedup.log"
-    conda: "identification.yaml"
-    shell:
-         "picard MarkDuplicates I={input} O={output.bam} M={output.txt} REMOVE_DUPLICATES=true VALIDATION_STRINGENCY=LENIENT > {log} 2>&1"
+#### ONLY FOR GRID DESIGN (STOCK MATRIX) BASED ANALYSIS ####
+if config["approach"] == "GRID":
+    rule remove_duplicates_picard:
+        input:
+            "results/mapped/{sample}.sorted.bam"
+    # optional to specify a list of BAMs; this has the same effect
+    # of marking duplicates on separate read groups for a sample
+    # and then merging
+        output:
+            bam="results/dedup/{sample}.bam",
+            metrics="results/dedup/{sample}.metrics.txt"
+        log:
+            "logs/picard/dedup/{sample}.log"
+        params:
+            extra="REMOVE_DUPLICATES=true VALIDATION_STRINGENCY=LENIENT"
+    # optional specification of memory usage of the JVM that snakemake will respect with global
+    # resource restrictions (https://snakemake.readthedocs.io/en/latest/snakefiles/rules.html#resources)
+    # and which can be used to request RAM during cluster job submission as `{resources.mem_mb}`:
+    # https://snakemake.readthedocs.io/en/latest/executing/cluster.html#job-properties
+        resources:
+            mem_mb=1024
+        wrapper:
+            "0.74.0/bio/picard/markduplicates"

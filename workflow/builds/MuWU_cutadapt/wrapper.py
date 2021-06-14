@@ -2,9 +2,7 @@ from snakemake.shell import shell
 import os.path
 from os import path
 
-#if path.exists("checks/read_type_is.SE"):
-#    print("ha")
-from snakemake.shell import shell
+#from snakemake.shell import shell
 
 n = len(snakemake.input.fastq_files)
 
@@ -36,7 +34,7 @@ if path.exists("checks/read_type_is.PE"):
 
     assert n == 2, "Input must contain 2 (paired-end) elements."
 
-    print("Second/Paired sample is hidden from workflow at this point- this is on purpose.")
+    print("Second/Paired sample is hidden from workflow at this point - this is on purpose.")
     print("For more info see: workflow/build/MuWU_cutadapt/wrapper.py")
 
     shell(
@@ -51,6 +49,3 @@ if path.exists("checks/read_type_is.PE"):
         " > {snakemake.output.qc} {log}"
     )
 
-
-#else:
-#    print("bah")

@@ -19,8 +19,9 @@ include: "rules/ref_utils.smk"
 include: "rules/ref.smk"
 #include: "rules/quality_control.smk"
 include: "rules/trimming.smk"
-#include: "rules/mapping.smk"
-
+include: "rules/mapping.smk"
+include: "rules/duplicate_removal.smk"
+include: "rules/indexes_bam2sam.smk"
 
 rule all:
     input:
@@ -34,13 +35,35 @@ rule all:
 #        Checkpoint_GetReadType("checks/determine_read_type_check.{rt}.txt"),
 #        Checkpoint_GetReadType("{rt}.works.txt"),
         #ref - fasta, annotation, (report)
-        "resources/annotation.gbff",
-        "resources/assembly_report.txt",
+        #"resources/annotation",
+        #"resources/assembly_report.txt",
+        #"resources/annotation.gff3",
+        #"resources/split_annotation.gff3",
+        #"resources/split_genome.fa",
+        #"resources/renaming_scheme.txt",
+        # final otput for both reference download paths 
+        #"resources/genome.fa",
+        #"resources/annotation",
+        # final annotation table reagrdless of rule path for annotation file
+        "resources/final_annotation_table",
         #cutadapt
         #Checkpoint_ReadSampleSheet_GRID("cut_reads/{sample}.fq1.gz"),
         #Checkpoint_ReadSampleSheet_GRID("cut_reads/{sample}.qc.txt"),
         #trimmomatic
-        Checkpoint_ReadSampleSheet_GRID("trimmed_reads/{sample}.forward_paired.fq.gz"),
+        #Checkpoint_ReadSampleSheet_GRID("trimmed_reads/{sample}.forward_paired.fq.gz"),
         #fastqc
         #"fastqc/raw/{sample}_{paired}.html",
         #"fastqc/raw/{sample}_{paired}_fastqc.zip"
+        #bowtie 2 index
+        #multiext(
+        #    "resources/genome",
+        #    ".1.bt2", ".2.bt2", ".3.bt2", ".4.bt2", ".rev.1.bt2", ".rev.2.bt2",
+        #),
+        #bowtie2 align & convert to sorted bam
+        #Checkpoint_ReadSampleSheet_GRID("results/mapped/{sample}.sam"),
+        #Checkpoint_ReadSampleSheet_GRID("results/mapped/{sample}.sorted.bam"),
+        Checkpoint_ReadSampleSheet_GRID("results/mapped/{sample}.sorted.bam.bai"),
+        # picard + samtools view conversion to SAM format
+        #Checkpoint_ReadSampleSheet_GRID("results/dedup/{sample}.bam"),
+        Checkpoint_ReadSampleSheet_GRID("results/dedup/{sample}.bam.bai"),
+        Checkpoint_ReadSampleSheet_GRID("results/dedup_sam/{sample}.sam"),           
