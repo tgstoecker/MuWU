@@ -1,20 +1,33 @@
-x = 2
+# assign directory containing sequencing reads as specified in config.yaml
+fasta = config["fasta"]
+annotation = config["annotation"]
+assembly_report = config["assembly_report"]
 
-def get_E(x):
-    E = x + 1
-    return E
 
-D = 2
+if is_gbff(annotation):
 
-if D == get_E(x):
-    rule test_conditional:
+    rule GenBank_download:
         output:
-            touch("bla")
+            genbank="resources/annotation",
+            assembly_report="resources/assembly_report.txt",
+#    conda:
+#        "download.yaml"
+        run:
+            fasta_annotation_handling(fasta, annotation, assembly_report)
 
-if D < get_E(x):
-    rule test_conditional2:
+
+    rule GenBan2gff3:
+
+
+
+
+### IF USER DID NOT SUPPYLY GENBANK FILE BUT GFF(3) OR GTF  ###
+if not is_gbff(annotation):
+    rule fasta_annotation_download:
         output:
-            touch("bla"),
-            touch("hidden_touch")
-
-
+            genbank="resources/annotation",
+            assembly_report="resources/genome.fa",
+#    conda:
+#        "download.yaml"
+        run:
+            fasta_annotation_handling(fasta, annotation, assembly_report)

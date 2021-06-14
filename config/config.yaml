@@ -1,16 +1,22 @@
-genome: Zea_mays.B73_RefGen_v4.dna.toplevel
-annotation: Zea_mays.B73_RefGen_v4.50
-
 #### download of fasta and annotation files #####
 ### should reference assembly (.fasta/.fa) and annotation (.gff3) be downloaded at runtime?
-download_fasta: yes or no
-download_annotation: yes or no
+#download_fasta: yes or no
+#download_annotation: yes or no
 
-## provide the links for download here ##
+#### Path to reference assembly in Fasta format and a corresponding annotation file ####
+### If a URL is provided - the file will be downloaded and used automatically
+### MuWU supports the following annotation file formats: .gff3(.gz), .gff(.gz), .gtf(.gz), .gbff(.gz), .dat(.gz) (GenBank)
+### important: if a GenBank annotation is supplied both fasta and annotation are created from the file (so the user does not need to supply a fasta file)
+### also important: we advise to search and download GenBank at NCBI (https://ftp.ncbi.nlm.nih.gov/genomes/ - genbank/ or refseq/) since .gbff files here exist for complete genomes,
+###                 whereas ensembl stores individual chromosomes in dat.gz which first have to be merged.
+###                 Our second recommendation is to use genbank/ under NCBI's directories as the gene name/locus tag refers to most commonly used ones and is not abstracted further under "gene_synonyms" like under refseq/.
+###                 Finally, in case of GenBank format we also require an assembly_report.txt to be submitted under "report:".
+###                 This is required so that we can rename the chromosome column entries to a proper chromosome name instead of the Assigned-Molecule name.
 fasta: ftp://ftp.ensemblgenomes.org/pub/plants/release-50/fasta/zea_mays/dna/Zea_mays.B73_RefGen_v4.dna.toplevel.fa.gz
-gtf: ftp://ftp.ensemblgenomes.org/pub/plants/release-50/gtf/zea_mays/Zea_mays.B73_RefGen_v4.50.gtf.gz
-gff3: ftp://ftp.ensemblgenomes.org/pub/plants/release-50/gff3/zea_mays/Zea_mays.B73_RefGen_v4.50.gff3.gz
-genbank: 
+#annotation: ftp://ftp.ensemblgenomes.org/pub/plants/release-50/gtf/zea_mays/Zea_mays.B73_RefGen_v4.50.gtf.gz
+annotation: https://ftp.ncbi.nlm.nih.gov/genomes/refseq/plant/Zea_mays/all_assembly_versions/suppressed/GCF_000005005.2_B73_RefGen_v4/GCF_000005005.2_B73_RefGen_v4_genomic.gbff.gz
+assembly_report: https://ftp.ncbi.nlm.nih.gov/genomes/refseq/plant/Zea_mays/all_assembly_versions/suppressed/GCF_000005005.2_B73_RefGen_v4/GCF_000005005.2_B73_RefGen_v4_assembly_report.txt
+
 
 #### Grid design or generic insertion identification approach - choices: 'GRID' or 'GENERIC'  ####
 ### using the GRID approach requires a suitable stock matrix .xlsx file (under config/stock_matrix), with which design and sample names are inferred
@@ -19,13 +25,46 @@ genbank:
 ## in either case please also provide location of your reads in your file system - read_dir:
 approach: GRID
 #approach: GENERIC
-reads_dir:
+
+# this example implies that the user created a directory "rawreads" in the main workflow directory
+# any location on the file system works (be careful with relative paths!)
+reads_dir: rawreads
 
 
 #### change adapter and transposon sequences that should be removed  ####
-# removal will be performed by cutadapt - explain how to enter + link to manual
+# removal is performed by cutadapt - link to manual: https://cutadapt.readthedocs.io/en/stable/index.html
+# cutadapt allows us to precisely remove every kind of adapter or prev. known sequence (-a/g/A/G/^ options)
 # in the MuSeq approach what should remain is TSD+genomic DNA; modify to your needs
-# choices here reflect BonnMu requirements - https://academic.oup.com/plphys/article/184/2/620/6117865:
+# choices here reflect BonnMu experimental setup - https://academic.oup.com/plphys/article/184/2/620/6117865:
+# first two lines correspond to the Mu-TIR sequence; after that Illumina adapters, U adapter
+# We use yaml folded style (>) so indention in each line will be ignored. 
+# (-) "block chomping indicator" to eliminate the trailing line break, that would normally be inserted.
+#adapters: >-
+#          -a GAGATAATTGCCATTATRGAMGAAGAGVG
+#          -G ^CBCTCTTCKTCYATAATGGCAATTATCTC
+#          -g ^AATGATACGGCGACCACCGAGATCTACACTCTTTCCCTACACGACGCTCTTCCGATCT
+#          -g ^GCCTTGGCAGTCTCAG
+#          -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC
+#          -a ATCTCGTATGCCGTCTTCTGCTTG
+#          -G ^CAAGCAGAAGACGGCATACGAGAT
+#          -G ^GTGACTGGAGTTCAGACGTGTGCTCTTCCGATCTC
+#          -A CTGAGACTGCCAAGGC
+#          -A AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT
+
+#single-end test
+adapters: >-
+          -a GAGATAATTGCCATTATRGAMGAAGAGVG
+          -g ^AATGATACGGCGACCACCGAGATCTACACTCTTTCCCTACACGACGCTCTTCCGATCT
+          -g ^GCCTTGGCAGTCTCAG
+          -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC
+          -a ATCTCGTATGCCGTCTTCTGCTTG
+
+
+# further options to pass to cutadapt; depending on your specific needs
+# -n (--times) option = remove # adapters at most from a read (default is 1)
+# --minimum-length; self explanatory
+# -e == maximum error rate
+cutadapt_extra: "-n 8 --minimum-length 12 -e 0.2"
 
 
 #### change TSD length used for identification algorithm - default is 9 = Mutator transposons  ####
@@ -34,7 +73,7 @@ reads_dir:
 #### change amount of support needed to call insertion - default: 2  ####
 
 
-#### add upstream or downstream bases to gene models to include regulatory regions, promoter sequences etc. ####
+#### add upstream or downstream bases (integer) to gene models to include regulatory regions, promoter sequences etc. ####
 ### leave empty if this is not wished:
 extension:
 

@@ -15,6 +15,7 @@ reads_dir = config["reads_dir"]
 
 
 include: "rules/common.smk"
+include: "rules/ref_utils.smk"
 include: "rules/ref.smk"
 #include: "rules/quality_control.smk"
 include: "rules/trimming.smk"
@@ -32,6 +33,9 @@ rule all:
 #        "works.txt",
 #        Checkpoint_GetReadType("checks/determine_read_type_check.{rt}.txt"),
 #        Checkpoint_GetReadType("{rt}.works.txt"),
+        #ref - fasta, annotation, (report)
+        "resources/annotation.gbff",
+        "resources/assembly_report.txt",
         #cutadapt
         #Checkpoint_ReadSampleSheet_GRID("cut_reads/{sample}.fq1.gz"),
         #Checkpoint_ReadSampleSheet_GRID("cut_reads/{sample}.qc.txt"),
