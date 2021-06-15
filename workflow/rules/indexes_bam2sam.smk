@@ -13,9 +13,9 @@ if config["approach"] == "GRID":
 
     rule index_sorted_bams_without_dups:
         input:
-            "results/dedup/{sample}.bam"
+            "results/dedup/{sample}.dedup.bam"
         output:
-            "results/dedup/{sample}.bam.bai"
+            "results/dedup/{sample}.dedup.bam.bai"
         params:
             "" # optional params string
         threads:
@@ -25,11 +25,11 @@ if config["approach"] == "GRID":
 
     rule convert_bam_to_sam:
         input:
-            "results/dedup/{sample}.bam"
+            "results/dedup/{sample}.dedup.bam"
         output:
-            "results/dedup_sam/{sample}.sam"
+            "results/dedup_sam/{sample}.dedup.sam"
         log:
-            "logs/dedup_sam/{sample}.log"
+            "logs/dedup_sam/{sample}.dedup.log"
         params:
             extra="" # optional params string
         wrapper:

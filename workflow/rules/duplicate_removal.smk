@@ -7,10 +7,10 @@ if config["approach"] == "GRID":
     # of marking duplicates on separate read groups for a sample
     # and then merging
         output:
-            bam="results/dedup/{sample}.bam",
-            metrics="results/dedup/{sample}.metrics.txt"
+            bam="results/dedup/{sample}.dedup.bam",
+            metrics="results/dedup/{sample}.dedup.metrics.txt"
         log:
-            "logs/picard/dedup/{sample}.log"
+            "logs/picard/dedup/{sample}.dedup.log"
         params:
             extra="REMOVE_DUPLICATES=true VALIDATION_STRINGENCY=LENIENT"
     # optional specification of memory usage of the JVM that snakemake will respect with global

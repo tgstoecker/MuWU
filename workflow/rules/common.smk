@@ -65,8 +65,22 @@ if config["approach"] == "GRID":
             return [ f"{rd}/{s.base_name}{s.fq_1_end}" ]    
          
 
-        
+    ## regardless of PE or SE for fastqc we need simply all samples to be returned
+    def get_fastqs_fastqc_1_GRID(wildcards):
+        rd = reads_dir
+        samples_df = pd.read_csv("config/grid_sample_sheet.tsv", dtype=str, sep="\t").set_index(["base_name"], drop=False)
 
+        s = samples_df.loc[ (wildcards.sample), ["base_name", "fq_1_end"] ].dropna()
+        return [ f"{rd}/{s.base_name}{s.fq_1_end}" ]
+
+    def get_fastqs_fastqc_2_GRID(wildcards):
+        rd = reads_dir
+        samples_df = pd.read_csv("config/grid_sample_sheet.tsv", dtype=str, sep="\t").set_index(["base_name"], drop=False)
+
+        # if fq_2_end is a column we continue in paired-end mode
+        if 'fq_2_end' in samples_df.columns:
+            s = samples_df.loc[ (wildcards.sample), ["base_name", "fq_2_end"] ].dropna()
+            return [ f"{rd}/{s.base_name}{s.fq_2_end}" ]
 
 
 #### ONLY FOR GENERAL ANALYSIS - NO STOCK MATRIX ####

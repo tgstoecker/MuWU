@@ -1,6 +1,7 @@
 channels:
   - bioconda
   - conda-forge
-  - defaults
 dependencies:
-  - cutadapt ==2.10
+  - fastqc==0.11.9
+
+
