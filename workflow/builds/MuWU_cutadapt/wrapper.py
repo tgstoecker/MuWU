@@ -43,7 +43,7 @@ if path.exists("checks/read_type_is.PE"):
         " {snakemake.params.extra}"
         " -o {snakemake.output.fastq1}"
 #        " -p {snakemake.output.fastq2}"
-        " -p cut_reads/{snakemake.wildcards.sample}.fq2.gz"
+        " -p results/cut_reads/{snakemake.wildcards.sample}.fq2.gz"
         " -j {snakemake.threads}"
         " {snakemake.input.fastq_files}"
         " > {snakemake.output.qc} {log}"

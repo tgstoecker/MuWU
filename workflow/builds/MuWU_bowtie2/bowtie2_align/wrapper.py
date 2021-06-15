@@ -24,7 +24,7 @@ if path.exists("checks/read_type_is.PE"):
 
     shell(
         "(bowtie2 --threads {snakemake.threads} {extra} "
-        "-x {snakemake.params.index} -1 {snakemake.input.r1} -2 trimmed_reads/{snakemake.wildcards.sample}.reverse_paired.fq.gz "
+        "-x {snakemake.params.index} -1 {snakemake.input.r1} -2 results/trimmed_reads/{snakemake.wildcards.sample}.reverse_paired.fq.gz "
         "| samtools view -Sbh -o {snakemake.output[0]} -) {log}"
     )
 

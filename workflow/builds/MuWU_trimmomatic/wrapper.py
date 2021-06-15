@@ -134,12 +134,12 @@ if path.exists("checks/read_type_is.PE"):
 
     # Distribute threads
     # some trickery here - we construct the second file by hand
-    input_files = [snakemake.input.r1, "cut_reads/" + snakemake.wildcards.sample + ".fq2.gz"]
+    input_files = [snakemake.input.r1, "results/cut_reads/" + snakemake.wildcards.sample + ".fq2.gz"]
     output_files = [
         snakemake.output.r1,
-        "trimmed_reads/" + snakemake.wildcards.sample + ".forward_unpaired.fq.gz",
-        "trimmed_reads/" + snakemake.wildcards.sample + ".reverse_paired.fq.gz",
-        "trimmed_reads/" + snakemake.wildcards.sample + ".reverse_unpaired.fq.gz",
+        "results/trimmed_reads/" + snakemake.wildcards.sample + ".forward_unpaired.fq.gz",
+        "results/trimmed_reads/" + snakemake.wildcards.sample + ".reverse_paired.fq.gz",
+        "results/trimmed_reads/" + snakemake.wildcards.sample + ".reverse_unpaired.fq.gz",
     ]
 
     trimmomatic_threads, input_threads, output_threads = distribute_threads(
