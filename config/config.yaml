@@ -1,8 +1,3 @@
-#### download of fasta and annotation files #####
-### should reference assembly (.fasta/.fa) and annotation (.gff3) be downloaded at runtime?
-#download_fasta: yes or no
-#download_annotation: yes or no
-
 #### Path to reference assembly in Fasta format and a corresponding annotation file ####
 ### If a URL is provided - the file will be downloaded and used automatically
 ### MuWU supports the following annotation file formats: .gff3(.gz), .gff(.gz), .gtf(.gz), .gbff(.gz), .dat(.gz) (GenBank)
@@ -66,12 +61,13 @@ adapters: >-
 # -e == maximum error rate
 cutadapt_extra: "-n 8 --minimum-length 12 -e 0.2"
 
+#### change length of overlap region (start/end of reads) used for identification algorithm ####
+### - default is 9 = Mutator transposons  ###
+overlap_size: 9
 
-#### change TSD length used for identification algorithm - default is 9 = Mutator transposons  ####
-
-
-#### change amount of support needed to call insertion - default: 2  ####
-
+#### change minimum amount of support needed to call insertion - default: 2  ####
+### in this example this would necessitate at least two reads that end & 2 reads which start with the overlap (TSD) ###
+overlap_support: 2
 
 #### add upstream or downstream bases (integer) to gene models to include regulatory regions, promoter sequences etc. ####
 ### leave empty if this is not wished:

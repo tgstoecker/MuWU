@@ -7,7 +7,7 @@ if config["approach"] == "GRID":
              contigs=Checkpoint_ReadSampleSheet_GRID("results/dedup_sam/{sample}.dedup.sam")
         output:
             # Don't use the trailing "/" for directories in your rules
-            assembly=directory("results/MuSeq_table")
+            assembly=directory("results/insertions_table")
         run:
             os.makedirs(output.assembly)
             for contig in input.contigs:
@@ -19,13 +19,18 @@ if config["approach"] == "GRID":
 
     rule Identify_Mu_insertions:
         input:
-            "results/MuSeq_table"
+            file_loc="results/insertions_table",
+            grid_sample_sheet="config/grid_sample_sheet.tsv",
         output:
-            one="results/MuSeq_table_final/MuSeq_FGS.csv",
-            two="results/MuSeq_table_final/SLI-MuSeq_FGS.csv"
+            one="results/insertions_table_final/all_identified_insertions.csv",
+            two="results/insertions_table_final/germinal_insertions.csv",
+        params:
+            # overlap_size refers to bp length of 
+            # in the MuSeq approach as part of BonnMu this is 9 - as is characteristic for Mutator transposons
+            overlap_size = config["overlap_size"],
+            overlap_support = config["overlap_support"],
+            approach = config["approach"],
         threads: config["threads_identify_Mu_insertions"]
-        benchmark:
-            "benchmarks/Mu_insertions-benchmark.txt"
         conda: "../envs/identification.yaml"
-        shell:
-            "python workflow/scripts/Mu_insertions.py -c {threads} --both -i results/MuSeq_table -o MuSeq_FGS.csv"
+        script:
+            "../scripts/insertions.py"

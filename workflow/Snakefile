@@ -17,11 +17,12 @@ reads_dir = config["reads_dir"]
 include: "rules/common.smk"
 include: "rules/ref_utils.smk"
 include: "rules/ref.smk"
-#include: "rules/quality_control.smk"
+include: "rules/quality_control.smk"
 include: "rules/trimming.smk"
 include: "rules/mapping.smk"
 include: "rules/duplicate_removal.smk"
 include: "rules/indexes_bam2sam.smk"
+include: "rules/insertion_identification.smk"
 
 rule all:
     input:
@@ -52,8 +53,11 @@ rule all:
         #trimmomatic
         #Checkpoint_ReadSampleSheet_GRID("trimmed_reads/{sample}.forward_paired.fq.gz"),
         #fastqc
-        #"fastqc/raw/{sample}_{paired}.html",
-        #"fastqc/raw/{sample}_{paired}_fastqc.zip"
+        #Checkpoint_ReadSampleSheet_GRID("results/fastqc/raw/{sample}_1_fastqc.html"),
+        #Checkpoint_ReadSampleSheet_GRID("results/fastqc/raw/{sample}_1_fastqc.zip"),
+        #trimmed fastqc 
+        #Checkpoint_ReadSampleSheet_GRID("results/fastqc/trimmed/{sample}_forward_paired_fastqc.html"),
+        #Checkpoint_ReadSampleSheet_GRID("results/fastqc/trimmed/{sample}_forward_paired_fastqc.zip"),
         #bowtie 2 index
         #multiext(
         #    "resources/genome",
@@ -64,6 +68,10 @@ rule all:
         #Checkpoint_ReadSampleSheet_GRID("results/mapped/{sample}.sorted.bam"),
         Checkpoint_ReadSampleSheet_GRID("results/mapped/{sample}.sorted.bam.bai"),
         # picard + samtools view conversion to SAM format
-        #Checkpoint_ReadSampleSheet_GRID("results/dedup/{sample}.bam"),
-        Checkpoint_ReadSampleSheet_GRID("results/dedup/{sample}.bam.bai"),
-        Checkpoint_ReadSampleSheet_GRID("results/dedup_sam/{sample}.sam"),           
+        #Checkpoint_ReadSampleSheet_GRID("results/dedup/{sample}.dedup.bam"),
+        Checkpoint_ReadSampleSheet_GRID("results/dedup/{sample}.dedup.bam.bai"),
+        Checkpoint_ReadSampleSheet_GRID("results/dedup_sam/{sample}.dedup.sam"),           
+        #multiqc
+        "results/multiqc/multiqc.html",
+        #Mu identification results
+        "results/insertions_table_final/all_identified_insertions.csv",
