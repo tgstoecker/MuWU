@@ -92,6 +92,22 @@ elif config["approach"] == "GENERIC":
                 expand("results/fastqc/raw/{sample}_1_fastqc.zip", sample=SAMPLES),
                 expand("results/fastqc/raw/{sample}_2_fastqc.html", sample=SAMPLES),
                 expand("results/fastqc/raw/{sample}_2_fastqc.zip", sample=SAMPLES),
+                #cutadapt
+#                expand("results/cut_reads/{sample}.1.fq.gz", sample=SAMPLES),
+#                expand("results/cut_reads/{sample}.2.fq.gz", sample=SAMPLES),
+#                expand("results/cut_reads/{sample}.qc.txt", sample=SAMPLES),
+                #trimmomatic
+                expand("results/trimmed_reads/{sample}.1.fq.gz", sample=SAMPLES),
+                expand("results/trimmed_reads/{sample}.2.fq.gz", sample=SAMPLES),
+                #fastqc trimmed
+                expand("results/fastqc/trimmed/{sample}_1_fastqc.html", sample=SAMPLES),
+                expand("results/fastqc/trimmed/{sample}_1_fastqc.zip", sample=SAMPLES),
+                expand("results/fastqc/trimmed/{sample}_2_fastqc.html", sample=SAMPLES),
+                expand("results/fastqc/trimmed/{sample}_2_fastqc.zip", sample=SAMPLES),
+                #bowtie2 align
+                expand("results/mapped/{sample}.sam", sample=SAMPLES),
+                #samtools; SAM to sorted BAM
+                expand("results/mapped/{sample}.sorted.bam", sample=SAMPLES),
 
 
     elif is_single_end_GENERIC_experiment(SAMPLES):
@@ -101,3 +117,16 @@ elif config["approach"] == "GENERIC":
                 #fastqc
                 expand("results/fastqc/raw/{sample}_1_fastqc.html", sample=SAMPLES),
                 expand("results/fastqc/raw/{sample}_1_fastqc.zip", sample=SAMPLES),
+                #cutadapt
+#                expand("results/cut_reads/{sample}.1.fq.gz", sample=SAMPLES),
+#                expand("results/cut_reads/{sample}.qc.txt", sample=SAMPLES),
+                #trimmomatic
+                expand("results/trimmed_reads/{sample}.1.fq.gz", sample=SAMPLES),
+                #trimmed fastqc
+                expand("results/fastqc/trimmed/{sample}_1_fastqc.html", sample=SAMPLES),
+                expand("results/fastqc/trimmed/{sample}_1_fastqc.zip", sample=SAMPLES),
+                #bowtie2 align
+                expand("results/mapped/{sample}.sam", sample=SAMPLES),
+                #samtools; SAM to sorted BAM
+                expand("results/mapped/{sample}.sorted.bam", sample=SAMPLES),
+

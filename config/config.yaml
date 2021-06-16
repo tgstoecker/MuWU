@@ -18,8 +18,8 @@ assembly_report:
 ### using the GENERIC approach requires a samples.tsv file (under config/), with which sample names, SE vs. PE read type and optionally different conditions are inferred
 ### conditions in the generic approach allow for the parallel analysis of different sets of input data that should be kept seperate - seperate final output files (e.g. different treatments etc.)
 ## in either case please also provide location of your reads in your file system - read_dir:
-approach: GRID
-#approach: GENERIC
+#approach: GRID
+approach: GENERIC
 
 # this example implies that the user created a directory "rawreads" in the main workflow directory
 # any location on the file system works (be careful with relative paths!)
@@ -34,25 +34,25 @@ reads_dir: rawreads
 # corresponding to the Mu-TIR sequence; after that Illumina adapters, U adapter
 # We use yaml folded style (>) so indention in each line will be ignored. 
 # (-) "block chomping indicator" to eliminate the trailing line break, that would normally be inserted.
-adapters: >-
-        -a GAGATAATTGCCATTATRGAMGAAGAGVG
-        -G ^CBCTCTTCKTCYATAATGGCAATTATCTC
-        -g ^AATGATACGGCGACCACCGAGATCTACACTCTTTCCCTACACGACGCTCTTCCGATCT
-        -g ^GCCTTGGCAGTCTCAG
-        -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC
-        -a ATCTCGTATGCCGTCTTCTGCTTG
-        -G ^CAAGCAGAAGACGGCATACGAGAT
-        -G ^GTGACTGGAGTTCAGACGTGTGCTCTTCCGATCTC
-        -A CTGAGACTGCCAAGGC
-        -A AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT
+#adapters: >-
+#        -a GAGATAATTGCCATTATRGAMGAAGAGVG
+#        -G ^CBCTCTTCKTCYATAATGGCAATTATCTC
+#        -g ^AATGATACGGCGACCACCGAGATCTACACTCTTTCCCTACACGACGCTCTTCCGATCT
+#        -g ^GCCTTGGCAGTCTCAG
+#        -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC
+#        -a ATCTCGTATGCCGTCTTCTGCTTG
+#        -G ^CAAGCAGAAGACGGCATACGAGAT
+#        -G ^GTGACTGGAGTTCAGACGTGTGCTCTTCCGATCTC
+#        -A CTGAGACTGCCAAGGC
+#        -A AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT
 
 #single-end test
-#adapters: >-
-#          -a GAGATAATTGCCATTATRGAMGAAGAGVG
-#          -g ^AATGATACGGCGACCACCGAGATCTACACTCTTTCCCTACACGACGCTCTTCCGATCT
-#          -g ^GCCTTGGCAGTCTCAG
-#          -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC
-#          -a ATCTCGTATGCCGTCTTCTGCTTG
+adapters: >-
+          -a GAGATAATTGCCATTATRGAMGAAGAGVG
+          -g ^AATGATACGGCGACCACCGAGATCTACACTCTTTCCCTACACGACGCTCTTCCGATCT
+          -g ^GCCTTGGCAGTCTCAG
+          -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC
+          -a ATCTCGTATGCCGTCTTCTGCTTG
 
 
 # further options to pass to cutadapt; depending on your specific needs
@@ -60,6 +60,11 @@ adapters: >-
 # --minimum-length; self explanatory
 # -e == maximum error rate
 cutadapt_extra: "-n 8 --minimum-length 12 -e 0.2"
+
+
+#### Trimmomatic trimming options  ####
+trimmer: [SLIDINGWINDOW:4:15 MINLEN:12]
+compression_level: "-9"
 
 #### change length of overlap region (start/end of reads) used for identification algorithm ####
 ### - default is 9 = Mutator transposons  ###

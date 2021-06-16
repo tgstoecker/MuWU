@@ -45,8 +45,93 @@ if config["approach"] == "GRID":
         log:
             "logs/trimmomatic/{sample}.overall.log"
         params:
-            trimmer=["SLIDINGWINDOW:4:15 MINLEN:12"],
-            compression_level="-9"
+            trimmer=config["trimmer"],
+            compression_level=config["compression_level"],
         threads: config["threads_trimmomatic"]
         wrapper:
             "file:workflow/builds/MuWU_trimmomatic"
+
+
+
+#### ONLY FOR GENERIC ANALYSIS - NO STOCK MATRIX ####
+elif config["approach"] == "GENERIC":
+
+    if not is_single_end_GENERIC_experiment(SAMPLES):
+
+        rule cutadapt_PE_GENERIC:
+            input:
+                get_fastqs_GENERIC,
+            output:
+                fastq1="results/cut_reads/{sample}.1.fq.gz",
+                fastq2="results/cut_reads/{sample}.2.fq.gz",
+                qc="results/cut_reads/{sample}.qc.txt"
+            params:
+                adapters = config["adapters"],
+                extra = config["cutadapt_extra"],
+            log:
+                "logs/cutadapt/{sample}.log"
+            threads: config["threads_cutadapt"]
+            wrapper:
+                "0.74.0/bio/cutadapt/pe"
+
+
+        rule trimmomatic_PE_GENERIC:
+            input:
+                r1="results/cut_reads/{sample}.1.fq.gz",
+                r2="results/cut_reads/{sample}.2.fq.gz"
+            output:
+                r1="results/trimmed_reads/{sample}.1.fq.gz",
+                r2="results/trimmed_reads/{sample}.2.fq.gz",
+            # reads where trimming entirely removed the mate
+                r1_unpaired="results/trimmed_reads/{sample}.1.unpaired.fastq.gz",
+                r2_unpaired="results/trimmed_reads/{sample}.2.unpaired.fastq.gz"
+            log:
+                "logs/trimmomatic/{sample}.overall.log"
+            params:
+                trimmer= config["trimmer"],
+                extra="",
+                compression_level=config["compression_level"],
+            threads:
+                config["threads_trimmomatic"]
+            resources:
+                mem_mb=2048
+            wrapper:
+                "0.74.0/bio/trimmomatic/pe"
+
+
+
+    if is_single_end_GENERIC_experiment(SAMPLES):
+
+        rule cutadapt_SE_GENERIC:
+            input:
+                get_fastqs_GENERIC,
+            output:
+                fastq="results/cut_reads/{sample}.1.fq.gz",
+                qc="results/cut_reads/{sample}.qc.txt"
+            params:
+                adapters = config["adapters"],
+                extra = config["cutadapt_extra"],
+            log:
+                "logs/cutadapt/{sample}.log"
+            threads: config["threads_cutadapt"]
+            wrapper:
+                "0.74.0/bio/cutadapt/se"
+
+
+        rule trimmomatic_SE_GENERIC:
+            input:
+                "results/cut_reads/{sample}.1.fq.gz",
+            output:
+                "results/trimmed_reads/{sample}.1.fq.gz",
+            log:
+                "logs/trimmomatic/{sample}.overall.log"
+            params:
+                trimmer= config["trimmer"],
+                extra="",
+                compression_level=config["compression_level"],
+            threads:
+                config["threads_trimmomatic"]
+            resources:
+                mem_mb=2048
+            wrapper:
+                "0.74.0/bio/trimmomatic/se"
