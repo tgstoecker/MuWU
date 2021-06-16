@@ -47,3 +47,34 @@ if config["approach"] == "GRID":
             "logs/multiqc/multiqc.log"
         wrapper:
             "0.74.0/bio/multiqc"
+
+
+#### ONLY FOR GENERIC ANALYSIS - NO STOCK MATRIX ####
+elif config["approach"] == "GENERIC":
+
+    rule fastqc_1_GENERIC:
+        input:
+            get_fastqs_fastqc_1_GENERIC,
+        output:
+            html="results/fastqc/raw/{sample}_1_fastqc.html",
+            zip="results/fastqc/raw/{sample}_1_fastqc.zip" # suffix _fastqc.zip necessary for multiqc to find the file
+        params: "--quiet"
+        threads: config["threads_fastqc"]
+        log:
+            "logs/fastqc/raw/{sample}_1.log"
+        wrapper:
+            "0.74.0/bio/fastqc"
+
+    if not is_single_end_GENERIC_experiment(SAMPLES):
+        rule fastqc_2_GENERIC:
+            input:
+                get_fastqs_fastqc_2_GENERIC,
+            output:
+                html="results/fastqc/raw/{sample}_2_fastqc.html",
+                zip="results/fastqc/raw/{sample}_2_fastqc.zip" # suffix _fastqc.zip necessary for multiqc to find the file
+            params: "--quiet"
+            threads: config["threads_fastqc"]
+            log:
+                "logs/fastqc/raw/{sample}_2.log"
+            wrapper:
+                "0.74.0/bio/fastqc"

@@ -24,8 +24,11 @@ include: "rules/duplicate_removal.smk"
 include: "rules/indexes_bam2sam.smk"
 include: "rules/insertion_identification.smk"
 
-rule all:
-    input:
+
+#### ONLY FOR GRID DESIGN (STOCK MATRIX) BASED ANALYSIS ####
+if config["approach"] == "GRID":
+    rule all:
+        input:
 #OLD pipeline
 #        "multiqc/multiqc.html",
 #        expand("sorted_alignments/{sample}.sorted.bam.bai", sample=SAMPLES),
@@ -45,8 +48,8 @@ rule all:
         # final otput for both reference download paths 
         #"resources/genome.fa",
         #"resources/annotation",
-        # final annotation table reagrdless of rule path for annotation file
-        "resources/final_annotation_table",
+            # final annotation table reagrdless of rule path for annotation file
+            "resources/final_annotation_table",
         #cutadapt
         #Checkpoint_ReadSampleSheet_GRID("cut_reads/{sample}.fq1.gz"),
         #Checkpoint_ReadSampleSheet_GRID("cut_reads/{sample}.qc.txt"),
@@ -66,12 +69,35 @@ rule all:
         #bowtie2 align & convert to sorted bam
         #Checkpoint_ReadSampleSheet_GRID("results/mapped/{sample}.sam"),
         #Checkpoint_ReadSampleSheet_GRID("results/mapped/{sample}.sorted.bam"),
-        Checkpoint_ReadSampleSheet_GRID("results/mapped/{sample}.sorted.bam.bai"),
+            Checkpoint_ReadSampleSheet_GRID("results/mapped/{sample}.sorted.bam.bai"),
         # picard + samtools view conversion to SAM format
         #Checkpoint_ReadSampleSheet_GRID("results/dedup/{sample}.dedup.bam"),
-        Checkpoint_ReadSampleSheet_GRID("results/dedup/{sample}.dedup.bam.bai"),
-        Checkpoint_ReadSampleSheet_GRID("results/dedup_sam/{sample}.dedup.sam"),           
-        #multiqc
-        "results/multiqc/multiqc.html",
-        #Mu identification results
-        "results/insertions_table_final/all_identified_insertions.csv",
+            Checkpoint_ReadSampleSheet_GRID("results/dedup/{sample}.dedup.bam.bai"),
+            Checkpoint_ReadSampleSheet_GRID("results/dedup_sam/{sample}.dedup.sam"),           
+            #multiqc
+            "results/multiqc/multiqc.html",
+            #Mu identification results
+            "results/insertions_table_final/all_identified_insertions.csv",
+
+
+#### ONLY FOR GENERIC ANALYSIS - NO STOCK MATRIX ####
+elif config["approach"] == "GENERIC":
+
+    if not is_single_end_GENERIC_experiment(SAMPLES):
+
+        rule all:
+            input:
+                #fastqc
+                expand("results/fastqc/raw/{sample}_1_fastqc.html", sample=SAMPLES),
+                expand("results/fastqc/raw/{sample}_1_fastqc.zip", sample=SAMPLES),
+                expand("results/fastqc/raw/{sample}_2_fastqc.html", sample=SAMPLES),
+                expand("results/fastqc/raw/{sample}_2_fastqc.zip", sample=SAMPLES),
+
+
+    elif is_single_end_GENERIC_experiment(SAMPLES):
+
+        rule all:
+            input:
+                #fastqc
+                expand("results/fastqc/raw/{sample}_1_fastqc.html", sample=SAMPLES),
+                expand("results/fastqc/raw/{sample}_1_fastqc.zip", sample=SAMPLES),
