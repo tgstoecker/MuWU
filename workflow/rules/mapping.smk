@@ -39,7 +39,7 @@ elif config["approach"] == "GENERIC":
 
     if not is_single_end_GENERIC_experiment(SAMPLES):
 
-        rule bowtie2_PE_GRID:
+        rule bowtie2_PE_GENERIC:
             input:
                 sample=["results/trimmed_reads/{sample}.1.fq.gz", "results/trimmed_reads/{sample}.2.fq.gz"],
                 idx=multiext(
@@ -60,7 +60,7 @@ elif config["approach"] == "GENERIC":
 
     if is_single_end_GENERIC_experiment(SAMPLES):
 
-        rule bowtie2_SE_GRID:
+        rule bowtie2_SE_GENERIC:
             input:
                 sample=["results/trimmed_reads/{sample}.1.fq.gz"],
                 idx=multiext(

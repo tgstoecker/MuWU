@@ -5,7 +5,7 @@
 # Tyll Stoecker & Lena Altrogge                                       #
 # tyll.stoecker@uni-bonn.de                                           #
 #                                                                     #
-# 15.06.2021                                                          #
+# 10.03.2021                                                          #
 #                                                                     #
 #####################################################################
 
@@ -15,75 +15,47 @@ import numpy as np
 import multiprocessing as mp
 
 # get snakemake variables and options
-path = str(snakemake.input.file_loc)
-OutputFile = "all_identified_insertions.csv"
-num_processors = snakemake.threads
-overlap_size = snakemake.params.overlap_size
-threshold = snakemake.params.overlap_support
-if snakemake.params.approach == "GRID":
-    both = True
-    grid_sample_sheet = pd.read_csv(snakemake.input.grid_sample_sheet, sep="\t")[['dim','base_name']]
-elif snakemake.params.approach == "GENERIC":
-    both = False
-
-
-
-print("Insertions will be detected with the following options:")
-print("######################################################")
-print("Input directory:", path)
-print("Output files:", OutputFile, "germinal_insertions.csv")
-print("# of processors that will be used:", num_processors)
-print("Overlap size:", overlap_size)
-print("Min. overlap support", threshold)
-print(snakemake.params.approach, "based approach chosen:")
-if both:
-    print("A seperate file with only germinal insertions will be produced.")
-    print("Using generated sample sheet of experimental grid design to determine Row & Column samples:")
-    print(grid_sample_sheet)
-else:
-    print("MuWU grid based germinal insertion detection will not be performed.")
-    print("To detect germline insertion use the GRID based approach.")
 
 
 # Help Message
 
-#usage = "Usage: %prog --single/both -c Cores -i Inputfile -o Outputfile [Options]"
+usage = "Usage: %prog --single/both -c Cores -i Inputfile -o Outputfile [Options]"
 
 # Parse Input Parameter
 
-#parser = optparse.OptionParser(usage=usage)
-#parser.add_option('-i', '--input',
-#    dest="path", metavar="INPUT",
-#    help="Path to your Input Folder with mapped Mu-Seq reads in SAM Format")
-#parser.add_option('-o', '--output',
-#    metavar="OUTPUTFILE",dest="OutputFile",
-#    help="The name of the Output File")
-##parser.add_option('--all',dest="all",
-##    action='store_true', help="Output all insertions")
-#parser.add_option('--single', action='store_true',
-#    dest="single", help="Output only Single line insertions")
-#parser.add_option('--both', dest="both", action='store_true',
-#    help="Output all AND Single line insertions in two seperate files")
-#parser.add_option('--threshold', default=2,
-#    dest="int", type="int", metavar="INT",
-#    help="How many reads are required to support an insertion site \
-#            on each side? (default=2)")
-#parser.add_option('-c', '--cores', default=4,
-#    metavar="NUM_PROCESSORS",
-#            dest="num_processors",
-#            help="How many processing cores to use (default=4)")
+parser = optparse.OptionParser(usage=usage)
+parser.add_option('-i', '--input',
+    dest="path", metavar="INPUT",
+    help="Path to your Input Folder with mapped Mu-Seq reads in SAM Format")
+parser.add_option('-o', '--output',
+    metavar="OUTPUTFILE",dest="OutputFile",
+    help="The name of the Output File")
+#parser.add_option('--all',dest="all",
+#    action='store_true', help="Output all insertions")
+parser.add_option('--single', action='store_true',
+    dest="single", help="Output only Single line insertions")
+parser.add_option('--both', dest="both", action='store_true',
+    help="Output all AND Single line insertions in two seperate files")
+parser.add_option('--threshold', default=2,
+    dest="int", type="int", metavar="INT",
+    help="How many reads are required to support an insertion site \
+            on each side? (default=2)")
+parser.add_option('-c', '--cores', default=4,
+    metavar="NUM_PROCESSORS",
+            dest="num_processors",
+            help="How many processing cores to use (default=4)")
 
 
-#options, args = parser.parse_args()
+options, args = parser.parse_args()
 
-#path = options.path
-#OutputFile = options.OutputFile
+path = options.path
+OutputFile = options.OutputFile
 #all = options.all
-#single = options.single
-#both = options.both
-#threshold =options.int
+single = options.single
+both = options.both
+threshold =options.int
 #cores option has to be integer not character string!
-#num_processors = int(options.num_processors)
+num_processors = int(options.num_processors)
 
 # Select the Inputfiles
 
@@ -128,10 +100,10 @@ def read_and_process_parallel(files):
         for x in f.Chr.drop_duplicates():
             ftable= f.loc[f['Chr'] == x]
 
-# Find for each End Coordinate Reads that overlap with the overlap_size (9 bp - Mutator transposons)
+# Find for each End Coordinate Reads that overlap with 9 bp
 
             for End in ftable.End.drop_duplicates():
-                ftableStart = ftable.loc[ftable['Start'] == End - (overlap_size - 1)]
+                ftableStart = ftable.loc[ftable['Start'] == End-8]
                 if len(ftableStart.index) >= threshold:
                     ftableStart = ftableStart[['Chr','Start','Sample']]
                     ftableStart['StartReads'] = len(ftableStart.index)
@@ -183,21 +155,15 @@ combined_csv_option_both = combined_csv.sort_values(['Sample','Chr', 'Start'])
 
 #if the --single or --both options are chosen:
 
-if both:
+if options.single or options.both :
     print ('Identifying Single Line Insertions...')
     MuTableSingle = pd.DataFrame(columns=['Chr','Start','End',
                                             'Sample','StartReads','EndReads'])
     combined_csv['combined'] = list(zip(combined_csv.Chr,
                                         combined_csv.Start,
                                         combined_csv.End))
-    # combine combined_csv with grid sample sheet -> do samples belong to row or column
-    combined_csv_grid = pd.merge(combined_csv, grid_sample_sheet, left_on='Sample', right_on='base_name')
-#    fRow=combined_csv[combined_csv['Sample'].str.match('Row')]
-#    fCol=combined_csv[combined_csv['Sample'].str.match('Col')]
-    fRow = combined_csv_grid[(combined_csv_grid['dim'] == 'row')]
-    fRow = fRow.drop(columns = ['dim','base_name'])
-    fCol = combined_csv_grid[(combined_csv_grid['dim'] == 'col')]
-    fCol = fCol.drop(columns = ['dim','base_name'])
+    fRow=combined_csv[combined_csv['Sample'].str.match('Row')]
+    fCol=combined_csv[combined_csv['Sample'].str.match('Col')]
     intersection=set(fRow.combined).intersection(fCol.combined)
 
 # turn set object into list
@@ -274,20 +240,20 @@ if not os.path.exists('../insertions_table'):
     os.makedirs('../insertions_table')
 
 
-#if options.single:
-#    combined_single_csv.to_csv('SLI-'+OutputFile, index = False)
+if options.single:
+    combined_single_csv.to_csv('SLI-'+OutputFile, index = False)
 #    shutil.move('SLI-'+OutputFile, "../insertions_table/",'SLI-'+OutputFile)
 
-if both:
-    combined_single_csv.to_csv('germinal_insertions.csv', index = False)
-    shutil.move('germinal_insertions.csv', "../insertions_table_final/",'germinal_insertions.csv')
+if options.both:
+    combined_single_csv.to_csv('SLI-'+OutputFile, index = False)
+    shutil.move('SLI-'+OutputFile, "../insertions_table_final/",'SLI-'+OutputFile)
 #and
     combined_csv_option_both.to_csv(OutputFile,index = False)
     shutil.move(OutputFile, "../insertions_table_final/",OutputFile)
 
-if not both:
+if not options.single and not options.both:
     combined_csv.to_csv(OutputFile,index = False)
-    shutil.move(OutputFile, "../insertions_table_final/",OutputFile)
+#    shutil.move(OutputFile, "../insertions_table/",OutputFile)
 
 #delete all tmp_files
 
@@ -298,29 +264,29 @@ if 'all_tmp_files' in globals():
         try:
             os.remove(tmp_file)
         except:
-            print("Error while deleting file:", tmp_file)
+            print("Error while deleting file : ", tmp_file)
 
 if 'all_single_tmp_files' in globals():
     for tmp_file in all_single_tmp_files:
         try:
             os.remove(tmp_file)
         except:
-            print("Error while deleting file:", tmp_file)
+            print("Error while deleting file : ", tmp_file)
 
 #Final message
 
-#if options.single:
-#    print("Finished creating output file :",
-#            'SLI-'+OutputFile,
-#                "in directory ../insertions_table")
+if options.single:
+    print("Finished creating output file :",
+            'SLI-'+OutputFile,
+                "in directory ../insertions_table")
 
-if both:
-    print("Finished creating output files:",
-            'germinal_insertions.csv',
+if options.both:
+    print("Finished creating output files :",
+            'SLI-'+OutputFile,
                 "and", OutputFile,
-                    "in directory results/insertions_table_final/")
+                    "in directory ../insertions_table")
 
-if not both:
-    print("Finished creating output file:",
+if not options.single and not options.both:
+    print("Finished creating output file :",
             OutputFile,
-                "in directory results/insertions_table_final/")
+                "in directory ../insertions_table")

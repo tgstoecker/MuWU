@@ -23,6 +23,7 @@ include: "rules/mapping.smk"
 include: "rules/duplicate_removal.smk"
 include: "rules/indexes_bam2sam.smk"
 include: "rules/insertion_identification.smk"
+include: "rules/insertion_annotation.smk"
 
 
 #### ONLY FOR GRID DESIGN (STOCK MATRIX) BASED ANALYSIS ####
@@ -78,6 +79,7 @@ if config["approach"] == "GRID":
             "results/multiqc/multiqc.html",
             #Mu identification results
             "results/insertions_table_final/all_identified_insertions.csv",
+            "results/insertions_table_final/germinal_insertions.csv",
 
 
 #### ONLY FOR GENERIC ANALYSIS - NO STOCK MATRIX ####
@@ -108,6 +110,18 @@ elif config["approach"] == "GENERIC":
                 expand("results/mapped/{sample}.sam", sample=SAMPLES),
                 #samtools; SAM to sorted BAM
                 expand("results/mapped/{sample}.sorted.bam", sample=SAMPLES),
+                #picard + samtools view conversion to SAM format
+                expand("results/dedup_sam/{sample}.dedup.sam", sample=SAMPLES),
+                expand("results/dedup/{sample}.dedup.bam", sample=SAMPLES),
+                #indexes
+                expand("results/mapped/{sample}.sorted.bam.bai", sample=SAMPLES),
+                expand("results/dedup/{sample}.dedup.bam.bai", sample=SAMPLES),
+                #multiqc
+                "results/multiqc/multiqc.html",
+                #insertion identification
+                "results/insertions_table_final/all_identified_insertions.csv",
+                #insertion annotation
+                "results/insertions_table_final/all_identified_insertions_annotated.csv",
 
 
     elif is_single_end_GENERIC_experiment(SAMPLES):
@@ -129,4 +143,17 @@ elif config["approach"] == "GENERIC":
                 expand("results/mapped/{sample}.sam", sample=SAMPLES),
                 #samtools; SAM to sorted BAM
                 expand("results/mapped/{sample}.sorted.bam", sample=SAMPLES),
+                #picard + samtools view conversion to SAM format
+                expand("results/dedup_sam/{sample}.dedup.sam", sample=SAMPLES),
+                expand("results/dedup/{sample}.dedup.bam", sample=SAMPLES),
+                #indexes
+                expand("results/mapped/{sample}.sorted.bam.bai", sample=SAMPLES),
+                expand("results/dedup/{sample}.dedup.bam.bai", sample=SAMPLES),
+                #multiqc
+                "results/multiqc/multiqc.html",
+                #insertion identification
+                "results/insertions_table_final/all_identified_insertions.csv",
+                #insertion annotation
+                "results/insertions_table_final/all_identified_insertions_annotated.csv",
 
+       

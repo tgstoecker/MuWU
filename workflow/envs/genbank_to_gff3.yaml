@@ -3,3 +3,4 @@ channels:
   - anaconda
 dependencies:
   - python >=3.6
+  - biopython =1.78

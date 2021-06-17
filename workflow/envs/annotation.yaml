@@ -1,15 +1,9 @@
 channels:
-  - r
-  - bioconda
   - conda-forge
-  - bioconda/label/gcc7
+  - bioconda
 dependencies:
   - r-base
-  - bioconductor-biocgenerics
-  - bioconductor-chippeakanno
-  - bioconductor-genomicranges
-  - bioconductor-iranges
-  - r-data.table
-  - r-reshape2
+  - r-dplyr
+  - r-fuzzyjoin
   - r-readxl
-  - r-vctrs
+  - bioconductor-iranges

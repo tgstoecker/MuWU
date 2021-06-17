@@ -135,3 +135,5 @@ elif config["approach"] == "GENERIC":
                 mem_mb=2048
             wrapper:
                 "0.74.0/bio/trimmomatic/se"
+
+

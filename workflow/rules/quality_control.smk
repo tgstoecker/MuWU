@@ -30,7 +30,7 @@ if config["approach"] == "GRID":
         wrapper:
             "file:workflow/builds/MuWU_trimmed_fastqc"
 
-
+#multiqc (/wrapper) is only interested in the directories - no need to refer to the pot. complex SE/PE scenarios explicitly
     rule multiqc_GRID:
         input:
             Checkpoint_ReadSampleSheet_GRID("results/fastqc/raw/{sample}_1_fastqc.zip"),
@@ -65,6 +65,21 @@ elif config["approach"] == "GENERIC":
         wrapper:
             "0.74.0/bio/fastqc"
 
+
+    rule fastqc_trimmed_1_GENERIC:
+        input:
+            "results/trimmed_reads/{sample}.1.fq.gz",
+        output:
+            html="results/fastqc/trimmed/{sample}_1_fastqc.html",
+            zip="results/fastqc/trimmed/{sample}_1_fastqc.zip" # suffix _fastqc.zip necessary for multiqc to find the file
+        params: "--quiet"
+        threads: config["threads_fastqc"]
+        log:
+            "logs/fastqc/raw/{sample}_1.log"
+        wrapper:
+            "0.74.0/bio/fastqc"
+
+
     if not is_single_end_GENERIC_experiment(SAMPLES):
         rule fastqc_2_GENERIC:
             input:
@@ -78,3 +93,38 @@ elif config["approach"] == "GENERIC":
                 "logs/fastqc/raw/{sample}_2.log"
             wrapper:
                 "0.74.0/bio/fastqc"
+
+
+        rule fastqc_trimmed_2_GENERIC:
+            input:
+                "results/trimmed_reads/{sample}.2.fq.gz",
+            output:
+                html="results/fastqc/trimmed/{sample}_2_fastqc.html",
+                zip="results/fastqc/trimmed/{sample}_2_fastqc.zip" # suffix _fastqc.zip necessary for multiqc to find the file
+            params: "--quiet"
+            threads: config["threads_fastqc"]
+            log:
+                "logs/fastqc/trimmed/{sample}_2.log"
+            wrapper:
+                "0.74.0/bio/fastqc"
+
+
+#multiqc (/wrapper) is only interested in the directories - no need to refer to the pot. complex SE/PE scenarios explicitly
+    rule multiqc_GENERIC:
+        input:
+            expand("results/fastqc/raw/{sample}_1_fastqc.zip", sample=SAMPLES),
+            expand("results/fastqc/trimmed/{sample}_1_fastqc.zip", sample=SAMPLES),
+            expand("results/cut_reads/{sample}.qc.txt", sample=SAMPLES),
+            expand("logs/trimmomatic/{sample}.overall.log", sample=SAMPLES),
+            expand("logs/bowtie2_align/{sample}.log", sample=SAMPLES),
+            expand("results/dedup/{sample}.dedup.bam", sample=SAMPLES),
+        output:
+            "results/multiqc/multiqc.html"
+        params:
+            "-ip"
+        log:
+            "logs/multiqc/multiqc.log"
+        wrapper:
+            "0.74.0/bio/multiqc"
+
+

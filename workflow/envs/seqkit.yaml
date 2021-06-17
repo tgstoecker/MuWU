@@ -1,5 +1,4 @@
 channels:
   - bioconda
-  - conda-forge
 dependencies:
-  - gffread =0.12.1
+  - seqkit =0.16.1

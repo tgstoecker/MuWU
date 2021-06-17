@@ -114,7 +114,7 @@ elif config["approach"] == "GENERIC":
     def get_fastqs_GENERIC(wildcards):
         rd = reads_dir
         """Get raw FASTQ files from unit sheet."""
-        if is_single_end_GENERIC(wildcards.sample):
+        if is_single_end_GENERIC_sample(wildcards.sample):
             s = samples.loc[ (wildcards.sample), ["fq1"] ].dropna()
             return [ f"{rd}/{s.fq1}" ]
         else:

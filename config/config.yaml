@@ -90,4 +90,7 @@ threads_sam_to_sorted_bam: 8
 threads_index_sorted_bams_with_dups: 4
 threads_index_sorted_bams_without_dups: 4
 threads_convert_bam_to_sam: 4
-threads_identify_Mu_insertions: 24
+#for optimal performance
+#GRID approach -  set this to #Col + #Row
+#GENERIC approach set this to # samples
+threads_identify_Mu_insertions: 4
