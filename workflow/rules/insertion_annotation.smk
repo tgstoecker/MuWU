@@ -6,11 +6,10 @@ if config["approach"] == "GRID":
             all="results/insertions_table_final/all_identified_insertions.csv",
             annotation="resources/final_annotation_table",
         output:
-            all="results/insertions_table_final/all_identified_insertions_annotated.csv",
-            germinal="results/insertions_table_final/germinal_identified_insertions_annotated.csv"
+            "results/insertions_table_final/all_identified_insertions_annotated.csv",
         conda: "../envs/annotation.yaml"
         script:
-            "workflow/scripts/annotation_all_insertions.R"
+            "../scripts/annotation_all_insertions.R"
 
     rule Annotate_germinal_insertions_GRID:
         input:
@@ -18,11 +17,10 @@ if config["approach"] == "GRID":
             grid_table="config/grid_sample_sheet.tsv",
             annotation="resources/final_annotation_table",
         output:
-            all="results/insertions_table_final/all_identified_insertions_annotated.csv",
-            germinal="results/insertions_table_final/germinal_identified_insertions_annotated.csv"
+            "results/insertions_table_final/germinal_identified_insertions_annotated.csv"
         conda: "../envs/annotation.yaml"
         script:
-            "workflow/scripts/annotation_germinal_insertions.R"
+            "../scripts/annotation_germinal_insertions.R"
 
 
 #### ONLY FOR GENERIC APPROACH BASED ANALYSIS ####

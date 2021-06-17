@@ -4,13 +4,27 @@ library(readxl)
 library(IRanges)
 
 
-snake_germinal <- snakemake@input[["germinal"]]
+snake_germinal_ins <- snakemake@input[["germinal"]]
 snake_grid <- snakemake@input[["grid_table"]]
 snake_annotation <- snakemake@input[["annotation"]]
 
 
 ## Read in tables with all identified insertions; 
-all_ins <- read.csv(snake_all_ins, header=TRUE)
+germinal_ins <- read.csv(snake_germinal_ins, header=TRUE)
+
+## Read in stock matrix
+MY_STOCK <- list.files("config/stock_matrix/", pattern="\\.xlsx$")
+stock <- as.data.frame(read_excel(paste0("config/stock_matrix/", MY_STOCK)))
+names(stock)[1] <- "X__1"
+rownames(stock) <- stock$X__1
+stock <- stock[, -1]
+stock <- as.matrix(stock)
+
+
+#grid table - to associate arbitrary names with row/col
+grid_table <- read.csv(snake_grid, sep = "\t", header=TRUE)
+grid_table <- grid_table %>%
+                select(dim, base_name)
 
 ## Read Annotation File
 annotation <- read.delim(snake_annotation, header=FALSE, comment.char="#")
@@ -30,7 +44,7 @@ annotation <- annotation %>%
   mutate(Gene_length = End - Start + 1)
 
 # join MuGerminal table with annotation
-all_ins_annotated <- fuzzyjoin::genome_inner_join(all_ins,
+germinal_ins_annotated <- fuzzyjoin::genome_inner_join(germinal_ins,
                                 annotation,
                                 by=c("Chr", "Start", "End")
                                 )
@@ -38,7 +52,7 @@ all_ins_annotated <- fuzzyjoin::genome_inner_join(all_ins,
 
 
 # rename, relocate and drop the columns to create a useful table
-all_ins_annotated <- all_ins_annotated %>%
+germinal_ins_annotated <- germinal_ins_annotated %>%
   dplyr::rename(
     Chr = "Chr.y",
     Start = "Start.y",
@@ -54,12 +68,40 @@ all_ins_annotated <- all_ins_annotated %>%
   )
 
 
+#merge annotated germinal ins. table with grid table
+germinal_ins_grid_info <- merge(germinal_ins_annotated, grid_table, by.x = "Sample", by.y = "base_name")
 
 # order the table as to have intersecting samples next to one another
-all_ins_annotated <- all_ins_annotated %>%
+germinal_ins_grid_info <- germinal_ins_grid_info %>%
   arrange(., Chr, Start, InsertionStart)
 
 
-write.csv(all_ins_annotated,
-          "results/insertions_table_final/all_identified_insertions_annotated.csv",
+## assigning Stock
+#create seperate dataframes - just with Cols and just with Rows
+just_row <- germinal_ins_grid_info %>%
+  filter(dim == "row") %>%
+  select(-dim)
+  
+just_col <- germinal_ins_grid_info %>%
+  filter(dim == "col") %>%
+  select(-dim)
+
+full <- c()
+for (i in 1:nrow(just_row))  {
+  full[i] <- stock[cbind(just_row$Sample[i], just_col$Sample[i])]
+}
+
+just_col$stock <- full
+just_row$stock <- full
+
+germinal_ins_annotated_stocks <- rbind(just_row, just_col)
+
+# order the table as to have intersecting samples next to one another; again..
+germinal_ins_annotated_stocks <- germinal_ins_annotated_stocks %>%
+  arrange(., Chr, Start, InsertionStart) %>%
+  relocate(Sample, .before = InsertionStart)
+
+getwd()
+write.csv(germinal_ins_annotated_stocks,
+          snakemake@output[[1]],
           row.names=F)

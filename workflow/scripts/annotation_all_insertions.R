@@ -60,5 +60,5 @@ all_ins_annotated <- all_ins_annotated %>%
 
 
 write.csv(all_ins_annotated, 
-          "results/insertions_table_final/all_identified_insertions_annotated.csv", 
+          snakemake@output[[1]], 
           row.names=F)

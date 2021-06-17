@@ -77,9 +77,12 @@ if config["approach"] == "GRID":
             Checkpoint_ReadSampleSheet_GRID("results/dedup_sam/{sample}.dedup.sam"),           
             #multiqc
             "results/multiqc/multiqc.html",
-            #Mu identification results
+            #insertion identification identification results
             "results/insertions_table_final/all_identified_insertions.csv",
             "results/insertions_table_final/germinal_insertions.csv",
+            #insertion annotation
+            "results/insertions_table_final/all_identified_insertions_annotated.csv",
+            "results/insertions_table_final/germinal_identified_insertions_annotated.csv",
 
 
 #### ONLY FOR GENERIC ANALYSIS - NO STOCK MATRIX ####
