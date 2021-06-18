@@ -124,4 +124,4 @@ Exchange the R script Annotation_of_Insertions.R in the Snakefile rule *Assign_G
   
 ### The workflow in the current release:
 `snakemake --rulegraph | dot -Tsvg > rulegraph.svg`
-![Alt text](./rulegraph.svg)
+![Alt text](./rulegraph_GRID.svg)
