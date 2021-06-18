@@ -18,8 +18,8 @@ assembly_report:
 ### using the GENERIC approach requires a samples.tsv file (under config/), with which sample names, SE vs. PE read type and optionally different conditions are inferred
 ### conditions in the generic approach allow for the parallel analysis of different sets of input data that should be kept seperate - seperate final output files (e.g. different treatments etc.)
 ## in either case please also provide location of your reads in your file system - read_dir:
-#approach: GRID
-approach: GENERIC
+approach: GRID
+#approach: GENERIC
 
 # this example implies that the user created a directory "rawreads" in the main workflow directory
 # any location on the file system works (be careful with relative paths!)
@@ -34,25 +34,25 @@ reads_dir: rawreads
 # corresponding to the Mu-TIR sequence; after that Illumina adapters, U adapter
 # We use yaml folded style (>) so indention in each line will be ignored. 
 # (-) "block chomping indicator" to eliminate the trailing line break, that would normally be inserted.
-#adapters: >-
-#        -a GAGATAATTGCCATTATRGAMGAAGAGVG
-#        -G ^CBCTCTTCKTCYATAATGGCAATTATCTC
-#        -g ^AATGATACGGCGACCACCGAGATCTACACTCTTTCCCTACACGACGCTCTTCCGATCT
-#        -g ^GCCTTGGCAGTCTCAG
-#        -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC
-#        -a ATCTCGTATGCCGTCTTCTGCTTG
-#        -G ^CAAGCAGAAGACGGCATACGAGAT
-#        -G ^GTGACTGGAGTTCAGACGTGTGCTCTTCCGATCTC
-#        -A CTGAGACTGCCAAGGC
-#        -A AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT
+adapters: >-
+        -a GAGATAATTGCCATTATRGAMGAAGAGVG
+        -G ^CBCTCTTCKTCYATAATGGCAATTATCTC
+        -g ^AATGATACGGCGACCACCGAGATCTACACTCTTTCCCTACACGACGCTCTTCCGATCT
+        -g ^GCCTTGGCAGTCTCAG
+        -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC
+        -a ATCTCGTATGCCGTCTTCTGCTTG
+        -G ^CAAGCAGAAGACGGCATACGAGAT
+        -G ^GTGACTGGAGTTCAGACGTGTGCTCTTCCGATCTC
+        -A CTGAGACTGCCAAGGC
+        -A AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTAGATCTCGGTGGTCGCCGTATCATT
 
 #single-end test
-adapters: >-
-          -a GAGATAATTGCCATTATRGAMGAAGAGVG
-          -g ^AATGATACGGCGACCACCGAGATCTACACTCTTTCCCTACACGACGCTCTTCCGATCT
-          -g ^GCCTTGGCAGTCTCAG
-          -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC
-          -a ATCTCGTATGCCGTCTTCTGCTTG
+#adapters: >-
+#          -a GAGATAATTGCCATTATRGAMGAAGAGVG
+#          -g ^AATGATACGGCGACCACCGAGATCTACACTCTTTCCCTACACGACGCTCTTCCGATCT
+#          -g ^GCCTTGGCAGTCTCAG
+#          -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC
+#          -a ATCTCGTATGCCGTCTTCTGCTTG
 
 
 # further options to pass to cutadapt; depending on your specific needs
@@ -75,8 +75,9 @@ overlap_size: 9
 overlap_support: 2
 
 #### add upstream or downstream bases (integer) to gene models to include regulatory regions, promoter sequences etc. ####
-### leave empty if this is not wished:
-extension:
+### note that gene length as reported in the final results is not impacted by this ###
+### leave at zero if this is not wished:
+extension: 0
 
 
 #### Thread options: ####
@@ -93,4 +94,4 @@ threads_convert_bam_to_sam: 4
 #for optimal performance
 #GRID approach -  set this to #Col + #Row
 #GENERIC approach set this to # samples
-threads_identify_Mu_insertions: 4
+threads_identify_Mu_insertions: 24

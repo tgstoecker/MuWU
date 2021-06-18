@@ -7,7 +7,7 @@ library(IRanges)
 snake_germinal_ins <- snakemake@input[["germinal"]]
 snake_grid <- snakemake@input[["grid_table"]]
 snake_annotation <- snakemake@input[["annotation"]]
-
+snake_extension <- snakemake@params[["extension"]]
 
 ## Read in tables with all identified insertions; 
 germinal_ins <- read.csv(snake_germinal_ins, header=TRUE)
@@ -42,6 +42,11 @@ annotation <- annotation %>%
 # compute gene_length
 annotation <- annotation %>%
   mutate(Gene_length = End - Start + 1)
+
+# add bp extension as defined in the config.yaml
+# this is useful for inclusion of upstream/downstream regions or if UTRs are poorly characterized
+annotation <- annotation %>%
+  mutate(Start = Start - snake_extension, End = End + snake_extension)
 
 # join MuGerminal table with annotation
 germinal_ins_annotated <- fuzzyjoin::genome_inner_join(germinal_ins,
@@ -101,7 +106,6 @@ germinal_ins_annotated_stocks <- germinal_ins_annotated_stocks %>%
   arrange(., Chr, Start, InsertionStart) %>%
   relocate(Sample, .before = InsertionStart)
 
-getwd()
 write.csv(germinal_ins_annotated_stocks,
           snakemake@output[[1]],
           row.names=F)

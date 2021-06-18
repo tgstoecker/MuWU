@@ -23,7 +23,7 @@ if config["approach"] == "GRID":
             grid_sample_sheet="config/grid_sample_sheet.tsv",
         output:
             one="results/insertions_table_final/all_identified_insertions.csv",
-            two="results/insertions_table_final/germinal_insertions.csv",
+            two="results/insertions_table_final/germinal_identified_insertions.csv",
         params:
             # overlap_size refers to bp length of 
             # in the MuSeq approach as part of BonnMu this is 9 - as is characteristic for Mutator transposons

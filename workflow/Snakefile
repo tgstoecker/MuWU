@@ -79,7 +79,7 @@ if config["approach"] == "GRID":
             "results/multiqc/multiqc.html",
             #insertion identification identification results
             "results/insertions_table_final/all_identified_insertions.csv",
-            "results/insertions_table_final/germinal_insertions.csv",
+            "results/insertions_table_final/germinal_identified_insertions.csv",
             #insertion annotation
             "results/insertions_table_final/all_identified_insertions_annotated.csv",
             "results/insertions_table_final/germinal_identified_insertions_annotated.csv",

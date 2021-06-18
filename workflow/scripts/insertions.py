@@ -31,7 +31,7 @@ elif snakemake.params.approach == "GENERIC":
 print("Insertions will be detected with the following options:")
 print("######################################################")
 print("Input directory:", path)
-print("Output files:", OutputFile, "germinal_insertions.csv")
+print("Output files:", OutputFile, "germinal_identified_insertions.csv")
 print("# of processors that will be used:", num_processors)
 print("Overlap size:", overlap_size)
 print("Min. overlap support", threshold)
@@ -279,8 +279,8 @@ if not os.path.exists('../insertions_table'):
 #    shutil.move('SLI-'+OutputFile, "../insertions_table/",'SLI-'+OutputFile)
 
 if both:
-    combined_single_csv.to_csv('germinal_insertions.csv', index = False)
-    shutil.move('germinal_insertions.csv', "../insertions_table_final/",'germinal_insertions.csv')
+    combined_single_csv.to_csv('germinal_identified_insertions.csv', index = False)
+    shutil.move('germinal_identified_insertions.csv', "../insertions_table_final/",'germinal_identified_insertions.csv')
 #and
     combined_csv_option_both.to_csv(OutputFile,index = False)
     shutil.move(OutputFile, "../insertions_table_final/",OutputFile)
@@ -316,7 +316,7 @@ if 'all_single_tmp_files' in globals():
 
 if both:
     print("Finished creating output files:",
-            'germinal_insertions.csv',
+            'germinal_identified_insertions.csv',
                 "and", OutputFile,
                     "in directory results/insertions_table_final/")
 
