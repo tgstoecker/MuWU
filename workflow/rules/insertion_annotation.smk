@@ -7,17 +7,21 @@ if config["approach"] == "GRID":
             annotation="resources/final_annotation_table",
         output:
             "results/insertions_table_final/all_identified_insertions_annotated.csv",
+        params:
+            extension=config["extension"],
         conda: "../envs/annotation.yaml"
         script:
             "../scripts/annotation_all_insertions.R"
 
     rule Annotate_germinal_insertions_GRID:
         input:
-            germinal="results/insertions_table_final/germinal_insertions.csv",
+            germinal="results/insertions_table_final/germinal_identified_insertions.csv",
             grid_table="config/grid_sample_sheet.tsv",
             annotation="resources/final_annotation_table",
         output:
             "results/insertions_table_final/germinal_identified_insertions_annotated.csv"
+        params:
+            extension=config["extension"],
         conda: "../envs/annotation.yaml"
         script:
             "../scripts/annotation_germinal_insertions.R"
@@ -32,6 +36,8 @@ if config["approach"] == "GENERIC":
             annotation="resources/final_annotation_table",
         output:
             all="results/insertions_table_final/all_identified_insertions_annotated.csv",
+        params:
+            extension=config["extension"],
         conda: "../envs/annotation.yaml"
         script:
             "../scripts/annotation_all_insertions.R"

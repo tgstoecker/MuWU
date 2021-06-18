@@ -8,6 +8,7 @@ snake_all_ins <- snakemake@input[["all"]]
 snake_annotation <- snakemake@input[["annotation"]]
 snake_extension <- snakemake@params[["extension"]]
 
+
 ## Read in tables with all identified insertions; 
 all_ins <- read.csv(snake_all_ins, header=TRUE)
 
@@ -28,10 +29,12 @@ annotation <- annotation %>%
 annotation <- annotation %>% 
   mutate(Gene_length = End - Start + 1)
 
+
 # add bp extension as defined in the config.yaml
 # this is useful for inclusion of upstream/downstream regions or if UTRs are poorly characterized
 annotation <- annotation %>%
   mutate(Start = Start - snake_extension, End = End + snake_extension)
+
 
 # join MuGerminal table with annotation
 all_ins_annotated <- fuzzyjoin::genome_inner_join(all_ins, 
