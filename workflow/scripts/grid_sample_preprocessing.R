@@ -2,6 +2,10 @@ library(readxl)
 library(stringr)
 library(dplyr)
 
+
+#get reads directory from config.yaml
+snake_reads_dir = snakemake@params[["reads_dir"]]
+
 # read in stock matrix and transform to usable matrix dataset
 MY_STOCK <- list.files("config/stock_matrix/", pattern="\\.xlsx$")
 stock <- as.data.frame(read_excel(paste0("config/stock_matrix/", MY_STOCK)))
@@ -16,7 +20,7 @@ col_dim_length <- length(colnames(stock))
 
 # function returning all files sharing pattern
 list_all_files <- function(x){
-  list.files(path="rawreads/", pattern=x)  
+  list.files(path=snake_reads_dir, pattern=x)  
 }
 
 # apply "list_all_files" function to all row & column samples
