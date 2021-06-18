@@ -1,6 +1,0 @@
-channels:
-  - bioconda
-  - conda-forge
-dependencies:
-  - pigz =2.4
-  - trimmomatic =0.38
