@@ -1,6 +1,0 @@
-channels:
-  - anaconda
-  - ostrokach
-dependencies:
-  - wget =1.20.1
-  - gzip =1.7
