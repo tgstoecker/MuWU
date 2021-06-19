@@ -58,7 +58,6 @@ if config["approach"] == "GENERIC":
     rule Identify_insertions_GENERIC:
         input:
             file_loc="results/insertions_table",
-            grid_sample_sheet="config/grid_sample_sheet.tsv",
         output:
             "results/insertions_table_final/all_identified_insertions.csv",
         params:
