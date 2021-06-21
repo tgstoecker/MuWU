@@ -72,8 +72,8 @@ def handle_annotation(annotation):
             print("Downloading annotation")
             urlretrieve(annotation, 'resources/annotation')
         elif not is_url(annotation):
-            printing("Linking annotation")
-            os.symlink(annotation, 'resources/annotation' + get_file_ext(annotation))
+            print("Linking annotation")
+            os.symlink(annotation, 'resources/annotation')
     if is_valid_annotation_file(annotation) and is_gzipped(annotation):
         if is_url(annotation):
             print("Downloading annotation")
