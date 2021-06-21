@@ -57,7 +57,7 @@ def handle_fasta(fasta, annotation):
                     with open('resources/genome.fa', 'wb') as f_out:
                         shutil.copyfileobj(f_in, f_out)
             else:
-                os.symlink(os.getcwd() + "/" + fasta, "resources/genome.fa")
+                os.symlink(fasta, "resources/genome.fa")
 
 def gunzip_annotation(annotation_file):
     with gzip.open(annotation_file, 'rb') as f_in:
