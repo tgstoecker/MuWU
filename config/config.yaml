@@ -7,6 +7,7 @@
 ###                 Our second recommendation is to use genbank/ under NCBI's directories as the gene name/locus tag refers to most commonly used ones and is not abstracted further under "gene_synonyms" like under refseq/.
 ###                 Finally, in case of GenBank format we also require an assembly_report.txt to be submitted under "report:".
 ###                 This is required so that we can rename the chromosome column entries to a proper chromosome name instead of the Assigned-Molecule name.
+### Please provide absolute file paths if local files are provided:
 fasta: ftp://ftp.ensemblgenomes.org/pub/plants/release-50/fasta/zea_mays/dna/Zea_mays.B73_RefGen_v4.dna.toplevel.fa.gz
 annotation: ftp://ftp.ensemblgenomes.org/pub/plants/release-50/gtf/zea_mays/Zea_mays.B73_RefGen_v4.50.gtf.gz
 #annotation: https://ftp.ncbi.nlm.nih.gov/genomes/refseq/plant/Zea_mays/all_assembly_versions/suppressed/GCF_000005005.2_B73_RefGen_v4/GCF_000005005.2_B73_RefGen_v4_genomic.gbff.gz
