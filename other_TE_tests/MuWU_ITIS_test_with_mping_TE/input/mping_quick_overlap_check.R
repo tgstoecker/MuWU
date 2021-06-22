@@ -4,17 +4,24 @@ library(IRanges)
 
 
 itis_mping <- read.csv("input/test.mping.filtered.bed", header=FALSE, sep="\t")
-itis_mping <- itis_mping[, c(1,2,3)]
-names(itis_mping) <- c("Chr" , "Start", "End")
+itis_mping_short <- itis_mping[, c(1,2,3)]
+names(itis_mping_short) <- c("Chr" , "Start", "End")
 
 
 MuWU_karma <- read.csv("results/insertions_table_final/all_identified_insertions.csv", header=TRUE, sep=",")
 
 
 message("ITIS finds 6 mping insertions in this dataset.")
+message("")
+
+
+message("")
 message("Overlapping with MuWU results:")
 message("")
-joined_sets <- fuzzyjoin::genome_join(itis_mping, MuWU_karma, by=c("Chr", "Start", "End"), mode="inner")
+itis_mping
+
+message("")
+joined_sets <- fuzzyjoin::genome_join(itis_mping_short, MuWU_karma, by=c("Chr", "Start", "End"), mode="inner")
 joined_sets
 
 message("")
@@ -33,7 +40,7 @@ MuWU_karma_top <- MuWU_karma %>%
 MuWU_karma_top
 
 message("The overlap - 8 topHits MuWU & 6 high confidence candidates from ITIS:")
-joined_sets_top <- fuzzyjoin::genome_join(itis_mping, MuWU_karma_top, by=c("Chr", "Start", "End"), mode="inner")
+joined_sets_top <- fuzzyjoin::genome_join(itis_mping_short, MuWU_karma_top, by=c("Chr", "Start", "End"), mode="inner")
 joined_sets_top
 
 message("")
