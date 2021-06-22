@@ -57,7 +57,7 @@ def handle_fasta(fasta, annotation):
                     with open('resources/genome.fa', 'wb') as f_out:
                         shutil.copyfileobj(f_in, f_out)
             else:
-                os.symlink(fasta, "resources/genome.fa")
+                os.symlink("../input/MSU7.Chr3_2M.fa", "resources/genome.fa")
 
 def gunzip_annotation(annotation_file):
     with gzip.open(annotation_file, 'rb') as f_in:
@@ -73,7 +73,7 @@ def handle_annotation(annotation):
             urlretrieve(annotation, 'resources/annotation')
         elif not is_url(annotation):
             print("Linking annotation")
-            os.symlink(annotation, 'resources/annotation')
+            os.symlink('../input/short_sample.gtf', 'resources/annotation')
     if is_valid_annotation_file(annotation) and is_gzipped(annotation):
         if is_url(annotation):
             print("Downloading annotation")
