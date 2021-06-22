@@ -10,6 +10,7 @@ if config["approach"] == "GRID":
         params:
             extension=config["extension"],
         conda: "../envs/annotation.yaml"
+        log: "logs/annotation/all_annotation.log"
         script:
             "../scripts/annotation_all_insertions.R"
 
@@ -23,6 +24,7 @@ if config["approach"] == "GRID":
         params:
             extension=config["extension"],
         conda: "../envs/annotation.yaml"
+        log: "logs/annotation/germinal_annotation.log"
         script:
             "../scripts/annotation_germinal_insertions.R"
 
@@ -39,5 +41,6 @@ if config["approach"] == "GENERIC":
         params:
             extension=config["extension"],
         conda: "../envs/annotation.yaml"
+        log: "logs/annotation/all_annotation.log"
         script:
             "../scripts/annotation_all_insertions.R"
