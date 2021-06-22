@@ -11,6 +11,8 @@ if is_gbff(annotation):
             # we rename the standardized "annotation" output here in order to not run into issues with inprecise rules later
             genbank="resources/annotation_gb",
             assembly_report="resources/assembly_report.txt",
+        log: 
+            "logs/annotation_table/genbank_path.log"
 #        conda:
 #            "../envs/download.yaml"
         run:
@@ -39,6 +41,8 @@ if is_gbff(annotation):
         output:
             split_annotation = "resources/split_annotation.gff3", 
             fa = "resources/split_genome.fa",
+        log: 
+            "logs/annotation_table/split_genbank_annotation_fasta.log"
         conda:
             "../envs/coreutils.yaml"
         # {{*}} = results inside shell to {*}
@@ -54,6 +58,8 @@ if is_gbff(annotation):
             "resources/assembly_report.txt"
         output:
             "resources/renaming_scheme.txt"
+        log: 
+            "logs/annotation_table/renaming_scheme.log"
         conda:
             "../envs/renaming.yaml"
         # note the double backslash in front of t - "\\t" becomes "\t" in shell
@@ -76,6 +82,8 @@ if is_gbff(annotation):
             fa = "resources/split_genome.fa",
         output:
             "resources/genome.fa"
+        log: 
+            "logs/annotation_table/rename_fasta.log"
         conda: "../envs/seqkit.yaml"
         shell:
             "seqkit replace -p '(.+)' -r '{{kv}}' -k {input.scheme} {input.fa} > {output}"
@@ -87,6 +95,8 @@ if is_gbff(annotation):
             split_annotation = "resources/split_annotation.gff3",
         output:
             "resources/annotation"
+        log: 
+            "logs/annotation_table/rename_annotation.log"
         conda: "../envs/coreutils.yaml"    
         # important note see: rule create_renaming_scheme
         shell:
@@ -102,6 +112,7 @@ if not is_gbff(annotation):
         output:
             fa = "resources/genome.fa",
             gff_gtf = "resources/annotation",
+        log: "logs/annotation_table/handling_non_genbank_annotation.log"
 #    conda:
 #        "download.yaml"
         run:
@@ -114,6 +125,8 @@ rule create_annotation_tables:
         "resources/annotation"
     output:
         "resources/final_annotation_table"
+    log: 
+        "logs/annotation_table/annotation_table.log"
     conda:
         "../envs/gffread.yaml"
     shell:

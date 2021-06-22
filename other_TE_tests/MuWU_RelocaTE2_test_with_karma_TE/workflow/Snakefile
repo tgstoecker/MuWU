@@ -14,6 +14,7 @@ configfile: "config/config.yaml"
 reads_dir = config["reads_dir"]
 
 
+include: "rules/common_utils.smk"
 include: "rules/common.smk"
 include: "rules/ref_utils.smk"
 include: "rules/ref.smk"
@@ -23,7 +24,6 @@ include: "rules/mapping.smk"
 include: "rules/duplicate_removal.smk"
 include: "rules/indexes_bam2sam.smk"
 include: "rules/insertion_identification.smk"
-include: "rules/insertion_annotation.smk"
 
 
 #### ONLY FOR GRID DESIGN (STOCK MATRIX) BASED ANALYSIS ####

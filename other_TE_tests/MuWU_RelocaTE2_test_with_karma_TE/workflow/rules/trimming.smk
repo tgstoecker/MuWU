@@ -4,6 +4,7 @@ if config["approach"] == "GRID":
     rule create_read_type_check:
         output:
             touch("checks/read_type.check")
+        log: "logs/read_check/read_check.log"
         run:
             with open("config/read_type.yaml") as file:
                 read_type_file = yaml.load(file, Loader=yaml.FullLoader)

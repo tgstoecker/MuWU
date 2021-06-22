@@ -4,6 +4,7 @@ rule index_sorted_bams_with_dups:
         "results/mapped/{sample}.sorted.bam"
     output:
         "results/mapped/{sample}.sorted.bam.bai"
+    log: "logs/index_bames/{sample}.indexing.log"
     params:
         "" # optional params string
     threads: config["threads_index_sorted_bams_without_dups"]
@@ -15,6 +16,7 @@ rule index_sorted_bams_without_dups:
         "results/dedup/{sample}.dedup.bam"
     output:
         "results/dedup/{sample}.dedup.bam.bai"
+    log: "logs/index_bames/{sample}.dedup.indexing.log"
     params:
         "" # optional params string
     threads:
