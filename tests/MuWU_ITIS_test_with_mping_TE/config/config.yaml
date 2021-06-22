@@ -97,4 +97,4 @@ threads_convert_bam_to_sam: 4
 #for optimal performance
 #GRID approach -  set this to #Col + #Row
 #GENERIC approach set this to # samples
-threads_identify_Mu_insertions: 24
+threads_identify_Mu_insertions: 1
