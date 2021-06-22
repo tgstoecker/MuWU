@@ -20,20 +20,6 @@ if config["approach"] == "GRID":
             "file:workflow/builds/MuWU_bowtie2/bowtie2_align"
 
 
-#    rule samtools_sort:
-#        input:
-#            "results/mapped/{sample}.sam"
-#        output:
-#            "results/mapped/{sample}.sorted.bam"
-#        params:
-#            extra = "-m 4G",
-#            tmp_dir = "/tmp/"
-#        threads:  # Samtools takes additional threads through its option -@
-#            config["threads_sam_to_sorted_bam"]     # This value - 1 will be sent to -@.
-#        wrapper:
-#            "0.74.0/bio/samtools/sort"
-
-
 #### ONLY FOR GENERIC ANALYSIS - NO STOCK MATRIX ####
 elif config["approach"] == "GENERIC":
 
@@ -86,6 +72,8 @@ rule samtools_sort:
         "results/mapped/{sample}.sam"
     output:
         "results/mapped/{sample}.sorted.bam"
+    log:
+        "logs/samtools_sort/{sample}.samtools.sort.log"
     params:
         extra = "-m 4G",
         tmp_dir = "/tmp/"
