@@ -37,7 +37,7 @@ elif config["approach"] == "GENERIC":
             log:
                 "logs/bowtie2_align/{sample}.log"
             params:
-                index="resources/genome",  # prefix of reference genome index (built with bowtie2-build)
+                index=lambda w, input: os.path.splitext(input.idx[0][0:16]),
                 extra="-N 1"  # optional parameters
             threads: config["threads_bowtie_align"]
             wrapper:
@@ -58,7 +58,7 @@ elif config["approach"] == "GENERIC":
             log:
                 "logs/bowtie2_align/{sample}.log"
             params:
-                index="resources/genome",  # prefix of reference genome index (built with bowtie2-build)
+                index=lambda w, input: os.path.splitext(input.idx[0][0:16]),
                 extra="-N 1"  # optional parameters
             threads: config["threads_bowtie_align"]
             wrapper:
