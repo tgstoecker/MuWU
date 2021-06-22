@@ -8,6 +8,7 @@ if config["approach"] == "GRID":
         output:
             # Don't use the trailing "/" for directories in your rules
             assembly=directory("results/insertions_table")
+        log: "logs/identification/preparation.log"
         run:
             os.makedirs(output.assembly)
             for contig in input.contigs:
@@ -32,6 +33,7 @@ if config["approach"] == "GRID":
             approach = config["approach"],
         threads: config["threads_identify_Mu_insertions"]
         conda: "../envs/identification.yaml"
+        log: "logs/identification/identification.log"
         script:
             "../scripts/insertions.py"
 
@@ -46,6 +48,7 @@ if config["approach"] == "GENERIC":
         output:
             # Don't use the trailing "/" for directories in your rules
             assembly=directory("results/insertions_table")
+        log: "logs/identification/preparation.log"
         run:
             os.makedirs(output.assembly)
             for contig in input.contigs:
@@ -68,6 +71,7 @@ if config["approach"] == "GENERIC":
             approach = config["approach"],
         threads: config["threads_identify_Mu_insertions"]
         conda: "../envs/identification.yaml"
+        log: "logs/identification/identification.log"
         script:
             "../scripts/insertions.py"
 
@@ -78,5 +82,6 @@ if config["approach"] == "GENERIC":
         output:
             touch("mping_quick_overlap_check.check"),
         conda: "../envs/annotation.yaml"
+        log: "logs/itis_comparison/itis_comparison.log"
         script:
             "../../input/mping_quick_overlap_check.R"
