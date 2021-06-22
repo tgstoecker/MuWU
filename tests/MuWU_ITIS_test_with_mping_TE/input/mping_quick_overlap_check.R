@@ -46,4 +46,4 @@ joined_sets_top
 message("")
 message("MuWU overlaps quite well with the results of ITIS.")
 message("In the top 8 MuWU candidates we find all 6 ITIS top candidates.")
-message("(Note that ITIS and MuWU insertions positions slightly differently - MuWU presents TSDs.)")
+message("(Note that ITIS and MuWU report insertion positions slightly differently - MuWU reports TSD bp positions.)")
