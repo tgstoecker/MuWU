@@ -32,6 +32,8 @@ if config["approach"] == "GRID":
         output:
             "config/grid_sample_sheet.tsv",
             "config/read_type.yaml",
+        log:
+            "logs/sample_sheet/grid_sample_sheet.log"
         params:
             reads_dir=config["reads_dir"],
         conda: 
