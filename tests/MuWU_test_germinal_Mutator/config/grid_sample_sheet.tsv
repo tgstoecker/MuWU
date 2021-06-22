@@ -1,0 +1,9 @@
+dim	num	base_name	fq_1_file	fq_2_file	fq_1_end	fq_2_end
+row	1	Row-01	Row-01_1.fq.gz	Row-01_2.fq.gz	_1.fq.gz	_2.fq.gz
+row	2	Row-02	Row-02_1.fq.gz	Row-02_2.fq.gz	_1.fq.gz	_2.fq.gz
+row	3	Row-03	Row-03_1.fq.gz	Row-03_2.fq.gz	_1.fq.gz	_2.fq.gz
+row	4	Row-04	Row-04_1.fq.gz	Row-04_2.fq.gz	_1.fq.gz	_2.fq.gz
+col	1	Col-01	Col-01_1.fq.gz	Col-01_2.fq.gz	_1.fq.gz	_2.fq.gz
+col	2	Col-02	Col-02_1.fq.gz	Col-02_2.fq.gz	_1.fq.gz	_2.fq.gz
+col	3	Col-03	Col-03_1.fq.gz	Col-03_2.fq.gz	_1.fq.gz	_2.fq.gz
+col	4	Col-04	Col-04_1.fq.gz	Col-04_2.fq.gz	_1.fq.gz	_2.fq.gz
