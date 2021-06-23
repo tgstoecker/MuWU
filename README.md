@@ -157,9 +157,9 @@ germinal_identified_insertions_annotated.csv
 <br>  
 
 # :heavy_check_mark: Tests
-We have included several tests to demonstrate MuWU' functionality and broad range of usability.
+We have included several easily runable tests to demonstrate MuWU's functionality and easy adaptability to a broad range of TE insertion types (under `tests/`).
 
-- 1
+- [GRID method test with *Mutator* TE (TSD = 9bp) - *Zea mays*](https://github.com/tgstoecker/MuWU/tree/master/tests/MuWU_test_germinal_Mutator)
 - 2
 - 3
 
