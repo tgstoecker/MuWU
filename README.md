@@ -5,7 +5,7 @@
 <img align="right" src="TSD_mapping.png" width=300 >
 
 
-- Automated workflow for the identification and annotation of transposable element insertion sites originally developed for the BonnMu resource and *Mutator* transposons in particular 
+- Automated workflow for the identification and annotation of transposable element insertion sites originally developed for the [BonnMu](https://academic.oup.com/plphys/article/184/2/620/6117865) resource and *Mutator* transposons in particular 
 - MuWU is able to **detect any kind of TE insertion event** as long as target site duplications (TSDs) are created by its integration and the TSD length is known
 
 <br>  
@@ -13,7 +13,7 @@
 # :control_knobs: Two modes - GRID and GENERIC:
 
 **GRID**
-- Requires as input reads in grid design as outlined e.g. by McCarty et al. 2013; Liu et al. 2016; Marcon et al. 2020 
+- Requires as input reads in grid design as outlined e.g. by [McCarty et al. 2013](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0077172); [Marcon et al. 2020](https://academic.oup.com/plphys/article/184/2/620/6117865) 
 - Differentiates between heritable germinal insertions and somatic insertions and annotates both sets
 
 **GENERIC**
@@ -157,11 +157,17 @@ germinal_identified_insertions_annotated.csv
 <br>  
 
 # :heavy_check_mark: Tests
-We have included several easily runable tests to demonstrate MuWU's functionality and easy adaptability to a broad range of TE insertion types (under `tests/`).
+We have included several easily runable tests to demonstrate MuWU's functionality and easy adaptability to a broad range of TE insertion types (under `tests/`).  
+Navigating to one of these directories and running either:  
+`snakemake --use-conda --cores xx`  
+`snakemake --use-conda --cores xx --conda-prefix conda_envs` (when using the singularity container)  
+will run the respective test run of the workflow.  
+In case of the latter two in which comparisons to [ITIS](https://github.com/Chuan-Jiang/ITIS) and [RelocaTE2](https://github.com/JinfengChen/RelocaTE2) are being made, the final step of the workflow will print comparative results to the console.  
+These results are also displayed in the respective README.md of the test directory.  
 
 - [GRID method test with *Mutator* TE (TSD = 9bp) - *Zea mays*](https://github.com/tgstoecker/MuWU/tree/master/tests/MuWU_test_germinal_Mutator)
-- 2
-- 3
+- [GENERIC method test with *mping* TE (TSD = 3bp) - *Oryza sativa*](https://github.com/tgstoecker/MuWU/tree/master/tests/MuWU_ITIS_test_with_mping_TE) based on [ITIS](https://github.com/Chuan-Jiang/ITIS) test data
+- [GENERIC method test with *karma* TE (TSD = 12bp) - *Oryza sativa*](https://github.com/tgstoecker/MuWU/tree/master/tests/MuWU_RelocaTE2_test_with_karma_TE) based on [RelocaTE2](https://github.com/JinfengChen/RelocaTE2) test data
 
 <br>  
 
