@@ -5,8 +5,7 @@
 - Automated workflow for the identification and annotation of transposable element insertion sites originally developed for the BonnMu resource and *Mutator* transposons in particular 
 - MuWU is able to **detect any kind of TE** as long as target site duplications (TSDs) are created by its integration and the TSD length is known
 
-## :control_knobs: Modes
-### Two modes - GRID and GENERIC:
+## :control_knobs: Two modes - GRID and GENERIC:
 
 **GRID**
 - Requires as input reads in grid design as outlined e.g. by McCarty et al. 2013 and Liu et al. 2016 
