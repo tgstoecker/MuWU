@@ -1,5 +1,5 @@
 Tests include all input files.  
-Options are already pre-selected for karma TE and this particular test dataset - see [ITIS](https://github.com/Chuan-Jiang/ITIS).  
+Options are already pre-selected for mping TE and this particular test dataset - see [ITIS](https://github.com/Chuan-Jiang/ITIS).  
 
 To run enter:  
 `snakemake --use-conda --cores xx`  
