@@ -1,14 +1,17 @@
-# MuWU
-## Mu-Seq Workflow Utility 
-[![Snakemake](https://img.shields.io/badge/snakemake-=6.4.1-brightgreen.svg)](https://snakemake.readthedocs.io)
+# MuWU - Mu-Seq Workflow Utility [![Snakemake](https://img.shields.io/badge/snakemake-=6.4.1-brightgreen.svg)](https://snakemake.readthedocs.io)
+
+<img align="right" src="TSD_mapping.png" width=300 >
+
 
 - Automated workflow for the identification and annotation of transposable element insertion sites originally developed for the BonnMu resource and *Mutator* transposons in particular 
 - MuWU is able to **detect any kind of TE** as long as target site duplications (TSDs) are created by its integration and the TSD length is known
 
-## :control_knobs: Two modes - GRID and GENERIC:
+<br>  
+
+# :control_knobs: Two modes - GRID and GENERIC:
 
 **GRID**
-- Requires as input reads in grid design as outlined e.g. by McCarty et al. 2013 and Liu et al. 2016 
+- Requires as input reads in grid design as outlined or used e.g. by McCarty et al. 2013; Liu et al. 2016; Marcon et al. 2020 
 - Differentiates between heritable germinal insertions and somatic insertions and annotates both sets
 
 **GENERIC**
@@ -16,48 +19,33 @@
 - Identifies & annotates all insertions of the particular TE
 
 
-## :gear: Options
+
+# :gear: Options
+
+config.yaml, bla
 
 
-
-## :arrow_double_down: Download & Setup
-
-## :beginner: Usage
-
-<br>  
+# :arrow_double_down: Download & Setup
 
 There are 2 ways of using MuWU:  
+* via cloning this repo and then using conda installation of necessary software at runtime
 * a singularity container, which includes a **working example with exemplary data** and requires no further downloads except for the container itself  
-* via cloning this repo and then using conda installation of necessary software at runtime  
-  
-The main output files are:  
 
-1. MultiQC HTML output (open in browser):  
-```
-/MuWU/multiqc/multiqc.html
-```  
-  
-2. Gene level final output tables:  
-```
-/MuWU/MuSeq_table_final/Mu_single_GeneIds_gene_lengths_and_stock.csv
-```
-<br>  
-
-## Option 1. Singularity container (incl. working example)
+## Option 2. Singularity container (incl. working example)
 ### Step 1 - Set up Singularity on your system: 
 Install the Python 3 version of Miniconda.
 you can get it here: https://docs.conda.io/en/latest/miniconda.html
 
 Answer yes to the question whether conda shall be put into your PATH environment variable.
 
-Then, you can install Singularity with
-`conda install -c conda-forge singularity=3.6.1`  
+Then, you can install Singularity (3.6.1) with
+`mamba install -c conda-forge singularity=3.6.1`  
   
 Alternatively install Singularity based on these instructions: https://singularity.lbl.gov/install-linux  
   
 ### Step 2 - set up the container to run the workflow  ####
 
-**Download the MuWU-example.sif file, hosted here:**  https://uni-bonn.sciebo.de/s/LsmuNDuEeA0sUer  
+**Download the MuWU-1.1.sif file, hosted here:**  https://uni-bonn.sciebo.de/s/LsmuNDuEeA0sUer  
   
 Create a sandbox from the .sif file:  
 This can take a while (on Intel(R) Xeon(R) CPU E5-2690 v4@ 2.60GHz roughly 30 min!), since the sandbox will be over 20Gb in size.  
@@ -132,6 +120,26 @@ Lastly, copy/link a stock matrix .xlsx table (example file given) into the stock
 This will assign the mutation to the corresponding stock automatically at the end of the workflow.  
 <br>  
 
+
+
+# :beginner: Usage, Tests & Output
+
+<br>  
+
+The main output files are:  
+
+1. MultiQC HTML output (open in browser):  
+```
+/MuWU/multiqc/multiqc.html
+```  
+  
+2. Gene level final output tables:  
+```
+/MuWU/MuSeq_table_final/Mu_single_GeneIds_gene_lengths_and_stock.csv
+```
+<br>  
+
+
 ### Starting MuWU:
 Change thread options for individual rules in the config.yaml file.  
 Then specifiy overall threads and start MuWU via:  
@@ -141,7 +149,7 @@ Then specifiy overall threads and start MuWU via:
 ### Only have a gff3 file?
 Exchange the R script Annotation_of_Insertions.R in the Snakefile rule *Assign_Gene_and_Transcript_IDs:* for the just_GFF3_Annotation_of_Insertions.R script also provided.  
   
-## :framed_picture: Visual
-### GRID workflow (visualized as snakemake rulegraph):
+# :framed_picture: Visualized
+### GRID workflow (as snakemake rulegraph):
 `snakemake --rulegraph | dot -Tsvg > rulegraph.svg`
 ![Alt text](./rulegraph_GRID.svg)
