@@ -54,6 +54,7 @@ RelocaTE2 finds 23 karma insertions in this dataset:
 22 Chr3 rice transposable_element_attribute 1880399 1880410  -  .  .
 23 Chr3 rice transposable_element_attribute 1892934 1892945  +  .  .
                                                                                                     V9
+1          ID=Chr3.109868.spanners;avg_flankers=3;spanners=0;type=homozygous;TE=karma;TSD=AGTATACATGGT
 2    ID=Chr3.155962.spanners;avg_flankers=4;spanners=0;type=homozygous;TE=karma/RIRE3;TSD=CTTTTTCTGCTA
 3          ID=Chr3.190305.spanners;avg_flankers=5;spanners=0;type=homozygous;TE=karma;TSD=TGACTTTTTAAA
 4          ID=Chr3.355593.spanners;avg_flankers=5;spanners=0;type=homozygous;TE=karma;TSD=TCGATCGCCTCC
