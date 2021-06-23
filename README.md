@@ -94,7 +94,7 @@ Activate conda environment (snakemake is already installed):
 
 <br>  
 
-# :beginner: Usage & Output
+# :beginner: Usage & Outputs
 
 ## Required input files
 
@@ -115,19 +115,18 @@ Both the GRID & GENERIC methods require:
 
 
 ## Once everything is set up - run the workflow:  
-
+Change thread options for individual rules in the config.yaml file.  
 Check the workflow (dryrun; testbuild of DAG):  
-`snakemake --use-conda --cores 24 --conda-prefix conda_envs -np`
+`snakemake --use-conda --cores xx --conda-prefix conda_envs -np`
   
 Run the workflow:  
-`snakemake --use-conda --cores 24 --conda-prefix conda_envs`  
+`snakemake --use-conda --cores xx --conda-prefix conda_envs`  
 
 `--conda-prefix conda_envs` will look for/install the environments in a directory called `conda_envs/`.  
 This is especially important if you should use the singularity container. Here the main software and test folder all have their respective environments installed in such a directory. If you omit this parameter snakemake/conda will try to download & install all required software which the container was specifically build for to circumvent.
 
 
-## Output  
-Besides a Final outputs are generated in the directory 
+## Outputs  
 The main output files are:  
 
 1. MultiQC HTML output (open in browser):  
@@ -137,20 +136,14 @@ The main output files are:
   
 2. (Annotated) Insertion tables under `MuWU/results/insertions_table_final/`  
 ```
+all_identified_insertions.csv
+germinal_identified_insertions.csv
+
+#! only in GRID method
 all_identified_insertions_annotated.csv
-
-#! only 
-l_identified_insertions_annotated.csv
-
+germinal_identified_insertions_annotated.csv
 ```
 
-<br>  
-
-
-### Starting MuWU:
-Change thread options for individual rules in the config.yaml file.  
-Then specifiy overall threads and start MuWU via:  
-`snakemake --cores xx --use-conda`  
 <br>  
 
 # :heavy_check_mark: Tests
