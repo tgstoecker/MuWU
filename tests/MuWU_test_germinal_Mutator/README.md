@@ -1,127 +1,32 @@
-# MuWU
-## Mu-Seq Workflow Utility 
-[![Snakemake](https://img.shields.io/badge/snakemake-=5.7.0-brightgreen.svg)](https://snakemake.readthedocs.io)
+Tests include all input files.
+Options are already pre-selected for *Mutator* TE and this particular test dataset.
 
-- Automated workflow for the identification and annotation of *Mutator* insertion sites used in the creation of the BonnMu resource
-- Requires as input Mu-seq reads in grid design as outlined by McCarty et al. 2013 and Liu et al. 2016 
-<br>  
+To run enter:
+`snakemake --use-conda --cores xx`
+`snakemake --use-conda --cores xx --conda-prefix conda_envs` (when using the singularity container)
 
-There are 2 ways of using MuWU:  
-* a singularity container, which includes a **working example with exemplary data** and requires no further downloads except for the container itself  
-* via cloning this repo and then using conda installation of necessary software at runtime  
-  
-The main output files are:  
+This test dataset simulates a run using the GRID method which also identifies the subset of heritable germinal insertions.
 
-1. MultiQC HTML output (open in browser):  
+Note that this particular test will build a bowtie2 index for the complete maize v4 reference genome.  
+A complete run takes ~30 min on an AMD EPYC 7662 with 48 cores.  
+
+Exemplary output from `results/insertions_table_final/germinal_identified_insertions_annotated.csv`:  
+
 ```
-/MuWU/multiqc/multiqc.html
-```  
-  
-2. Gene & Transcript level final output tables:  
+"GeneID","Chr","Start","End","Sample","InsertionStart","InsertionEnd","StartReads","EndReads","Gene_length","stock"
+"Zm00001d027324","1",2959502,2972168,"Row-01",2959609,2959617,2,4,12667,"D-0081"
+"Zm00001d027324","1",2959502,2972168,"Col-04",2959609,2959617,3,15,12667,"D-0081"
+"Zm00001d028211","1",26525210,26529825,"Row-03",26529757,26529765,16,2,4616,"D-0127"
+"Zm00001d028211","1",26525210,26529825,"Col-02",26529757,26529765,2,4,4616,"D-0127"
+"Zm00001d028532","1",38393485,38403506,"Row-02",38393512,38393520,2,3,10022,"D-0102"
+"Zm00001d028532","1",38393485,38403506,"Col-01",38393512,38393520,2,2,10022,"D-0102"
+"Zm00001d029980","1",97331766,97337093,"Row-01",97331843,97331851,2,2,5328,"D-0081"
+"Zm00001d029980","1",97331766,97337093,"Col-04",97331843,97331851,6,2,5328,"D-0081"
+"Zm00001d030164","1",109844576,109871086,"Row-03",109844709,109844717,2,2,26511,"D-0127"
+"Zm00001d030164","1",109844576,109871086,"Col-02",109844709,109844717,3,2,26511,"D-0127"
+"Zm00001d030533","1",142260864,142278394,"Row-01",142273323,142273331,5,8,17531,"D-0079"
+"Zm00001d030533","1",142260864,142278394,"Col-02",142273323,142273331,6,8,17531,"D-0079"
+"Zm00001d031013","1",173396175,173402763,"Row-01",173396182,173396190,4,4,6589,"D-0080"
+"Zm00001d031013","1",173396175,173402763,"Col-03",173396182,173396190,3,2,6589,"D-0080"
+...
 ```
-/MuWU/MuSeq_table_final/Mu_single_GeneIds_gene_lengths_and_stock.csv
-/MuWU/MuSeq_table_final/Mu_single_TranscriptIds_transcript_lengths_and_stock.csv
-```
-<br>  
-
-## Option 1. Singularity container (incl. working example)
-### Step 1 - Set up Singularity on your system: 
-Install the Python 3 version of Miniconda.
-you can get it here: https://docs.conda.io/en/latest/miniconda.html
-
-Answer yes to the question whether conda shall be put into your PATH environment variable.
-
-Then, you can install Singularity with
-`conda install -c conda-forge singularity=3.6.1`  
-  
-Alternatively install Singularity based on these instructions: https://singularity.lbl.gov/install-linux  
-  
-### Step 2 - set up the container to run the workflow  ####
-
-**Download the MuWU-example.sif file, hosted here:**  https://uni-bonn.sciebo.de/s/LsmuNDuEeA0sUer  
-  
-Create a sandbox from the .sif file:  
-This can take a while (on Intel(R) Xeon(R) CPU E5-2690 v4@ 2.60GHz roughly 30 min!), since the sandbox will be over 20Gb in size.  
-It is might be necessary to set SINGULARITY_TMPDIR to a particular (or newly created) tmp directroy as singularity on some systems uses `/tmp` directory as standard while building. This can lead to storage errors if the space is limited by your sysadmin.  
-Easy workaround - set SINGULARITY_TMPDIR to a directory where space is plenty:  
-`export SINGULARITY_TMPDIR=/path/to/where/tmp/should/be`  
-  
-`singularity build --sandbox MuWU-example MuWU-example.sif`  
-  
-Access the sandbox:  
-`singularity shell --writable --no-home MuWU-example`
-  
-Once "inside", navigate to the MuWU directory  
-`cd /MuWU/`  
-  
-Activate conda environment (snakemake is already installed):  
-`source activate snakemake`  
-
-### Step 3 - run the workflow:  
-
-Check the workflow (dryrun; testbuild of DAG):  
-`snakemake --use-conda --cores 24 --conda-prefix conda_envs -np`
-  
-Run the workflow:  
-(on Intel(R) Xeon(R) CPU E5-2690 v4@ 2.60GHz with 24 cores it takes ~ 10min)  
-`snakemake --use-conda --cores 24 --conda-prefix conda_envs`  
-<br>  
-
-#### Output  
-Final outputs are generated in the directory `./MuSeq_table_final`  
-  
-
-## Option 2. Cloning of this repo and download/installation of software at runtime
-### Set up conda and snakemake: 
-Install the Python 3 version of Miniconda.
-you can get it here: https://docs.conda.io/en/latest/miniconda.html
-
-Answer yes to the question whether conda shall be put into your PATH environment variable.
-
-Then, you can install Snakemake with
-
-`conda install -c bioconda -c conda-forge snakemake=5.7.0`  
-<br>  
-
-### Preparing the working directory:
-
-Download/Clone the current release of the MuWU pipeline.
-
-With conda and the included YAML files all required software and dependencies are downloaded and prepared into conda environment during runtime of the workflow.
-
-MuWU requires to adhere to the directory structure explained in the following.
-During the workflow new directories will be created, however for easy usage please copy or move your sequencing data to the RawReads directory. 
-Fasta and annotation files are downloaded automatically from ensembl; e.g. currently used: v4 maize reference assembly and annotations:
-
-- Zea_mays.B73_RefGen_v4.dna.toplevel.fa
-
-- Zea_mays.B73_RefGen_v4.46.gtf
-
-- Zea_mays.B73_RefGen_v4.46.gff3
-
-
-It is also necessary to stick to the following naming scheme of the samples:
-column/row; sample number; left/right
-e.g.:
-Col_01.1.fq; 
-Col_01.2.fq; 
-Row_01.1.fq; 
-etc. 
-
-Lastly, copy/link a stock matrix .xlsx table (example file given) into the stock_matrix directory.
-
-This will assign the mutation to the corresponding stock automatically at the end of the workflow.  
-<br>  
-
-### Starting MuWU:
-Change thread options for individual rules in the config.yaml file.  
-Then specifiy overall threads and start MuWU via:  
-`snakemake --cores xx --use-conda`  
-<br>  
-
-### Only have a gff3 file?
-Exchange the R script Annotation_of_Insertions.R in the Snakefile rule *Assign_Gene_and_Transcript_IDs:* for the just_GFF3_Annotation_of_Insertions.R script also provided.  
-  
-### The workflow in the current release:
-`snakemake --rulegraph | dot -Tsvg > rulegraph.svg`
-![Alt text](./rulegraph_GRID.svg)
