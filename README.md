@@ -1,9 +1,30 @@
 # MuWU
 ## Mu-Seq Workflow Utility 
-[![Snakemake](https://img.shields.io/badge/snakemake-=5.7.0-brightgreen.svg)](https://snakemake.readthedocs.io)
+[![Snakemake](https://img.shields.io/badge/snakemake-=6.4.1-brightgreen.svg)](https://snakemake.readthedocs.io)
 
-- Automated workflow for the identification and annotation of *Mutator* insertion sites used in the creation of the BonnMu resource
-- Requires as input Mu-seq reads in grid design as outlined by McCarty et al. 2013 and Liu et al. 2016 
+- Automated workflow for the identification and annotation of transposable element insertion sites originally developed for the BonnMu resource and *Mutator* transposons in particular 
+- MuWU is able to detect any kind of TE as long as target site duplications (TSDs) are created by its integration and the TSD length is known
+
+## :control_knobs: Modes
+### Two modes - GRID and GENERIC:
+
+**GRID**
+- Requires as input reads in grid design as outlined e.g. by McCarty et al. 2013 and Liu et al. 2016 
+- Differentiates between heritable germinal insertions and somatic insertions and annotates both sets
+
+**GENERIC**
+- Does not require sequencing reads of special experimental design
+- Identifies & annotates all insertions of the particular TE
+
+
+## :gear: Options
+
+
+
+## :arrow_double_down: Download & Setup
+
+## :beginner: Usage
+
 <br>  
 
 There are 2 ways of using MuWU:  
@@ -17,10 +38,9 @@ The main output files are:
 /MuWU/multiqc/multiqc.html
 ```  
   
-2. Gene & Transcript level final output tables:  
+2. Gene level final output tables:  
 ```
 /MuWU/MuSeq_table_final/Mu_single_GeneIds_gene_lengths_and_stock.csv
-/MuWU/MuSeq_table_final/Mu_single_TranscriptIds_transcript_lengths_and_stock.csv
 ```
 <br>  
 
@@ -122,6 +142,7 @@ Then specifiy overall threads and start MuWU via:
 ### Only have a gff3 file?
 Exchange the R script Annotation_of_Insertions.R in the Snakefile rule *Assign_Gene_and_Transcript_IDs:* for the just_GFF3_Annotation_of_Insertions.R script also provided.  
   
-### The workflow in the current release:
+## :framed_picture: Visual
+### GRID workflow (visualized as snakemake rulegraph):
 `snakemake --rulegraph | dot -Tsvg > rulegraph.svg`
 ![Alt text](./rulegraph_GRID.svg)
