@@ -29,14 +29,38 @@ config.yaml, bla
 
 There are 2 ways of using MuWU:  
 * via cloning this repo and then using conda installation of necessary software at runtime
-* a singularity container, which includes a **working example with exemplary data** and requires no further downloads except for the container itself  
+* a singularity container, which includes a and requires no further downloads except for the container itself  
 
-## Option 2. Singularity container (incl. working example)
+
+## Option 1. Cloning of this repo and download/installation of software at runtime
+### Step 1 - Set up conda and snakemake: 
+Install the Python 3 version of Miniconda.
+you can get it here: https://docs.conda.io/en/latest/miniconda.html
+
+Answer yes to the question whether conda shall be put into your PATH environment variable.
+
+Then, you can install mamba and Snakemake with
+
+`conda install -c conda-forge -c bioconda mamba snakemake=6.4.1`  
+
+### Step 2 - Preparing the working directory:
+
+Clone the current release of the MuWU pipeline.
+
+`git clone https://github.com/tgstoecker/MuWU.git`
+
+With conda and the included YAML files all required software and dependencies are downloaded and prepared into conda environment during runtime of the workflow.
+
+
+## Option 2. Singularity container
 ### Step 1 - Set up Singularity on your system: 
 Install the Python 3 version of Miniconda.
 you can get it here: https://docs.conda.io/en/latest/miniconda.html
 
 Answer yes to the question whether conda shall be put into your PATH environment variable.
+
+Install mamba:
+`conda install -c conda-forge mamba`
 
 Then, you can install Singularity (3.6.1) with
 `mamba install -c conda-forge singularity=3.6.1`  
@@ -64,6 +88,9 @@ Once "inside", navigate to the MuWU directory
 Activate conda environment (snakemake is already installed):  
 `source activate snakemake`  
 
+
+# :beginner: Usage & Output
+
 ### Step 3 - run the workflow:  
 
 Check the workflow (dryrun; testbuild of DAG):  
@@ -77,24 +104,6 @@ Run the workflow:
 #### Output  
 Final outputs are generated in the directory `./MuSeq_table_final`  
   
-
-## Option 2. Cloning of this repo and download/installation of software at runtime
-### Set up conda and snakemake: 
-Install the Python 3 version of Miniconda.
-you can get it here: https://docs.conda.io/en/latest/miniconda.html
-
-Answer yes to the question whether conda shall be put into your PATH environment variable.
-
-Then, you can install Snakemake with
-
-`conda install -c bioconda -c conda-forge snakemake=5.7.0`  
-<br>  
-
-### Preparing the working directory:
-
-Download/Clone the current release of the MuWU pipeline.
-
-With conda and the included YAML files all required software and dependencies are downloaded and prepared into conda environment during runtime of the workflow.
 
 MuWU requires to adhere to the directory structure explained in the following.
 During the workflow new directories will be created, however for easy usage please copy or move your sequencing data to the RawReads directory. 
@@ -121,11 +130,6 @@ This will assign the mutation to the corresponding stock automatically at the en
 <br>  
 
 
-
-# :beginner: Usage, Tests & Output
-
-<br>  
-
 The main output files are:  
 
 1. MultiQC HTML output (open in browser):  
@@ -148,6 +152,13 @@ Then specifiy overall threads and start MuWU via:
 
 ### Only have a gff3 file?
 Exchange the R script Annotation_of_Insertions.R in the Snakefile rule *Assign_Gene_and_Transcript_IDs:* for the just_GFF3_Annotation_of_Insertions.R script also provided.  
+
+# :heavy_check_mark: Tests
+We have included several tests to demonstrate MuWU' functionality and broad range of usability.
+
+- 
+-
+-
   
 # :framed_picture: Visualized
 ### GRID workflow (as snakemake rulegraph):
