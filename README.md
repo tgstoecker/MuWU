@@ -1,5 +1,7 @@
 # MuWU - Mu-Seq Workflow Utility [![Snakemake](https://img.shields.io/badge/snakemake-=6.4.1-brightgreen.svg)](https://snakemake.readthedocs.io)
 
+<br>
+
 <img align="right" src="TSD_mapping.png" width=300 >
 
 
@@ -11,7 +13,7 @@
 # :control_knobs: Two modes - GRID and GENERIC:
 
 **GRID**
-- Requires as input reads in grid design as outlined or used e.g. by McCarty et al. 2013; Liu et al. 2016; Marcon et al. 2020 
+- Requires as input reads in grid design as outlined e.g. by McCarty et al. 2013; Liu et al. 2016; Marcon et al. 2020 
 - Differentiates between heritable germinal insertions and somatic insertions and annotates both sets
 
 **GENERIC**
@@ -19,11 +21,13 @@
 - Identifies & annotates all insertions of the particular TE
 
 
+<br>  
 
 # :gear: Options
 
 config.yaml, bla
 
+<br>  
 
 # :arrow_double_down: Download & Setup
 
@@ -88,32 +92,29 @@ Once "inside", navigate to the MuWU directory
 Activate conda environment (snakemake is already installed):  
 `source activate snakemake`  
 
+<br>  
 
 # :beginner: Usage & Output
 
-### Step 3 - run the workflow:  
+## Required input files
 
-Check the workflow (dryrun; testbuild of DAG):  
-`snakemake --use-conda --cores 24 --conda-prefix conda_envs -np`
-  
-Run the workflow:  
-(on Intel(R) Xeon(R) CPU E5-2690 v4@ 2.60GHz with 24 cores it takes ~ 10min)  
-`snakemake --use-conda --cores 24 --conda-prefix conda_envs`  
-<br>  
+As described under options, control of parameters and inputs is inside `config/config.yaml` - for more details for all options please see that file.
 
-#### Output  
-Final outputs are generated in the directory `./MuSeq_table_final`  
-  
+Both the GRID & GENERIC methods require:
+1. Reference sequence & annotation for the species in question 
+   - MuWU can handle both file paths as well URL links (will download files in the later case automatically)
+   - Files can be either unpacked or gzipped
+   - We currently support gff3, gtf and genbank (.gbff & .dat) as annotation formats
+     - In case of a GenBank annotation we also demand the corresponding "assembly_report.txt" to be supplied in order to cirrectly rename the chromosomes/scaffolds
+2. SE or PE sequencing reads (unpacked or gzipped) (best: enriched for insertions and with a primer/adapter PCR approach yielding starts/ends with TSD sequence after trimming)
+3. File describing samples (**this differs between the methods!**)
+   - GRID: an excel table needs to be supplied under `config/stock_matrix/` (example provided)
+   - GENERIC: (example provided)
+   - -> 
 
-MuWU requires to adhere to the directory structure explained in the following.
+
 During the workflow new directories will be created, however for easy usage please copy or move your sequencing data to the RawReads directory. 
-Fasta and annotation files are downloaded automatically from ensembl; e.g. currently used: v4 maize reference assembly and annotations:
-
-- Zea_mays.B73_RefGen_v4.dna.toplevel.fa
-
-- Zea_mays.B73_RefGen_v4.46.gtf
-
-- Zea_mays.B73_RefGen_v4.46.gff3
+Fasta and annotation files are downloaded automatically from ensembl; e.g. currently used: 
 
 
 It is also necessary to stick to the following naming scheme of the samples:
@@ -128,6 +129,23 @@ Lastly, copy/link a stock matrix .xlsx table (example file given) into the stock
 
 This will assign the mutation to the corresponding stock automatically at the end of the workflow.  
 <br>  
+
+## Once everything is set up - run the workflow:  
+
+Check the workflow (dryrun; testbuild of DAG):  
+`snakemake --use-conda --cores 24 --conda-prefix conda_envs -np`
+  
+Run the workflow:  
+`snakemake --use-conda --cores 24 --conda-prefix conda_envs`  
+
+`--conda-prefix conda_envs` will look for/install the environments in a directory called `conda_envs/`.  
+This is especially important if you should use the singularity container. Here the main software and test folder all have their respective environments installed in such a directory. If you omit this parameter snakemake/conda will try to download & install all required software which the container was specifically build for to circumvent.
+
+#### Output  
+Final outputs are generated in the directory `./MuSeq_table_final`  
+  
+
+
 
 
 The main output files are:  
@@ -153,14 +171,21 @@ Then specifiy overall threads and start MuWU via:
 ### Only have a gff3 file?
 Exchange the R script Annotation_of_Insertions.R in the Snakefile rule *Assign_Gene_and_Transcript_IDs:* for the just_GFF3_Annotation_of_Insertions.R script also provided.  
 
+<br>  
+
 # :heavy_check_mark: Tests
 We have included several tests to demonstrate MuWU' functionality and broad range of usability.
 
-- 
--
--
-  
+- 1
+- 2
+- 3
+
+<br>  
+
 # :framed_picture: Visualized
 ### GRID workflow (as snakemake rulegraph):
 `snakemake --rulegraph | dot -Tsvg > rulegraph.svg`
+
+<br>  
+
 ![Alt text](./rulegraph_GRID.svg)
