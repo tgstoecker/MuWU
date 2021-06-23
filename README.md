@@ -25,7 +25,17 @@
 
 # :gear: Options
 
-config.yaml, bla
+All options of the workflow including which of the two methods to chose, input files and parameters for e.g. thread usage per step can be set and changed in `config/config.yaml`.  
+The most important parameters are briefly discussed in the following.  
+Besides suitable handling of primers/adapters via trimming using cutadapt & trimmomatic the config.yaml allows to set:  
+`overlap_size`, `overlap_support` and `extension` (allow of which accept an integer as argument)
+
+With `overlap_size` the user can change the length of the overlap region (start/end of reads) used inside identification algorithm.
+This should be set equal to the length of TSD of the transposon being investigated (default is 9 = *Mutator* transposons).  
+
+`overlap_support` controls the minimum amount of support needed to call an insertion (default is 2). With this default it would necessitate at least two reads that end & 2 reads which start with the overlap (TSD sequence at particular locus).
+
+Using `extension`, upstream or downstream bases (eqaul to integer value) can be added to the gene models of the annotation to include UTRs, regulatory regions, promoter sequences etc.. This is helpful since insertions outside of gene models can otherwise not be annotated and thus allows for easier association of these regions with the gene at the particular locus.
 
 <br>  
 
