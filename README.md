@@ -3,7 +3,7 @@
 [![Snakemake](https://img.shields.io/badge/snakemake-=6.4.1-brightgreen.svg)](https://snakemake.readthedocs.io)
 
 - Automated workflow for the identification and annotation of transposable element insertion sites originally developed for the BonnMu resource and *Mutator* transposons in particular 
-- MuWU is able to detect any kind of TE as long as target site duplications (TSDs) are created by its integration and the TSD length is known
+- MuWU is able to **detect any kind of TE** as long as target site duplications (TSDs) are created by its integration and the TSD length is known
 
 ## :control_knobs: Modes
 ### Two modes - GRID and GENERIC:
