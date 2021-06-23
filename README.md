@@ -6,7 +6,7 @@
 
 
 - Automated workflow for the identification and annotation of transposable element insertion sites originally developed for the BonnMu resource and *Mutator* transposons in particular 
-- MuWU is able to **detect any kind of TE** as long as target site duplications (TSDs) are created by its integration and the TSD length is known
+- MuWU is able to **detect any kind of TE insertion event** as long as target site duplications (TSDs) are created by its integration and the TSD length is known
 
 <br>  
 
@@ -109,26 +109,10 @@ Both the GRID & GENERIC methods require:
 2. SE or PE sequencing reads (unpacked or gzipped) (best: enriched for insertions and with a primer/adapter PCR approach yielding starts/ends with TSD sequence after trimming)
 3. File describing samples (**this differs between the methods!**)
    - GRID: an excel table needs to be supplied under `config/stock_matrix/` (example provided)
-   - GENERIC: (example provided)
-   - -> 
+   - GENERIC: appropiately modified `config/samples.tsv` file
+   - -> In both cases the file is used to infer the complete structure of the workflow and SE/PE type of the reads
+   - -> In the GRID method it is important that the base name of the fastq file/s match its corresponding entry in the the stock matrix table
 
-
-During the workflow new directories will be created, however for easy usage please copy or move your sequencing data to the RawReads directory. 
-Fasta and annotation files are downloaded automatically from ensembl; e.g. currently used: 
-
-
-It is also necessary to stick to the following naming scheme of the samples:
-column/row; sample number; left/right
-e.g.:
-Col_01.1.fq; 
-Col_01.2.fq; 
-Row_01.1.fq; 
-etc. 
-
-Lastly, copy/link a stock matrix .xlsx table (example file given) into the stock_matrix directory.
-
-This will assign the mutation to the corresponding stock automatically at the end of the workflow.  
-<br>  
 
 ## Once everything is set up - run the workflow:  
 
@@ -141,13 +125,9 @@ Run the workflow:
 `--conda-prefix conda_envs` will look for/install the environments in a directory called `conda_envs/`.  
 This is especially important if you should use the singularity container. Here the main software and test folder all have their respective environments installed in such a directory. If you omit this parameter snakemake/conda will try to download & install all required software which the container was specifically build for to circumvent.
 
-#### Output  
-Final outputs are generated in the directory `./MuSeq_table_final`  
-  
 
-
-
-
+## Output  
+Besides a Final outputs are generated in the directory 
 The main output files are:  
 
 1. MultiQC HTML output (open in browser):  
@@ -155,10 +135,15 @@ The main output files are:
 /MuWU/multiqc/multiqc.html
 ```  
   
-2. Gene level final output tables:  
+2. (Annotated) Insertion tables under `MuWU/results/insertions_table_final/`  
 ```
-/MuWU/MuSeq_table_final/Mu_single_GeneIds_gene_lengths_and_stock.csv
+all_identified_insertions_annotated.csv
+
+#! only 
+l_identified_insertions_annotated.csv
+
 ```
+
 <br>  
 
 
@@ -166,11 +151,6 @@ The main output files are:
 Change thread options for individual rules in the config.yaml file.  
 Then specifiy overall threads and start MuWU via:  
 `snakemake --cores xx --use-conda`  
-<br>  
-
-### Only have a gff3 file?
-Exchange the R script Annotation_of_Insertions.R in the Snakefile rule *Assign_Gene_and_Transcript_IDs:* for the just_GFF3_Annotation_of_Insertions.R script also provided.  
-
 <br>  
 
 # :heavy_check_mark: Tests
