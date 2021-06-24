@@ -3,7 +3,7 @@ Options are already pre-selected for karma TE and this particular test dataset -
 
 To run enter:  
 `snakemake --use-conda --cores xx`  
-`snakemake --use-conda --cores xx --conda-prefix conda_envs` (when using the singularity container)  
+`snakemake --cores xx` (when using the singularity container)  
 
 karma transposons in this dataset result in 12 bp TSDs.  
 
