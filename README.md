@@ -2,11 +2,14 @@
 
 <br>
 
-<img align="right" src="TSD_mapping.png" width=300 >
+<img align="right" src="TSD_mapping.png" width=300>
 
 
 - Automated workflow for the identification and annotation of transposable element insertion sites originally developed for the *[BonnMu]*(https://academic.oup.com/plphys/article/184/2/620/6117865) resource and *Mutator* transposons in particular 
-- MuWU is able to **detect any kind of TE insertion event** as long as target site duplications (TSDs) are created by its integration, the TSD length is known and   the library is enriched for the areas of insertion/their immediate flanking sequences
+- MuWU is able to **detect any kind of TE insertion event** as long as: 
+    - target site duplications (TSDs) are created by its integration 
+    - the TSD length is known and   
+    - the library is enriched for the areas of insertion/their immediate flanking sequences
 
 <br>  
 
