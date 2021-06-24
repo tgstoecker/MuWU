@@ -3,7 +3,7 @@ Options are already pre-selected for *Mutator* TE and this particular test datas
 
 To run enter:  
 `snakemake --use-conda --cores xx`  
-`snakemake --use-conda --cores xx --conda-prefix conda_envs` (when using the singularity container)  
+`snakemake --cores xx` (when using the singularity container)  
 
 This test dataset simulates a run using the GRID method which also identifies the subset of heritable germinal insertions.  
 
