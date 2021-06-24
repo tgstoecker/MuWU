@@ -17,9 +17,9 @@ This way, a subset of reads is created that starts/ends with the TSD region - cr
 Finally, we compare the MuWU found karma insertions with those reported by RelocaTE2.
 
 In terms of recall we identify 21 of 23 RelocaTE2 insertions.  
-As the input data is not targeted towards karma TEs we have overall little read support and thus reduced `overlap_support` parameter which results in many additional potential insertion sites.  
+As the input data is not targeted towards karma TEs we have overall little read support and thus reduced the `overlap_support` parameter which results in many additional potential insertion sites.  
 
-In conclusion, MuWU can easily be adapted to other TEs - however a targeted approach is required for specfic TSD coverage which allows increasing the `overlap_support` parameter which in turn allows us to report final set of higher confidence and with less false positives.
+In conclusion, MuWU can easily be adapted to other TEs - however a targeted approach is required for specfic TSD coverage which allows increasing the `overlap_support` parameter which in turn leads to a final set of higher confidence and with less false positives.
 
 See our test with [ITIS test data](https://github.com/tgstoecker/MuWU/tree/master/tests/MuWU_ITIS_test_with_mping_TE) which is derived from the genome resequencing project of Japonica A123(SRR631734), which have TE mping activated. The library is thus enriched for mping TE making MuWU more suitable.  
 We show that our top candidates are the same as the high confidence set as reported by [ITIS](https://github.com/Chuan-Jiang/ITIS).  
