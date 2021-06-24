@@ -5,19 +5,19 @@
 <img align="right" src="TSD_mapping.png" width=300 >
 
 
-- Automated workflow for the identification and annotation of transposable element insertion sites originally developed for the [BonnMu](https://academic.oup.com/plphys/article/184/2/620/6117865) resource and *Mutator* transposons in particular 
-- MuWU is able to **detect any kind of TE insertion event** as long as target site duplications (TSDs) are created by its integration and the TSD length is known
+- Automated workflow for the identification and annotation of transposable element insertion sites originally developed for the *[BonnMu]*(https://academic.oup.com/plphys/article/184/2/620/6117865) resource and *Mutator* transposons in particular 
+- MuWU is able to **detect any kind of TE insertion event** as long as target site duplications (TSDs) are created by its integration, the TSD length is known and the library is enriched for the areas of insertion/their immediate flanking sequences
 
 <br>  
 
 # :control_knobs: Two modes - GRID and GENERIC:
 
 **GRID**
-- Requires as input reads in grid design as outlined e.g. by [McCarty et al. 2013](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0077172); [Marcon et al. 2020](https://academic.oup.com/plphys/article/184/2/620/6117865) 
+- Requires as input DNA sequencing reads in grid design as outlined e.g. by [McCarty et al. 2013](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0077172); [Marcon et al. 2020](https://academic.oup.com/plphys/article/184/2/620/6117865) 
 - Differentiates between heritable germinal insertions and somatic insertions and annotates both sets
 
 **GENERIC**
-- Does not require sequencing reads of special experimental design
+- Does not require DNA sequencing reads of special experimental design
 - Identifies & annotates all insertions of the particular TE
 
 
@@ -25,10 +25,10 @@
 
 # :gear: Options
 
-All options of the workflow including which of the two methods to chose, input files and parameters for e.g. thread usage per step can be set and changed in `config/config.yaml`.  
+All options of the workflow including which of the two methods to chose, input files and parameters (e.g. thread usage per step) can be set and changed in `config/config.yaml`.  
 The most important parameters are briefly discussed in the following.  
 Besides suitable handling of primers/adapters via trimming using cutadapt & trimmomatic the config.yaml allows to set:  
-`overlap_size`, `overlap_support` and `extension` (allow of which accept an integer as argument)
+`overlap_size`, `overlap_support` and `extension` (all of of which accept an integer argument).
 
 With `overlap_size` the user can change the length of the overlap region (start/end of reads) used inside identification algorithm.
 This should be set equal to the length of TSD of the transposon being investigated (default is 9 = *Mutator* transposons).  
@@ -42,8 +42,8 @@ Using `extension`, upstream or downstream bases (eqaul to integer value) can be 
 # :arrow_double_down: Download & Setup
 
 There are 2 ways of using MuWU:  
-* via cloning this repo and then using conda installation of necessary software at runtime
-* a singularity container, which includes a and requires no further downloads except for the container itself  
+* via cloning this repo and then using conda/mamba installation of necessary software at runtime
+* a singularity container, which requires no further downloads except for the container itself  
 
 
 ## Option 1. Cloning of this repo and download/installation of software at runtime
@@ -115,7 +115,7 @@ Both the GRID & GENERIC methods require:
    - MuWU can handle both file paths as well URL links (will download files in the later case automatically)
    - Files can be either unpacked or gzipped
    - We currently support gff3, gtf and genbank (.gbff & .dat) as annotation formats
-     - In case of a GenBank annotation we also demand the corresponding "assembly_report.txt" to be supplied in order to cirrectly rename the chromosomes/scaffolds
+     - In case of a GenBank annotation we also demand the corresponding "assembly_report.txt" to be supplied in order to correctly rename the chromosomes/scaffolds
 2. SE or PE sequencing reads (unpacked or gzipped) (best: enriched for insertions and with a primer/adapter PCR approach yielding starts/ends with TSD sequence after trimming)
 3. File describing samples (**this differs between the methods!**)
    - GRID: an excel table needs to be supplied under `config/stock_matrix/` (example provided)
@@ -133,7 +133,7 @@ Run the workflow:
 `snakemake --use-conda --cores xx --conda-prefix conda_envs`  
 
 `--conda-prefix conda_envs` will look for/install the environments in a directory called `conda_envs/`.  
-This is especially important if you should use the singularity container. Here the main software and test folder all have their respective environments installed in such a directory. If you omit this parameter snakemake/conda will try to download & install all required software which the container was specifically build for to circumvent.
+This is especially important if you should use the singularity container. Here the main software and test folder all have their respective environments **already installed** in such a directory. If you omit this parameter snakemake/conda will try to download & install all required software which the container was specifically build for to already to contain.
 
 
 ## Outputs  
