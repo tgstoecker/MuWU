@@ -3,7 +3,7 @@ Options are already pre-selected for mping TE and this particular test dataset -
 
 To run enter:  
 `snakemake --use-conda --cores xx`  
-`snakemake --use-conda --cores xx --conda-prefix conda_envs` (when using the singularity container)  
+`snakemake --cores xx` (when using the singularity container)  
 
 This dataset is taken fro a study investigating transposon polymorphisms using mping TE (insertions result in 3 bp TSDs).  
 
