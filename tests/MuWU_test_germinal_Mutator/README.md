@@ -1,16 +1,18 @@
-Tests include all input files.
-Options are already pre-selected for *Mutator* TE and this particular test dataset.
+Tests include all input files.  
+Options are already pre-selected for *Mutator* TE and this particular test dataset.  
 
-To run enter:
-`snakemake --use-conda --cores xx`
-`snakemake --use-conda --cores xx --conda-prefix conda_envs` (when using the singularity container)
+To run enter:  
+`snakemake --use-conda --cores xx`  
+`snakemake --use-conda --cores xx --conda-prefix conda_envs` (when using the singularity container)  
 
-This test dataset simulates a run using the GRID method which also identifies the subset of heritable germinal insertions.
+This test dataset simulates a run using the GRID method which also identifies the subset of heritable germinal insertions.  
 
 Note that this particular test will build a bowtie2 index for the complete maize v4 reference genome.  
 A complete run takes ~30 min on an AMD EPYC 7662 with 48 cores.  
 
 Exemplary output from `results/insertions_table_final/germinal_identified_insertions_annotated.csv`:  
+
+`stock` information refers to the intersection in the grid matrix and thus the F2 family (in the *BonnMu* project) in which the germinal insertion/mutation can be uniquely found.
 
 ```
 "GeneID","Chr","Start","End","Sample","InsertionStart","InsertionEnd","StartReads","EndReads","Gene_length","stock"
