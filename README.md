@@ -86,23 +86,22 @@ Alternatively install Singularity based on these instructions: https://singulari
   
 ### Step 2 - set up the container to run the workflow  ####
 
-**Download the MuWU-1.1.sif file, hosted here:**  https://uni-bonn.sciebo.de/s/LsmuNDuEeA0sUer  
+**Download the MuWU-1.1.sif file, hosted here:**  [https://uni-bonn.sciebo.de/s/LZldZvNkpRVYmxd](https://uni-bonn.sciebo.de/s/LZldZvNkpRVYmxd)  
   
 Create a sandbox from the .sif file:  
-This can take a while (on Intel(R) Xeon(R) CPU E5-2690 v4@ 2.60GHz roughly 30 min!), since the sandbox will be over 20Gb in size.  
 It is might be necessary to set SINGULARITY_TMPDIR to a particular (or newly created) tmp directroy as singularity on some systems uses `/tmp` directory as standard while building. This can lead to storage errors if the space is limited by your sysadmin.  
 Easy workaround - set SINGULARITY_TMPDIR to a directory where space is plenty:  
 `export SINGULARITY_TMPDIR=/path/to/where/tmp/should/be`  
   
-`singularity build --sandbox MuWU-example MuWU-example.sif`  
+`singularity build --sandbox MuWU-sandbox MuWUv1.1.sif`  
   
 Access the sandbox:  
-`singularity shell --writable --no-home MuWU-example`
+`singularity shell --home $PWD MuWU-sandbox`
   
-Once "inside", navigate to the MuWU directory  
-`cd /MuWU/`  
+Move "inside" and navigate to the MuWU directory (& inside one of test directories)
+`cd MuWU-sandox/MuWU/`  
   
-Activate conda environment (snakemake is already installed):  
+Activate conda environment (snakemake and all MuWU dependencies are already installed):  
 `source activate snakemake`  
 
 <br>  
@@ -118,7 +117,7 @@ Both the GRID & GENERIC methods require:
    - MuWU can handle both file paths as well URL links (will download files in the later case automatically)
    - Files can be either unpacked or gzipped
    - We currently support gff3, gtf and genbank (.gbff & .dat) as annotation formats
-     - In case of a GenBank annotation we also demand the corresponding "assembly_report.txt" to be supplied in order to correctly rename the chromosomes/scaffolds
+     - In case of a GenBank annotation we also demand the corresponding "assembly_report.txt" to be supplied (or an URL to be given) in order to correctly rename the chromosomes/scaffolds
 2. SE or PE sequencing reads (unpacked or gzipped) (best: enriched for insertions and with a primer/adapter PCR approach yielding starts/ends with TSD sequence after trimming)
 3. File describing samples (**this differs between the methods!**)
    - GRID: an excel table needs to be supplied under `config/stock_matrix/` (example provided)
@@ -163,7 +162,7 @@ germinal_identified_insertions_annotated.csv
 We have included several easily runable tests to demonstrate MuWU's functionality and easy adaptability to a broad range of TE insertion types (under `tests/`).  
 Navigating to one of these directories and running either:  
 `snakemake --use-conda --cores xx`  
-`snakemake --use-conda --cores xx --conda-prefix conda_envs` (when using the singularity container)  
+`snakemake --cores xx` (when using the singularity container)  
 will run the respective test run of the workflow.  
 In case of the latter two in which comparisons to [ITIS](https://github.com/Chuan-Jiang/ITIS) and [RelocaTE2](https://github.com/JinfengChen/RelocaTE2) are being made, the final step of the workflow will print comparative results to the console.  
 These results are also displayed in the respective README.md of the test directory.  
