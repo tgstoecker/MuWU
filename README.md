@@ -132,10 +132,13 @@ Check the workflow (dryrun; testbuild of DAG):
 `snakemake --use-conda --cores xx --conda-prefix conda_envs -np`
   
 Run the workflow:  
-`snakemake --use-conda --cores xx --conda-prefix conda_envs`  
+`snakemake --use-conda --cores xx` or  
+`snakemake --cores xx`  (when using the singularity container)
 
-`--conda-prefix conda_envs` will look for/install the environments in a directory called `conda_envs/`.  
-This is especially important if you should use the singularity container. Here the main software and test folder all have their respective environments **already installed** in such a directory. If you omit this parameter snakemake/conda will try to download & install all required software which the container was specifically build for to already to contain.
+Using the latter command (without `--use-conda`) will expect all software to be readily available and in your $PATH.  
+Here the main software and test folder all have their respective environments **already installed**.  
+If you omit this parameter snakemake/conda will try to download & install all required software which the container was specifically build for to already to contain.  
+Of course this is exactly the behaviour you want if you cloned MuWU here from github and want all the dependencies to be installed at runtime.  
 
 
 ## Outputs  
