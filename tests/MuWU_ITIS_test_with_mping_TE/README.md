@@ -83,7 +83,9 @@ Looking at the top supported candidates in our MuWU analysis - StartEnd + EndRea
 6 Chr1:0-2000000  248110  248112  mping          2        6       8
 7 Chr1:0-2000000  352435  352437  mping          3        4       7
 8 Chr1:0-2000000  639973  639975  mping          2        5       7
+
 The overlap - 8 topHits MuWU & 6 high confidence candidates from ITIS:
+
            Chr.x Start.x   End.x          Chr.y Start.y   End.y Sample
 1 Chr1:0-2000000  174497  174500 Chr1:0-2000000  174498  174500  mping
 2 Chr1:0-2000000  214352  214355 Chr1:0-2000000  214353  214355  mping
