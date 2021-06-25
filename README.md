@@ -1,4 +1,4 @@
-# MuWU - Mu-Seq Workflow Utility [![Snakemake](https://img.shields.io/badge/snakemake-=6.4.1-brightgreen.svg)](https://snakemake.readthedocs.io)
+# MuWU - Mu-seq Workflow Utility [![Snakemake](https://img.shields.io/badge/snakemake-=6.4.1-brightgreen.svg)](https://snakemake.readthedocs.io)
 
 <br>
 
