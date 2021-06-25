@@ -5,7 +5,7 @@
 <img align="right" src="TSD_mapping.png" width=300>
 
 
-- Automated workflow for the identification and annotation of transposable element insertion sites originally developed for the *[BonnMu]*(https://academic.oup.com/plphys/article/184/2/620/6117865) resource and *Mutator* transposons in particular 
+- Automated workflow for the identification and annotation of transposable element insertion sites originally developed for the *[BonnMu](https://academic.oup.com/plphys/article/184/2/620/6117865)* resource and *Mutator* transposons in particular 
 - MuWU is able to **detect any kind of TE insertion event** as long as: 
     - target site duplications (TSDs) are created by its integration 
     - the TSD length is known and   
@@ -129,14 +129,14 @@ Both the GRID & GENERIC methods require:
 ## Once everything is set up - run the workflow:  
 Change thread options for individual rules in the config.yaml file.  
 Check the workflow (dryrun; testbuild of DAG):  
-`snakemake --use-conda --cores xx --conda-prefix conda_envs -np`
+`snakemake --use-conda --cores xx -np`
   
 Run the workflow:  
 `snakemake --use-conda --cores xx` or  
 `snakemake --cores xx`  (when using the singularity container)
 
 Using the latter command (without `--use-conda`) will expect all software to be readily available and in your $PATH.  
-Here the main software and test folder all have their respective environments **already installed**.  
+This is the intended command if you use the singuarity container - here the main software and test folder all have their respective environments **already installed**.  
 If you omit this parameter snakemake/conda will try to download & install all required software which the container was specifically build for to already to contain.  
 Of course this is exactly the behaviour you want if you cloned MuWU here from github and want all the dependencies to be installed at runtime.  
 
