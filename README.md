@@ -41,7 +41,7 @@ This should be set equal to the length of TSD of the transposon being investigat
 
 `overlap_support` controls the minimum amount of support needed to call an insertion (default is 2). With this default it would necessitate at least two reads that end & 2 reads which start with the overlap (TSD sequence at particular locus).
 
-Using `extension`, upstream or downstream bases (eqaul to integer value) can be added to the gene models of the annotation to include UTRs, regulatory regions, promoter sequences etc.. This is helpful since insertions outside of gene models can otherwise not be annotated and thus allows for easier association of these regions with the gene at the particular locus.
+Using `extension`, upstream or downstream bases (equal to integer value) can be added to the gene models of the annotation to include UTRs, regulatory regions, promoter sequences etc.. This is helpful since insertions outside of gene models can otherwise not be annotated and thus allows for easier association of these regions with the gene at the particular locus.
 
 <br>  
 
