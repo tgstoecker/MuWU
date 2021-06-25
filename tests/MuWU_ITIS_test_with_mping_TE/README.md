@@ -6,6 +6,7 @@ To run enter:
 `snakemake --cores xx` (when using the singularity container)  
 
 This dataset is taken fro a study investigating transposon polymorphisms using mping TE (insertions result in 3 bp TSDs).  
+- genome resequencing project of Japonica A123(SRR631734), which have transposon mping be activted
 
 The test runs the MuWU pipeline on the test dataset and trims the mping consensus sequence from all reads if it is found.  
 This way, a subset of reads is created that starts/ends with the TSD region - creating a library suitable for the MuWU insertion identification algorithm.  
