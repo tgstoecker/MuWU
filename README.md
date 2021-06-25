@@ -86,7 +86,7 @@ Alternatively install Singularity based on these instructions: https://singulari
   
 ### Step 2 - set up the container to run the workflow  ####
 
-**Download the MuWU-1.1.sif file, hosted here:**  [https://uni-bonn.sciebo.de/s/LZldZvNkpRVYmxd](https://uni-bonn.sciebo.de/s/LZldZvNkpRVYmxd)  
+**Download the MuWUv1.1.sif file, hosted here:**  [https://uni-bonn.sciebo.de/s/LZldZvNkpRVYmxd](https://uni-bonn.sciebo.de/s/LZldZvNkpRVYmxd)  
   
 Create a sandbox from the .sif file:  
 It is might be necessary to set SINGULARITY_TMPDIR to a particular (or newly created) tmp directroy as singularity on some systems uses `/tmp` directory as standard while building. This can lead to storage errors if the space is limited by your sysadmin.  
