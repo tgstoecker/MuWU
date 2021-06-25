@@ -186,3 +186,31 @@ These results are also displayed in the respective README.md of the test directo
 <br>  
 
 ![Alt text](./rulegraph_GRID.svg)
+
+# :scroll: Complete list of software
+- bioconductor-iranges ==2.26.0
+- biopython =1.78
+- bowtie2 ==2.4.1
+- coreutils =8.31
+- cutadapt ==2.10
+- fastqc ==0.11.9
+- gffread =0.12.1
+- grep =3.4
+- mamba ==0.14.1
+- multiqc ==1.10.1
+- numpy =1.16.4
+- pandas =0.25.0
+- picard ==2.22.1
+- pigz ==2.3.4
+- python >=3.6
+- r-base ==4.1.0
+- r-dplyr ==1.0.6
+- r-fuzzyjoin ==0.1.6
+- r-readxl ==1.3.1
+- r-stringr ==1.4.0
+- samtools ==1.10
+- seqkit =0.16.1
+- snakemake ==6.4.1
+- snakemake-wrapper-utils ==0.2.0
+- tbb ==2020.2
+- trimmomatic ==0.36
