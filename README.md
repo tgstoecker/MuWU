@@ -175,7 +175,7 @@ These results are also displayed in the respective README.md of the test directo
 
 - [GRID method test with *Mutator* TE (TSD = 9bp) - *Zea mays*](https://github.com/tgstoecker/MuWU/tree/master/tests/MuWU_test_germinal_Mutator)
 - [GENERIC method test with *mping* TE (TSD = 3bp) - *Oryza sativa*](https://github.com/tgstoecker/MuWU/tree/master/tests/MuWU_ITIS_test_with_mping_TE) based on [ITIS](https://github.com/Chuan-Jiang/ITIS) test data
-- [GENERIC method test with *karma* TE (TSD = 12bp) - *Oryza sativa*](https://github.com/tgstoecker/MuWU/tree/master/tests/MuWU_RelocaTE2_test_with_karma_TE) based on [RelocaTE2](https://github.com/JinfengChen/RelocaTE2) test data
+- [GENERIC method test with *Karma* TE (TSD = 12bp) - *Oryza sativa*](https://github.com/tgstoecker/MuWU/tree/master/tests/MuWU_RelocaTE2_test_with_karma_TE) based on [RelocaTE2](https://github.com/JinfengChen/RelocaTE2) test data
 
 <br>  
 
