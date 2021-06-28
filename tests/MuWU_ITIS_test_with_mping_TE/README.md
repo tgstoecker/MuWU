@@ -1,11 +1,11 @@
 Tests include all input files.  
-Options are already pre-selected for mping TE and this particular test dataset - see [ITIS](https://github.com/Chuan-Jiang/ITIS).  
+Options are already pre-selected for *mPing* TE and this particular test dataset - see [ITIS](https://github.com/Chuan-Jiang/ITIS).  
 
 To run enter:  
 `snakemake --use-conda --cores xx`  
 `snakemake --cores xx` (when using the singularity container)  
 
-This dataset is taken fro a study investigating transposon polymorphisms using mping TE (insertions result in 3 bp TSDs).  
+This dataset is taken fro a study investigating transposon polymorphisms using *mPing* TE (insertions result in 3 bp TSDs).  
 - genome resequencing project of Japonica A123(SRR631734), which have transposon mping be activted
 
 The test runs the MuWU pipeline on the test dataset and trims the mping consensus sequence from all reads if it is found.  
@@ -14,7 +14,7 @@ This way, a subset of reads is created that starts/ends with the TSD region - cr
 Finally, we compare the MuWU found mping insertions with those reported by ITIS.  
 
 In terms of recall we identify all 6 high confidence insertions as reported by ITIS.  
-Compared to the RelocaTE2 test, this dataset here is focussed on one particular TE mping - thus we have greater overall TE/TSD read support.  
+Compared to the RelocaTE2 test, this dataset here is focussed on one particular TE *mPing* - thus we have greater overall TE/TSD read support.  
 - The `overlap_support` parameter can be increased to generate higher confidence results and with less false positives.  
 
 Our test shows that in our top 8 MuWU insertion calls we identify the 6 high confidence insertions reported by ITIS.  
