@@ -75,7 +75,7 @@ overlap_size: 3
 
 #### change minimum amount of support needed to call insertion - default: 2  ####
 ### in this example this would necessitate at least two reads that end & 2 reads which start with the overlap (TSD) ###
-overlap_support: 1
+overlap_support: 2
 
 #### add upstream or downstream bases (integer) to gene models to include regulatory regions, promoter sequences etc. ####
 ### note that gene length as reported in the final results is not impacted by this ###
