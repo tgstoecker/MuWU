@@ -165,17 +165,17 @@ germinal_identified_insertions_annotated.csv
 <br>  
 
 # :heavy_check_mark: Tests
-We have included several easily runable tests to demonstrate MuWU's functionality and easy adaptability to a broad range of TE insertion types (under `tests/`).  
+We have included easily executable tests to demonstrate MuWU's functionality and easy adaptability to a broad range of TE insertion types (under `tests/`).  
 Navigating to one of these directories and running either:  
 `snakemake --use-conda --cores xx`  
 `snakemake --cores xx` (when using the singularity container)  
 will run the respective test run of the workflow.  
-In case of the latter two in which comparisons to [ITIS](https://github.com/Chuan-Jiang/ITIS) and [RelocaTE2](https://github.com/JinfengChen/RelocaTE2) are being made, the final step of the workflow will print comparative results to the console.  
+In case of the latter one in which a comparison to [ITIS](https://github.com/Chuan-Jiang/ITIS) is being made, the final step of the workflow will print comparative results to the console.  
 These results are also displayed in the respective README.md of the test directory.  
 
 - [GRID method test with *Mutator* TE (TSD = 9bp) - *Zea mays*](https://github.com/tgstoecker/MuWU/tree/master/tests/MuWU_test_germinal_Mutator)
 - [GENERIC method test with *mping* TE (TSD = 3bp) - *Oryza sativa*](https://github.com/tgstoecker/MuWU/tree/master/tests/MuWU_ITIS_test_with_mping_TE) based on [ITIS](https://github.com/Chuan-Jiang/ITIS) test data
-- [GENERIC method test with *Karma* TE (TSD = 12bp) - *Oryza sativa*](https://github.com/tgstoecker/MuWU/tree/master/tests/MuWU_RelocaTE2_test_with_karma_TE) based on [RelocaTE2](https://github.com/JinfengChen/RelocaTE2) test data
+
 
 <br>  
 
