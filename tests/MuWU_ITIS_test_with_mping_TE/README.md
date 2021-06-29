@@ -55,18 +55,14 @@ Overlapping with MuWU results:
 3 Chr1:0-2000000  316534  316537 Chr1:0-2000000  316535  316537  mping
 4 Chr1:0-2000000  639972  639975 Chr1:0-2000000  639973  639975  mping
 5 Chr1:0-2000000 1193504 1193507 Chr1:0-2000000 1193505 1193507  mping
-6 Chr1:0-2000000 1374936 1374939 Chr1:0-2000000 1374936 1374938  mping
-7 Chr1:0-2000000 1374936 1374939 Chr1:0-2000000 1374937 1374939  mping
-8 Chr1:0-2000000 1374936 1374939 Chr1:0-2000000 1374939 1374941  mping
+6 Chr1:0-2000000 1374936 1374939 Chr1:0-2000000 1374937 1374939  mping
   StartReads EndReads
 1          3        6
 2          6        6
 3          4       13
 4          2        5
 5          6        7
-6          1        1
-7          7        8
-8          1        1
+6          7        8
 
 Consider, that MuWU would normally be used after a targeted PCR approach.
 We nevertheless identify 6 of the 6 high confidence mping insertions as identified by ITIS
