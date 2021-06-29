@@ -10,7 +10,7 @@ This data set is taken from genome resequencing project of Japonica A123(SRR6317
 The test runs the MuWU pipeline on the test dataset and trims the *mPing* consensus sequence from all reads if it is found.  
 This way, a subset of reads is created that starts/ends with the TSD region - creating a library suitable for the MuWU insertion identification algorithm.  
 
-Finally, we compare the MuWU found mping insertions with those reported by ITIS.  
+Finally, we compare the MuWU found *mPing* insertions with those reported by ITIS.  
 
 We identify all 6 high confidence insertions as reported by ITIS.  
 
