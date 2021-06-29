@@ -170,7 +170,7 @@ Navigating to one of these directories and running either:
 `snakemake --use-conda --cores xx`  
 `snakemake --cores xx` (when using the singularity container)  
 will run the respective test run of the workflow.  
-In case of the latter one in which a comparison to [ITIS](https://github.com/Chuan-Jiang/ITIS) is being made, the final step of the workflow will print comparative results to the console.  
+In case of the latter one in which a comparison to a test data set and results [ITIS](https://github.com/Chuan-Jiang/ITIS) is being made, the final step of the workflow will print results to the console.  
 These results are also displayed in the respective README.md of the test directory.  
 
 - [GRID method test with *Mutator* TE (TSD = 9bp) - *Zea mays*](https://github.com/tgstoecker/MuWU/tree/master/tests/MuWU_test_germinal_Mutator)
