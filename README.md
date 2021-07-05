@@ -12,7 +12,7 @@
 - MuWU is able to **detect any kind of TE insertion event** as long as: 
     - target site duplications (TSDs) are created by its integration 
     - the TSD length is known and   
-    - the library is enriched for the areas of insertion/their immediate flanking sequences
+    - the library is enriched for the areas of insertion/their immediate flanking sequences (e.g. targeted transposon sequencing)
 
 <br>  
 
