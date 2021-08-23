@@ -26,7 +26,7 @@ def is_valid_annotation_file(annotation):
 def get_file_ext(annotation):
     for ext in extensions:
         if annotation.endswith("{}".format(ext)):
-            return 
+            return ext
 
 def is_gbff(file):
     for ext in genbank:
