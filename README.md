@@ -16,6 +16,13 @@
 
 <br>  
 
+**If you use MuWU in published research. Please cite the paper:**  
+Stöcker, Tyll, et al. "MuWU: Mutant-seq library analysis and annotation." Bioinformatics (2021)  
+- DOI: [https://doi.org/10.1093/bioinformatics/btab679](https://doi.org/10.1093/bioinformatics/btab679)  
+- Link: [https://academic.oup.com/bioinformatics/advance-article/doi/10.1093/bioinformatics/btab679/6377773](https://academic.oup.com/bioinformatics/advance-article/doi/10.1093/bioinformatics/btab679/6377773)  
+
+<br>  
+
 # :control_knobs: Two modes - GRID and GENERIC:
 
 **GRID**
