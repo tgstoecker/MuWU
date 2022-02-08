@@ -1,0 +1,39 @@
+from snakemake.utils import min_version
+
+min_version("6.3.0")
+
+import pandas as pd
+import yaml
+import os.path
+from os import path
+
+configfile: "config/config.yaml"
+
+
+# assign directory containing sequencing reads as specified in config.yaml
+reads_dir = config["reads_dir"]
+
+#include: "rules/common_utils.smk"
+#include: "rules/common.smk"
+#include: "rules/ref_utils.smk"
+#include: "rules/ref.smk"
+#include: "rules/quality_control.smk"
+#include: "rules/trimming.smk"
+#include: "rules/mapping.smk"
+#include: "rules/duplicate_removal.smk"
+#include: "rules/indexes_bam2sam.smk"
+#include: "rules/insertion_identification.smk"
+#include: "rules/insertion_annotation.smk"
+include: "rules/te_typing.smk"
+
+#### ONLY FOR GRID DESIGN (STOCK MATRIX) BASED ANALYSIS ####
+#if config["approach"] == "GRID":
+
+SAMPLES=['Row-01', 'Row-02', 'Col-01', 'Col-02']
+PAIRED=['1', '2']
+#TE_TYPES=['Mu1_L', 'Mu1_R']
+TE_TYPES=config["TE_types"]
+
+rule all:
+    input:
+        expand("results/te_typing/{sample}/{paired}/{te_type}.txt", sample=SAMPLES, paired=PAIRED, te_type=TE_TYPES)
