@@ -24,7 +24,7 @@ include: "rules/duplicate_removal.smk"
 include: "rules/indexes_bam2sam.smk"
 include: "rules/insertion_identification.smk"
 include: "rules/insertion_annotation.smk"
-
+include: "rules/te_typing.smk"
 
 #### ONLY FOR GRID DESIGN (STOCK MATRIX) BASED ANALYSIS ####
 if config["approach"] == "GRID":

@@ -31,9 +31,9 @@ include: "rules/te_typing.smk"
 
 SAMPLES=['Row-01', 'Row-02', 'Col-01', 'Col-02']
 PAIRED=['1', '2']
-#TE_TYPES=['Mu1_L', 'Mu1_R']
 TE_TYPES=config["TE_types"]
 
 rule all:
     input:
-        expand("results/te_typing/{sample}/{paired}/{te_type}.txt", sample=SAMPLES, paired=PAIRED, te_type=TE_TYPES)
+        expand("results/te_typing/{sample}/{paired}/{te_type}.txt", sample=SAMPLES, paired=PAIRED, te_type=TE_TYPES),
+        "results/te_typing/all.types",

@@ -96,6 +96,7 @@ threads_convert_bam_to_sam: 4
 #GRID approach -  set this to #Col + #Row
 #GENERIC approach set this to # samples
 threads_identify_Mu_insertions: 24
+threads_te_typing_seqkit: 4
 
 
 # TE (sub-)types
