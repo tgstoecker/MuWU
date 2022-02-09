@@ -46,7 +46,7 @@ if config["approach"] == "GRID":
         log:
             "logs/multiqc/multiqc.log"
         wrapper:
-            "0.74.0/bio/multiqc"
+            "v1.1.0/bio/multiqc"
 
 
 #### ONLY FOR GENERIC ANALYSIS - NO STOCK MATRIX ####
@@ -125,6 +125,6 @@ elif config["approach"] == "GENERIC":
         log:
             "logs/multiqc/multiqc.log"
         wrapper:
-            "0.74.0/bio/multiqc"
+            "v.1.1.0/bio/multiqc"
 
 
