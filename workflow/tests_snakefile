@@ -13,6 +13,12 @@ configfile: "config/config.yaml"
 # assign directory containing sequencing reads as specified in config.yaml
 reads_dir = config["reads_dir"]
 
+#for the quick-hacked typing of insertions -> statically defined variables
+SAMPLES=config["SAMPLES"]
+PAIRED=config["PAIRED"]
+TE_TYPES=config["TE_types"]
+
+
 #include: "rules/common_utils.smk"
 #include: "rules/common.smk"
 #include: "rules/ref_utils.smk"
@@ -29,11 +35,8 @@ include: "rules/te_typing.smk"
 #### ONLY FOR GRID DESIGN (STOCK MATRIX) BASED ANALYSIS ####
 #if config["approach"] == "GRID":
 
-SAMPLES=['Row-01', 'Row-02', 'Col-01', 'Col-02']
-PAIRED=['1', '2']
-TE_TYPES=config["TE_types"]
-
 rule all:
     input:
         expand("results/te_typing/{sample}/{paired}/{te_type}.txt", sample=SAMPLES, paired=PAIRED, te_type=TE_TYPES),
+        expand("results/te_typing/{sample}/{sample}_te_types_merged.tsv", sample=SAMPLES, paired=PAIRED, te_type=TE_TYPES),
         "results/te_typing/all.types",

@@ -99,6 +99,11 @@ threads_identify_Mu_insertions: 24
 threads_te_typing_seqkit: 4
 
 
+#### TE typing ####
+SAMPLES: ['Row-01', 'Row-02', 'Row-03', 'Row-04',
+         'Col-01', 'Col-02', 'Col-03', 'Col-04']
+PAIRED: ['1', '2']
+
 # TE (sub-)types
 TE_types:
   Mu1_L: CCCTCTTCGTCCATAATGGCAATTATCTC
