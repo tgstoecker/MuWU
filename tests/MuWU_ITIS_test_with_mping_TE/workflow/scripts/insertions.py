@@ -181,15 +181,20 @@ print("Sorting by sample, chromosome and start position...")
 combined_csv = combined_csv.sort_values(['Sample','Chr', 'Start'])
 combined_csv_option_both = combined_csv.sort_values(['Sample','Chr', 'Start'])
 
+#rename Start to InsertionStart and End to InsertionEnd
+combined_csv.rename(columns={'Start': 'InsertionStart', 'End': 'InsertionEnd'}, inplace=True)
+combined_csv_option_both.rename(columns={'Start': 'InsertionStart', 'End': 'InsertionEnd'}, inplace=True)
+
+
 #if the --single or --both options are chosen:
 
 if both:
     print ('Identifying Single Line Insertions...')
-    MuTableSingle = pd.DataFrame(columns=['Chr','Start','End',
+    MuTableSingle = pd.DataFrame(columns=['Chr','InsertionStart','InsertionEnd',
                                             'Sample','StartReads','EndReads'])
     combined_csv['combined'] = list(zip(combined_csv.Chr,
-                                        combined_csv.Start,
-                                        combined_csv.End))
+                                        combined_csv.InsertionStart,
+                                        combined_csv.InsertionEnd))
     # combine combined_csv with grid sample sheet -> do samples belong to row or column
     combined_csv_grid = pd.merge(combined_csv, grid_sample_sheet, left_on='Sample', right_on='base_name')
 #    fRow=combined_csv[combined_csv['Sample'].str.match('Row')]
@@ -216,26 +221,26 @@ if both:
         to separate file for each '''
         x = args[0]
         fname = args[1]
-        df2 = pd.DataFrame(columns=['Chr','Start','End','Sample',
+        df2 = pd.DataFrame(columns=['Chr','InsertionStart','InsertionEnd','Sample',
                                     'StartReads','EndReads','combined'])
-        df3 = pd.DataFrame(columns=['Chr','Start','End',
+        df3 = pd.DataFrame(columns=['Chr','InsertionStart','InsertionEnd',
                                     'Sample','StartReads','EndReads'])
         for i in x:
             if len(fCol.loc[fCol['combined'] == i].index) == 1 \
             and len(fRow.loc[fRow['combined'] == i].index) ==1:
                 df2Col = fCol.loc[fCol['combined'] == i]
                 df2Row = fRow.loc[fRow['combined'] == i]
-                df2 = df2.append(df2Col[['Chr','Start','End',
+                df2 = df2.append(df2Col[['Chr','InsertionStart','InsertionEnd',
                                         'Sample','StartReads','EndReads']],
                                         sort=True)
-                df2 = df2.append(df2Row[['Chr','Start','End',
+                df2 = df2.append(df2Row[['Chr','InsertionStart','InsertionEnd',
                                         'Sample','StartReads','EndReads']],
                                         sort=True)
             else:
                 continue
         df3 = df3.append(df2, sort=True)
-        df3 = df3[['Chr','Start','End','Sample','StartReads','EndReads']]
-        header = ['Chr','Start','End','Sample','StartReads','EndReads']
+        df3 = df3[['Chr','InsertionStart','InsertionEnd','Sample','StartReads','EndReads']]
+        header = ['Chr','InsertionStart','InsertionEnd','Sample','StartReads','EndReads']
         with open(fname, 'w') as fout:
             df3.to_csv(fout, index=False, columns = header)
 
@@ -267,7 +272,9 @@ if both:
     print("Sorting by sample, chromosome and start position...")
     combined_single_csv = combined_single_csv.sort_values(['Sample',
                                                             'Chr',
-                                                            'Start'])
+                                                            'InsertionStart'])
+
+
 
 #export to csv, create Output file and move to new directory
 if not os.path.exists('../insertions_table'):
