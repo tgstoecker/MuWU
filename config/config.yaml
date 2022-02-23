@@ -100,8 +100,19 @@ threads_te_typing_seqkit: 4
 
 
 #### TE typing ####
-SAMPLES: ['Row-01', 'Row-02', 'Row-03', 'Row-04',
-         'Col-01', 'Col-02', 'Col-03', 'Col-04']
+SAMPLES: ['Row_01', 'Row_02', 'Row_03', 'Row_04',
+          'Row_05', 'Row_06', 'Row_07', 'Row_08',
+          'Row_09', 'Row_10', 'Row_11', 'Row_12',
+          'Row_13', 'Row_14', 'Row_15', 'Row_16',
+          'Row_17', 'Row_18', 'Row_19', 'Row_20',
+          'Row_21', 'Row_22', 'Row_23', 'Row_24',
+          'Col_01', 'Col_02', 'Col_03', 'Col_04',
+          'Col_05', 'Col_06', 'Col_07', 'Col_08',
+          'Col_09', 'Col_10', 'Col_11', 'Col_12',
+          'Col_13', 'Col_14', 'Col_15', 'Col_16',
+          'Col_17', 'Col_18', 'Col_19', 'Col_20',
+          'Col_21', 'Col_22', 'Col_23', 'Col_24']
+
 PAIRED: ['1', '2']
 
 # TE (sub-)types - Mu5_L just placeholder

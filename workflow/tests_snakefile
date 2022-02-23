@@ -37,6 +37,7 @@ include: "rules/te_typing.smk"
 
 rule all:
     input:
-        expand("results/te_typing/{sample}/{paired}/{te_type}.txt", sample=SAMPLES, paired=PAIRED, te_type=TE_TYPES),
-        expand("results/te_typing/{sample}/{sample}_te_types_merged.tsv", sample=SAMPLES, paired=PAIRED, te_type=TE_TYPES),
-        "results/te_typing/all.types",
+        expand("results/te_typing/pre_sorting/{sample}/{paired}/{te_type}.txt", sample=SAMPLES, paired=PAIRED, te_type=TE_TYPES),
+        expand("results/te_typing/pre_sorting/{sample}/{sample}_te_types_merged.tsv", sample=SAMPLES, paired=PAIRED, te_type=TE_TYPES),
+#        "results/te_typing/all.types",
+        expand("results/te_typing/uncategorized/{sample}/{paired}/unc.fa", sample=SAMPLES, paired=PAIRED),

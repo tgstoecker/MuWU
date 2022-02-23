@@ -1,0 +1,80 @@
+#zcat rawreads/*_1.fq.gz | 
+cat all_1_reads.fq |
+  seqkit grep -j 24 --by-name -r -f headers_strand_1_uncategorized_ins.csv | 
+  seqkit grep -j 24 --by-seq -m 4 -p ATAATGGCAATTATCTC > pre_strand_1_final.fa
+#| 
+#  seqkit seq --seq-type DNA --reverse --complement |
+#  seqkit fq2fa > strand_1_final.fa
+
+#here no reverse complement
+zcat rawreads/*_2.fq.gz | 
+  seqkit grep --by-name -r -f headers_strand_2_uncategorized_ins.csv |
+  seqkit grep --by-seq -m 4 -p ATAATGGCAATTATCTC |
+  seqkit fq2fa > strand_2_final.fa
+
+
+#create faidx index
+samtools faidx strand_1_final.fa
+samtools faidx strand_2_final.fa
+
+#create bed file with information where in the read the more or less conserved motif is situated
+#use the same mismatch value (for now = 4)
+cat strand_1_final.fa | seqkit locate -m 4 -p ATAATGGCAATTATCTC > strand_1_info.bed
+cat strand_2_final.fa | seqkit locate -m 4 -p ATAATGGCAATTATCTC > strand_2_info.bed
+
+#modify the bed file so that the start coordinate is extended to the "left" by max 12 bp
+#if start coordiante is <= 12 the nset to 0
+#awk -F "\t" 'NR==1; $5 < 12 && NR>1{print $1,1,$6; next} NR>1{print $1,$5-12,$6}' OFS="\t" strand_1_info.bed > strand_1_info_cut.txt
+awk -F "\t" '$5 < 12 && NR>1{print $1":"1"-"$6; next} NR>1{print $1":"$5-12"-"$6}' strand_1_info.bed > strand_1_info_cut.txt
+awk -F "\t" '$5 < 12 && NR>1{print $1":"1"-"$6; next} NR>1{print $1":"$5-12"-"$6}' strand_2_info.bed > strand_2_info_cut.txt
+
+#loop over fasta and extract subregions
+#-> this would be a targeted single sequence
+#seqkit faidx strand_1_final.fa E00591:404:HFCMWCCX2:7:1101:14823:10081:1-20
+###conda install -c conda-forge findutils
+#since we use >>; do a sanity check if an old version was already created
+[ -f strand_1_motifs_pos_header.fa ] && rm strand_1_motifs_pos_header.fa
+xargs -n 1 -I{} samtools faidx strand_1_final.fa {} < strand_1_info_cut.txt >> strand_1_motifs_pos_header.fa
+
+[ -f strand_2_motifs_pos_header.fa ] && rm strand_2_motifs_pos_header.fa
+xargs -n 1 -I{} samtools faidx strand_2_final.fa {} < strand_2_info_cut.txt >> strand_2_motifs_pos_header.fa
+
+
+#rename header to base read + /1 or /2
+#> add this point each header ends in :#-# (range in original read where the motif is)
+#this is important for edge cases in which both mates of paired reads appear in the next step;
+#might lead to problems, so let's be clean here
+#sed 's/\(.*\):.*/\1 /' strand_1_motifs_pos_header.fa > final_strand_1_motifs_pos_header.fa
+sed 's/\(.*\):.*/\1\\1/' strand_1_motifs_pos_header.fa > final_strand_1_motifs_pos_header.fa
+sed 's/\(.*\):.*/\1\\2/' strand_2_motifs_pos_header.fa > final_strand_2_motifs_pos_header.fa
+#sed '/^>/ s/$/\\1/' strand_1_motifs_pos_header.fa > final_strand_1_motifs_pos_header.fa
+#sed '/^>/ s/$/\\2/' strand_2_motifs_pos_header.fa > final_strand_2_motifs_pos_header.fa
+
+### Merge/concat of _1 and _2 files here
+cat final_strand_1_motifs_pos_header.fa final_strand_2_motifs_pos_header.fa > final_concat_motifs_pos_header.fa
+
+#cluster reads - -c 1; shorter seqs if identical in their length will be "swallowed" by larger seqs
+cd-hit -i final_concat_motifs_pos_header.fa -o test_hit_out.txt -c 1 -g 1 -sc 1 -sf 1 -d 80
+
+
+#cd-hit comes with reformat scripts for the output in perl
+clstr2txt.pl test_hit_out.txt.clstr > reformat_test_hit_out.txt.clstr
+
+#clstr_rep column (column #5) == 1 then corresponds to representative sequence (found in ...out.txt)
+#-> for this line we can look in column (#1) id to find the name of this fa entry/read
+#clstr_size (column #3) == # corresponds to size of cluster
+#reducing to representative seqs entries
+
+
+#re-format normal out.txt to columns
+#simple solution since seqs are <=29 bp so we don't have multi-line occurences
+cat test_hit_out.txt | paste - - > reformat_test_hit_out.txt
+sed 's/^>//' reformat_test_hit_out.txt > final_reformat_test_hit_out.txt
+
+#add cluster size information as third column to reformat_test_hit_out.txt
+##-> create subset of reformat_test_hit_out.txt.clstr with only read and cluster size info for representative seqs/reads
+awk -F "\t" '$5 > 0 && NR>1{print $1,$3; next} {}' OFS="\t" reformat_test_hit_out.txt.clstr > rep_test_hit_out.txt.clstr
+## reference
+#https://stackoverflow.com/questions/45167499/how-to-merge-2-tables-with-awk
+awk 'BEGIN {FS=OFS="\t"} NR==FNR {h[$1] = $2; next} {print $0,h[$1]}' final_reformat_test_hit_out.txt rep_test_hit_out.txt.clstr > final_rep_clstr.txt
+
