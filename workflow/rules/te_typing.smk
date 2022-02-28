@@ -41,11 +41,17 @@ rule merging_read_te_typing:
          """
 
 
-##### Annotation with te type/s  #####################
+####### Annotation with te type/s  #######
 
 rule te_typing_annotation:
+    input:
+        germinal_annotated="results/insertions_table_final/germinal_identified_insertions_annotated.csv",
+        germinal_NOT_annotated="results/insertions_table_final/germinal_identified_insertions.csv",
+        all_annotated="results/insertions_table_final/all_identified_insertions_annotated.csv",
+        all_NOT_annotated="results/insertions_table_final/all_identified_insertions.csv",
     output:
-        touch("results/te_typing/all.types")
+        "results/insertions_table_final_te_typed/headers_strand_1_uncategorized_ins.csv",
+        "results/insertions_table_final_te_typed/headers_strand_2_uncategorized_ins.csv",
     params:
         samples=lambda w: list(config["SAMPLES"]),
         all_types=lambda w: list(config["TE_types"].keys()), 
