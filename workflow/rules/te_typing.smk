@@ -40,17 +40,23 @@ rule merging_read_te_typing:
          sed  -i '1i Name\\tStrand\\tType' {output}
          """
 
-#rule te_typing_annotation:
-#    output:
-#        touch("results/te_typing/all.types")
-#    params:
-#        samples=lambda w: list(config["SAMPLES"]),
-#        all_types=lambda w: list(config["TE_types"].keys()), 
-#    conda: "../envs/annotation.yaml"
-#    script:
-#        "../scripts/te_type_annotation.R"
+
+##### Annotation with te type/s  #####################
+
+rule te_typing_annotation:
+    output:
+        touch("results/te_typing/all.types")
+    params:
+        samples=lambda w: list(config["SAMPLES"]),
+        all_types=lambda w: list(config["TE_types"].keys()), 
+    conda: "../envs/annotation.yaml"
+    script:
+        "../scripts/te_type_annotation.R"
 #    shell:
-#        "{params.all_types}"
+#        """
+#        {params.samples}
+#        {params.all_types}
+#        """
 
 
 
