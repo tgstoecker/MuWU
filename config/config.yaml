@@ -22,6 +22,11 @@ assembly_report:
 approach: GRID
 #approach: GENERIC
 
+
+#### choose whether or not te/element typing should be performed
+#if not; just change/remove perform flag here
+TE_TYPING: perform
+
 # this example implies that the user created a directory "rawreads" in the main workflow directory
 # any location on the file system works (be careful with relative paths!)
 reads_dir: rawreads
@@ -95,9 +100,9 @@ threads_convert_bam_to_sam: 4
 #for optimal performance
 #GRID approach -  set this to #Col + #Row
 #GENERIC approach set this to # samples
-threads_identify_Mu_insertions: 24
+threads_identify_Mu_insertions: 48
 threads_te_typing_seqkit: 4
-te_typing_cluster_cores: 32
+te_typing_cluster_cores: 48
 
 #### TE typing ####
 SAMPLES: ['Row_01', 'Row_02', 'Row_03', 'Row_04',
@@ -164,3 +169,4 @@ TE_types:
   Mu18_R: GTCTGTTGTTTCATAACGGCAATTGTCTC
   Mu19_L: CTCTCTTCTTCCATAATGGCAATTATCTC
   Mu19_R: CTCTGTTGTTTCATAATGGCAATTGTCTC
+

@@ -123,8 +123,6 @@ rule index_categorized_ins_reads:
         "results/te_typing/uncategorized/merged/{paired}/merged_{paired}_unc_{insertion_table}.fa",
     output:
         "results/te_typing/uncategorized/merged/{paired}/merged_{paired}_unc_{insertion_table}.fa.fai"
-#    params:
-#        p=lambda w: config["PAIRED"]
     conda: "../envs/te_typing.yaml"
     shell:
         """
