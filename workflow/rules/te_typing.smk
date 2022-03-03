@@ -45,10 +45,7 @@ rule merging_read_te_typing:
 
 rule te_typing_annotation:
     input:
-#        germinal_annotated="results/insertions_table_final/germinal_identified_insertions_annotated.csv",
-#        germinal="results/insertions_table_final/germinal_identified_insertions.csv",
-#        all_annotated="results/insertions_table_final/all_identified_insertions_annotated.csv",
-#        all="results/insertions_table_final/all_identified_insertions.csv",
+        read_typing=expand("results/te_typing/pre_sorting/{sample}/{sample}_te_types_merged.tsv", sample=SAMPLES),
         insertion_table="results/insertions_table_final/{insertion_table}.csv",
     output:
         "results/insertions_table_final_te_typed/headers_strand_1_uncategorized_{insertion_table}.csv",
@@ -57,6 +54,7 @@ rule te_typing_annotation:
         samples=lambda wildcards: list(config["SAMPLES"]),
         all_types=lambda wildcards: list(config["TE_types"].keys()), 
         insertion_table_name=lambda wildcards: wildcards.insertion_table,
+        te_typing_cluster_cores=lambda wildcards: config["te_typing_cluster_cores"],
     conda: "../envs/annotation.yaml"
     script:
         "../scripts/te_type_annotation.R"
@@ -106,12 +104,12 @@ rule get_uncategorized_ins_reads_2:
 rule merge_uncategorized_ins_reads:
     input:
 #        expand("results/te_typing/uncategorized/{sample}/{{paired}}/unc.fa", sample=SAMPLES),
-        one=expand("results/te_typing/uncategorized/{sample}/1/unc.fa", sample=SAMPLES),
-        two=expand("results/te_typing/uncategorized/{sample}/2/unc.fa", sample=SAMPLES),
+        one=expand("results/te_typing/uncategorized/{{insertion_table}}/{sample}/1/unc.fa", sample=SAMPLES),
+        two=expand("results/te_typing/uncategorized/{{insertion_table}}/{sample}/2/unc.fa", sample=SAMPLES),
     output:
 #        "results/te_typing/uncategorized/merged/{paired}/merged_{paired}_unc.fa",
-        one="results/te_typing/uncategorized/merged/1/merged_1_unc.fa",
-        two="results/te_typing/uncategorized/merged/2/merged_2_unc.fa",
+        one="results/te_typing/uncategorized/merged/1/merged_1_unc_{insertion_table}.fa",
+        two="results/te_typing/uncategorized/merged/2/merged_2_unc_{insertion_table}.fa",
     conda: "../envs/te_typing.yaml"
     shell:
         """
@@ -123,9 +121,9 @@ rule merge_uncategorized_ins_reads:
 #create faidx index
 rule index_categorized_ins_reads:
     input:
-        "results/te_typing/uncategorized/merged/{paired}/merged_{paired}_unc.fa",
+        "results/te_typing/uncategorized/merged/{paired}/merged_{paired}_unc_{insertion_table}.fa",
     output:
-        "results/te_typing/uncategorized/merged/{paired}/merged_{paired}_unc.fa.fai"
+        "results/te_typing/uncategorized/merged/{paired}/merged_{paired}_unc_{insertion_table}.fa.fai"
 #    params:
 #        p=lambda w: config["PAIRED"]
     conda: "../envs/te_typing.yaml"
@@ -138,10 +136,10 @@ rule index_categorized_ins_reads:
 #use the same mismatch value (for now = 4) & mostly conserved motif ATAATGGCAATTATCTC
 rule locate_motif:
     input:
-        fa="results/te_typing/uncategorized/merged/{paired}/merged_{paired}_unc.fa",
-        fai="results/te_typing/uncategorized/merged/{paired}/merged_{paired}_unc.fa.fai"
+        fa="results/te_typing/uncategorized/merged/{paired}/merged_{paired}_unc_{insertion_table}.fa",
+        fai="results/te_typing/uncategorized/merged/{paired}/merged_{paired}_unc_{insertion_table}.fa.fai"
     output: 
-        "results/te_typing/uncategorized/merged/{paired}/merged_{paired}_unc_motif_info.bed"
+        "results/te_typing/uncategorized/merged/{paired}/merged_{paired}_unc_motif_info_{insertion_table}.bed"
     conda: "../envs/te_typing.yaml"
     shell:
         """
@@ -155,13 +153,12 @@ rule locate_motif:
 #output format is for ondex lookup: read_name:start-end
 rule extend_motif:
     input:
-        "results/te_typing/uncategorized/merged/{paired}/merged_{paired}_unc_motif_info.bed",
+        "results/te_typing/uncategorized/merged/{paired}/merged_{paired}_unc_motif_info_{insertion_table}.bed",
     output:
-        "results/te_typing/uncategorized/merged/{paired}/{paired}_info_cut.txt",
+        "results/te_typing/uncategorized/merged/{paired}/{paired}_info_cut_{insertion_table}.txt",
     conda: "../envs/te_typing.yaml"
     shell:
         """awk -F "\\t" '$5 < 12 && NR>1 {{print $1":"1"-"$6; next}} NR>1 {{print $1":"$5-12"-"$6}}' {input} > {output}"""
-
 
 
 #loop over fasta and extract subregions
@@ -171,10 +168,10 @@ rule extend_motif:
 #since we use >>; do a sanity check if an old version was already created
 rule extract_unc_ins_motif_subregions:
     input:
-        fa="results/te_typing/uncategorized/merged/{paired}/merged_{paired}_unc.fa",
-        ext_motifs="results/te_typing/uncategorized/merged/{paired}/{paired}_info_cut.txt",
+        fa="results/te_typing/uncategorized/merged/{paired}/merged_{paired}_unc_{insertion_table}.fa",
+        ext_motifs="results/te_typing/uncategorized/merged/{paired}/{paired}_info_cut_{insertion_table}.txt",
     output:
-        "results/te_typing/uncategorized/merged/{paired}/{paired}_motifs_pos_header.fa",
+        "results/te_typing/uncategorized/merged/{paired}/{paired}_motifs_pos_header_{insertion_table}.fa",
     conda: "../envs/te_typing.yaml"
     shell:
         """
@@ -189,9 +186,9 @@ rule extract_unc_ins_motif_subregions:
 #might lead to problems, so let's be clean here
 rule rename_unc_ins_motif_subregions:
     input:
-        "results/te_typing/uncategorized/merged/{paired}/{paired}_motifs_pos_header.fa",
+        "results/te_typing/uncategorized/merged/{paired}/{paired}_motifs_pos_header_{insertion_table}.fa",
     output:
-        "results/te_typing/uncategorized/merged/{paired}/renamed_{paired}_motifs_pos_header.fa",
+        "results/te_typing/uncategorized/merged/{paired}/renamed_{paired}_motifs_pos_header_{insertion_table}.fa",
     conda: "../envs/te_typing.yaml"
     #sed 's/\(.*\):.*/\1\\1/' {input} > {output}
     shell:
@@ -202,9 +199,9 @@ rule rename_unc_ins_motif_subregions:
 ### Merge/concat of _1 and _2 files here
 rule concat_motif_subregions_files:
     input:
-        expand("results/te_typing/uncategorized/merged/{paired}/renamed_{paired}_motifs_pos_header.fa", paired=PAIRED),
+        expand("results/te_typing/uncategorized/merged/{paired}/renamed_{paired}_motifs_pos_header_{{insertion_table}}.fa", paired=PAIRED),
     output:
-        "results/te_typing/uncategorized/merged/merged_final_motifs_pos_header.fa",
+        "results/te_typing/uncategorized/merged/merged_final_motifs_pos_header_{insertion_table}.fa",
     conda: "../envs/te_typing.yaml"
     shell:
         """
@@ -215,10 +212,10 @@ rule concat_motif_subregions_files:
 #cluster reads - -c 1; shorter seqs if identical in their length will be "swallowed" by larger seqs
 rule clustering_unc_reads_final_set:
     input:
-        "results/te_typing/uncategorized/merged/merged_final_motifs_pos_header.fa",
+        "results/te_typing/uncategorized/merged/merged_final_motifs_pos_header_{insertion_table}.fa",
     output:
-        txt="results/te_typing/uncategorized_clustered/unc_reads_final_set.txt",
-        clstr="results/te_typing/uncategorized_clustered/unc_reads_final_set.txt.clstr",
+        txt=temp("results/te_typing/uncategorized_clustered/unc_reads_final_set_{insertion_table}.txt"),
+        clstr=temp("results/te_typing/uncategorized_clustered/unc_reads_final_set_{insertion_table}.txt.clstr"),
     conda: "../envs/te_typing.yaml"
     shell:
         """
@@ -232,9 +229,9 @@ rule clustering_unc_reads_final_set:
 #reducing to representative seqs entries
 rule reformat_clustering_results_1:
     input:
-        "results/te_typing/uncategorized_clustered/unc_reads_final_set.txt.clstr",
+        "results/te_typing/uncategorized_clustered/unc_reads_final_set_{insertion_table}.txt.clstr",
     output:
-        "results/te_typing/uncategorized_clustered/ref_unc_reads_final_set.txt.clstr",
+        "results/te_typing/uncategorized_clustered/ref_unc_reads_final_set_{insertion_table}.txt.clstr",
     conda: "../envs/te_typing.yaml"
     shell:  
         """
@@ -245,10 +242,10 @@ rule reformat_clustering_results_1:
 #simple solution since seqs are <=29 bp so we don't have multi-line occurences
 rule reformat_clustering_results_2:
     input:
-        "results/te_typing/uncategorized_clustered/unc_reads_final_set.txt",
+        "results/te_typing/uncategorized_clustered/unc_reads_final_set_{insertion_table}.txt",
     output:
-        pre="results/te_typing/uncategorized_clustered/pre_ref_reads_final_set.txt",
-        final="results/te_typing/uncategorized_clustered/final_ref_reads_final_set.txt",
+        pre=temp("results/te_typing/uncategorized_clustered/pre_ref_reads_final_set_{insertion_table}.txt"),
+        final=temp("results/te_typing/uncategorized_clustered/final_ref_reads_final_set_{insertion_table}.txt"),
     conda: "../envs/te_typing.yaml"
     shell:
         """
@@ -262,11 +259,11 @@ rule reformat_clustering_results_2:
 #https://stackoverflow.com/questions/45167499/how-to-merge-2-tables-with-awk
 rule final_cluster_sizes:
     input:
-        clstr="results/te_typing/uncategorized_clustered/ref_unc_reads_final_set.txt.clstr",
-        txt="results/te_typing/uncategorized_clustered/final_ref_reads_final_set.txt",
+        clstr="results/te_typing/uncategorized_clustered/ref_unc_reads_final_set_{insertion_table}.txt.clstr",
+        txt="results/te_typing/uncategorized_clustered/final_ref_reads_final_set_{insertion_table}.txt",
     output:
-        clstr="results/te_typing/uncategorized_clustered/rep_ref_unc_reads_final_set.txt.clstr",
-        final="results/te_typing/uncategorized_clustered/final_clstr_file.tsv",
+        clstr=temp("results/te_typing/uncategorized_clustered/rep_ref_unc_reads_final_set_{insertion_table}.txt.clstr"),
+        final="results/te_typing/uncategorized_clustered/final_clstr_file_{insertion_table}.tsv",
     conda: "../envs/te_typing.yaml"
     shell:
         """awk -F "\\t" '$5 > 0 && NR>1 {{print $1,$3; next}} {{}}' OFS="\\t" {input.clstr} > {output.clstr} && """

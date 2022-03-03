@@ -15,8 +15,7 @@ message("Getting snakemake variables:")
 #samples <- snakemake@params[["samples"]]
 samples <- c('Row_01', 'Col_01')
 all_types <- snakemake@params[["all_types"]]
-te_annotation_max_cores <- 16
-
+te_typing_cluster_cores <- snakemake@params[["te_typing_cluster_cores"]]
 insertion_table_file <- snakemake@input[["insertion_table"]]
 insertion_table_name <- snakemake@params[["insertion_table_name"]]
 
@@ -80,7 +79,7 @@ setup_cluster <- function(){
 
   #define cluster
   parallel::detectCores()
-  n.cores <- te_annotation_max_cores
+  n.cores <- te_typing_cluster_cores
   n.cores
 
   #create the cluster - FORK because this way libraries, variables etc. are copied to the clusters!

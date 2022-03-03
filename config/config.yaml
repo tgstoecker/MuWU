@@ -97,7 +97,7 @@ threads_convert_bam_to_sam: 4
 #GENERIC approach set this to # samples
 threads_identify_Mu_insertions: 24
 threads_te_typing_seqkit: 4
-
+te_typing_cluster_cores: 32
 
 #### TE typing ####
 SAMPLES: ['Row_01', 'Row_02', 'Row_03', 'Row_04',
