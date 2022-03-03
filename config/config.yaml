@@ -19,8 +19,8 @@ assembly_report:
 ### using the GENERIC approach requires a samples.tsv file (under config/), with which sample names, SE vs. PE read type and optionally different conditions are inferred
 ### conditions in the generic approach allow for the parallel analysis of different sets of input data that should be kept seperate - seperate final output files (e.g. different treatments etc.)
 ## in either case please also provide location of your reads in your file system - read_dir:
-approach: GRID
-#approach: GENERIC
+#approach: GRID
+approach: GENERIC
 
 # this example implies that the user created a directory "rawreads" in the main workflow directory
 # any location on the file system works (be careful with relative paths!)
@@ -120,13 +120,11 @@ INSERTION_TABLES_GRID: ["germinal_identified_insertions_annotated",
                         "all_identified_insertions_annotated",
                         "all_identified_insertions"]
 
-#INSERTION_TABLES_GENERIC: ["all",
-#                          "all_annotated",
-#                          "germinal",
-#                          "germinal_annotated"]
+INSERTION_TABLES_GENERIC: ["all_identified_insertions_annotated",
+                           "all_identified_insertions"]
 
 
-# TE (sub-)types - Mu5_L just placeholder
+# TE (sub-)types - Mu5_L just placeholder; Mu6_R unknown
 TE_types:
   Mu1_L: CCCTCTTCGTCCATAATGGCAATTATCTC
   Mu1_R: CTCTCTTCGTCCATAATGGCAATTATCTC

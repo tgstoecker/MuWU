@@ -13,6 +13,14 @@ configfile: "config/config.yaml"
 # assign directory containing sequencing reads as specified in config.yaml
 reads_dir = config["reads_dir"]
 
+#for the quick-hacked typing of insertions -> statically defined variables
+SAMPLES=config["SAMPLES"]
+PAIRED=config["PAIRED"]
+TE_TYPES=config["TE_types"]
+INSERTION_TABLES_GRID=config["INSERTION_TABLES_GRID"]
+INSERTION_TABLES_GENERIC=config["INSERTION_TABLES_GENERIC"]
+
+
 include: "rules/common_utils.smk"
 include: "rules/common.smk"
 include: "rules/ref_utils.smk"
@@ -83,6 +91,8 @@ if config["approach"] == "GRID":
             #insertion annotation
             "results/insertions_table_final/all_identified_insertions_annotated.csv",
             "results/insertions_table_final/germinal_identified_insertions_annotated.csv",
+            #te/element typing
+            expand("results/te_typing/uncategorized_clustered/final_clstr_file_{insertion_table}.tsv", insertion_table=INSERTION_TABLES_GRID),
 
 
 #### ONLY FOR GENERIC ANALYSIS - NO STOCK MATRIX ####
@@ -125,7 +135,8 @@ elif config["approach"] == "GENERIC":
                 "results/insertions_table_final/all_identified_insertions.csv",
                 #insertion annotation
                 "results/insertions_table_final/all_identified_insertions_annotated.csv",
-
+                #te/element typing
+                expand("results/te_typing/uncategorized_clustered/final_clstr_file_{insertion_table}.tsv", insertion_table=INSERTION_TABLES_GENERIC),
 
     elif is_single_end_GENERIC_experiment(SAMPLES):
 

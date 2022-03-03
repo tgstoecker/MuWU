@@ -18,6 +18,7 @@ SAMPLES=config["SAMPLES"]
 PAIRED=config["PAIRED"]
 TE_TYPES=config["TE_types"]
 INSERTION_TABLES_GRID=config["INSERTION_TABLES_GRID"]
+INSERTION_TABLES_GENERIC=config["INSERTION_TABLES_GENERIC"]
 
 #include: "rules/common_utils.smk"
 #include: "rules/common.smk"
@@ -46,15 +47,7 @@ if config["approach"] == "GRID":
 ##            expand("results/te_typing/uncategorized/merged/merged_final_motifs_pos_header_{insertion_table}.fa", insertion_table=INSERTION_TABLES_GRID),
             expand("results/te_typing/uncategorized_clustered/final_clstr_file_{insertion_table}.tsv", insertion_table=INSERTION_TABLES_GRID),
 
-#            expand("results/te_typing/uncategorized/{insertion_table}/{sample}/{paired}/unc.fa", insertion_table=INSERTION_TABLES_GRID, sample=SAMPLES, paired=PAIRED),
-#            expand("results/te_typing/uncategorized/merged/{paired}/merged_{paired}_unc.fa", paired=PAIRED),
-#            expand("results/te_typing/uncategorized/merged/{paired}/merged_{paired}_unc.fa.fai", paired=PAIRED),
-#            expand("results/te_typing/uncategorized/merged/{paired}/merged_{paired}_unc_motif_info.bed", paired=PAIRED),
-#            expand("results/te_typing/uncategorized/merged/{paired}/{paired}_info_cut.txt", paired=PAIRED),
-#            expand("results/te_typing/uncategorized/merged/{paired}/{paired}_motifs_pos_header.fa", paired=PAIRED),
-#            expand("results/te_typing/uncategorized/merged/{paired}/renamed_{paired}_motifs_pos_header.fa", paired=PAIRED),
-#            "results/te_typing/uncategorized/merged/merged_final_motifs_pos_header.fa",
-#            "results/te_typing/uncategorized_clustered/unc_reads_final_set.txt",
-#            "results/te_typing/uncategorized_clustered/ref_unc_reads_final_set.txt.clstr",
-#            "results/te_typing/uncategorized_clustered/final_ref_reads_final_set.txt",
-#            "results/te_typing/uncategorized_clustered/final_clstr_file.tsv",
+if config["approach"] == "GENERIC":
+    rule all:
+        input:
+            expand("results/te_typing/uncategorized_clustered/final_clstr_file_{insertion_table}.tsv", insertion_table=INSERTION_TABLES_GENERIC),

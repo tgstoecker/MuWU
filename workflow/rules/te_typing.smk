@@ -103,7 +103,6 @@ rule get_uncategorized_ins_reads_2:
 
 rule merge_uncategorized_ins_reads:
     input:
-#        expand("results/te_typing/uncategorized/{sample}/{{paired}}/unc.fa", sample=SAMPLES),
         one=expand("results/te_typing/uncategorized/{{insertion_table}}/{sample}/1/unc.fa", sample=SAMPLES),
         two=expand("results/te_typing/uncategorized/{{insertion_table}}/{sample}/2/unc.fa", sample=SAMPLES),
     output:
