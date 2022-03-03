@@ -17,7 +17,7 @@ reads_dir = config["reads_dir"]
 SAMPLES=config["SAMPLES"]
 PAIRED=config["PAIRED"]
 TE_TYPES=config["TE_types"]
-
+INSERTION_TABLES_GRID=config["INSERTION_TABLES_GRID"]
 
 #include: "rules/common_utils.smk"
 #include: "rules/common.smk"
@@ -33,22 +33,24 @@ TE_TYPES=config["TE_types"]
 include: "rules/te_typing.smk"
 
 #### ONLY FOR GRID DESIGN (STOCK MATRIX) BASED ANALYSIS ####
-#if config["approach"] == "GRID":
-
-rule all:
-    input:
-        expand("results/te_typing/pre_sorting/{sample}/{paired}/{te_type}.txt", sample=SAMPLES, paired=PAIRED, te_type=TE_TYPES),
-        expand("results/te_typing/pre_sorting/{sample}/{sample}_te_types_merged.tsv", sample=SAMPLES, paired=PAIRED, te_type=TE_TYPES),
-#        "results/te_typing/all.types",
-        expand("results/te_typing/uncategorized/{sample}/{paired}/unc.fa", sample=SAMPLES, paired=PAIRED),
-        expand("results/te_typing/uncategorized/merged/{paired}/merged_{paired}_unc.fa", paired=PAIRED),
-        expand("results/te_typing/uncategorized/merged/{paired}/merged_{paired}_unc.fa.fai", paired=PAIRED),
-        expand("results/te_typing/uncategorized/merged/{paired}/merged_{paired}_unc_motif_info.bed", paired=PAIRED),
-        expand("results/te_typing/uncategorized/merged/{paired}/{paired}_info_cut.txt", paired=PAIRED),
-        expand("results/te_typing/uncategorized/merged/{paired}/{paired}_motifs_pos_header.fa", paired=PAIRED),
-        expand("results/te_typing/uncategorized/merged/{paired}/renamed_{paired}_motifs_pos_header.fa", paired=PAIRED),
-        "results/te_typing/uncategorized/merged/merged_final_motifs_pos_header.fa",
-        "results/te_typing/uncategorized_clustered/unc_reads_final_set.txt",
-        "results/te_typing/uncategorized_clustered/ref_unc_reads_final_set.txt.clstr",
-        "results/te_typing/uncategorized_clustered/final_ref_reads_final_set.txt",
-        "results/te_typing/uncategorized_clustered/final_clstr_file.tsv",
+if config["approach"] == "GRID":
+    rule all:
+        input:
+            expand("results/te_typing/pre_sorting/{sample}/{paired}/{te_type}.txt", sample=SAMPLES, paired=PAIRED, te_type=TE_TYPES),
+            expand("results/te_typing/pre_sorting/{sample}/{sample}_te_types_merged.tsv", sample=SAMPLES, paired=PAIRED, te_type=TE_TYPES),
+            #annotation with te type
+            expand("results/insertions_table_final_te_typed/headers_strand_1_uncategorized_{insertion_table}.csv", insertion_table=INSERTION_TABLES_GRID),
+            expand("results/insertions_table_final_te_typed/headers_strand_2_uncategorized_{insertion_table}.csv", insertion_table=INSERTION_TABLES_GRID),
+            #after annotation
+            expand("results/te_typing/uncategorized/{insertion_table}/{sample}/{paired}/unc.fa", insertion_table=INSERTION_TABLES_GRID, sample=SAMPLES, paired=PAIRED),
+            expand("results/te_typing/uncategorized/merged/{paired}/merged_{paired}_unc.fa", paired=PAIRED),
+            expand("results/te_typing/uncategorized/merged/{paired}/merged_{paired}_unc.fa.fai", paired=PAIRED),
+            expand("results/te_typing/uncategorized/merged/{paired}/merged_{paired}_unc_motif_info.bed", paired=PAIRED),
+            expand("results/te_typing/uncategorized/merged/{paired}/{paired}_info_cut.txt", paired=PAIRED),
+            expand("results/te_typing/uncategorized/merged/{paired}/{paired}_motifs_pos_header.fa", paired=PAIRED),
+            expand("results/te_typing/uncategorized/merged/{paired}/renamed_{paired}_motifs_pos_header.fa", paired=PAIRED),
+            "results/te_typing/uncategorized/merged/merged_final_motifs_pos_header.fa",
+            "results/te_typing/uncategorized_clustered/unc_reads_final_set.txt",
+            "results/te_typing/uncategorized_clustered/ref_unc_reads_final_set.txt.clstr",
+            "results/te_typing/uncategorized_clustered/final_ref_reads_final_set.txt",
+            "results/te_typing/uncategorized_clustered/final_clstr_file.tsv",

@@ -45,16 +45,18 @@ rule merging_read_te_typing:
 
 rule te_typing_annotation:
     input:
-        germinal_annotated="results/insertions_table_final/germinal_identified_insertions_annotated.csv",
-        germinal_NOT_annotated="results/insertions_table_final/germinal_identified_insertions.csv",
-        all_annotated="results/insertions_table_final/all_identified_insertions_annotated.csv",
-        all_NOT_annotated="results/insertions_table_final/all_identified_insertions.csv",
+#        germinal_annotated="results/insertions_table_final/germinal_identified_insertions_annotated.csv",
+#        germinal="results/insertions_table_final/germinal_identified_insertions.csv",
+#        all_annotated="results/insertions_table_final/all_identified_insertions_annotated.csv",
+#        all="results/insertions_table_final/all_identified_insertions.csv",
+        insertion_table="results/insertions_table_final/{insertion_table}.csv",
     output:
-        "results/insertions_table_final_te_typed/headers_strand_1_uncategorized_ins.csv",
-        "results/insertions_table_final_te_typed/headers_strand_2_uncategorized_ins.csv",
+        "results/insertions_table_final_te_typed/headers_strand_1_uncategorized_{insertion_table}.csv",
+        "results/insertions_table_final_te_typed/headers_strand_2_uncategorized_{insertion_table}.csv",
     params:
-        samples=lambda w: list(config["SAMPLES"]),
-        all_types=lambda w: list(config["TE_types"].keys()), 
+        samples=lambda wildcards: list(config["SAMPLES"]),
+        all_types=lambda wildcards: list(config["TE_types"].keys()), 
+        insertion_table_name=lambda wildcards: wildcards.insertion_table,
     conda: "../envs/annotation.yaml"
     script:
         "../scripts/te_type_annotation.R"
@@ -65,16 +67,15 @@ rule te_typing_annotation:
 #        """
 
 
-
 ###### once done with annotation  ###########
 #extract all reads from fqs that correspond to uncategorized insertions
 
 rule get_uncategorized_ins_reads_1:
     input:
         reads="rawreads/{sample}_1.fq.gz",
-        unc_headers="headers_strand_1_uncategorized_ins.csv",
+        unc_headers="results/insertions_table_final_te_typed/headers_strand_1_uncategorized_{insertion_table}.csv",
     output:
-        "results/te_typing/uncategorized/{sample}/1/unc.fa",
+        "results/te_typing/uncategorized/{insertion_table}/{sample}/1/unc.fa",
     threads: config["threads_te_typing_seqkit"]
     conda: "../envs/te_typing.yaml"
     shell:
@@ -89,9 +90,9 @@ rule get_uncategorized_ins_reads_1:
 rule get_uncategorized_ins_reads_2:
     input:
         reads="rawreads/{sample}_2.fq.gz",
-        unc_headers="headers_strand_2_uncategorized_ins.csv",
+        unc_headers="results/insertions_table_final_te_typed/headers_strand_2_uncategorized_{insertion_table}.csv",
     output:
-        "results/te_typing/uncategorized/{sample}/2/unc.fa",
+        "results/te_typing/uncategorized/{insertion_table}/{sample}/2/unc.fa",
     threads: config["threads_te_typing_seqkit"]
     conda: "../envs/te_typing.yaml"
     shell:

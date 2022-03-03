@@ -15,23 +15,30 @@ message("Getting snakemake variables:")
 #samples <- snakemake@params[["samples"]]
 samples <- c('Row_01', 'Col_01')
 all_types <- snakemake@params[["all_types"]]
-te_annotation_max_cores <- 48
+te_annotation_max_cores <- 16
 
-germinal_annotated <- snakemake@input[["germinal_annotated"]]
-germinal_NOT_annotated <- snakemake@input[["germinal_NOT_annotated"]]
-all_annotated <- snakemake@input[["all_annotated"]]
-all_NOT_annotated <- snakemake@input[["all_NOT_annotated"]]
+insertion_table_file <- snakemake@input[["insertion_table"]]
+insertion_table_name <- snakemake@params[["insertion_table_name"]]
+
+#germinal_annotated <- snakemake@input[["germinal_annotated"]]
+#germinal <- snakemake@input[["germinal"]]
+#all_annotated <- snakemake@input[["all_annotated"]]
+#all_NOT_annotated <- snakemake@input[["all"]]
 
 
-input_list <- list(germinal_annotated, 
-                   germinal_NOT_annotated, 
-                   all_annotated, 
-                   all_NOT_annotated)
+#input_list <- list(germinal_annotated, 
+#                   germinal_NOT_annotated, 
+#                   all_annotated, 
+#                   all_NOT_annotated)
 
-names(input_list) <- c("germinal_annotated", 
-                       "germinal_NOT_annotated", 
-                       "all_annotated", 
-                       "all_NOT_annotated")
+#names(input_list) <- c("germinal_annotated", 
+#                       "germinal_NOT_annotated", 
+#                       "all_annotated", 
+#                       "all_NOT_annotated")
+
+
+
+
 
 #for (i in 1:length(input_list)) {
 #  print(names(input_list[i]))
@@ -181,19 +188,21 @@ number2binary = function(number, noBits) {
 message("Getting insertion files:")
 
 
-for (i in 1:length(input_list)) {
+#for (i in 1:length(input_list)) {
 
+  #get name of current input file (input files were named at the start of the script)
+#  name_input <- names(input_list[i])
 
-  all_insertions <- read.csv(as.character(input_list[i]), header=TRUE)
-  all_insertions <- all_insertions %>%
+  insertions <- read.csv(as.character(insertion_table_file), header=TRUE)
+  insertions <- insertions %>%
     filter(Sample %in% samples)
 
   #create insertions table with additional columns per (Mu) element/type
-  all_insertions_typed <- all_insertions
+  insertions_typed <- insertions
 
-  all_insertions_typed[,all_types]=0
+  insertions_typed[,all_types]=0
   #add additional column for uncategorized reads
-  all_insertions_typed <- all_insertions_typed %>%
+  insertions_typed <- insertions_typed %>%
     add_column(uncategorized = 0)
 
 
@@ -202,10 +211,10 @@ for (i in 1:length(input_list)) {
 
   setup_cluster()
 
-  pre_ait_annotated <- foreach(row = 1:nrow(all_insertions_typed)) %dopar% {
+  pre_ait_annotated <- foreach(row = 1:nrow(insertions_typed)) %dopar% {
   
     #take row to work on
-    tmp_ins <- all_insertions_typed[row,]
+    tmp_ins <- insertions_typed[row,]
 
     #match Sample with sam object
     tmp_sam <- get(paste0("sam_", tmp_ins$Sample))
@@ -392,7 +401,7 @@ for (i in 1:length(input_list)) {
 
   ### write complete table to output ###
   data.table::fwrite(ait_annotated, 
-                     "results/insertions_table_final_te_typed/complete.csv", 
+                     paste0("results/insertions_table_final_te_typed/complete_", insertion_table_name, ".csv"), 
                      row.names=F)
 
   ### create assessment table for collaborators ###
@@ -445,11 +454,11 @@ for (i in 1:length(input_list)) {
 
 
   data.table::fwrite(type_candidates_stats, 
-                     "results/insertions_table_final_te_typed/stats1.csv", 
+                     paste0("results/insertions_table_final_te_typed/type_candidate_stats_", insertion_table_name, ".csv"), 
                      row.names=F)
 
   data.table::fwrite(all_candidates_stats, 
-                     "results/insertions_table_final_te_typed/stats2.csv", 
+                     paste0("results/insertions_table_final_te_typed/all_candidates_stats_", insertion_table_name, ".csv"), 
                      row.names=F)
 
 
@@ -539,14 +548,23 @@ for (i in 1:length(input_list)) {
     select(Name)
 
   #write table for all_uncategorized_ins
-  write.csv(unc_ins, "all_uncategorized_ins.csv", quote=FALSE, row.names=FALSE)
+  write.csv(unc_ins, 
+            paste0("all_uncategorized_", insertion_table_name, ".csv"), 
+            quote=FALSE, 
+            row.names=FALSE)
 
   #header files for strand 1 and 2 seperate
-  write.csv(headers_strand_1_uncategorized_ins, "results/insertions_table_final_te_typed/headers_strand_1_uncategorized_ins.csv", quote=FALSE, row.names=FALSE)
-  write.csv(headers_strand_2_uncategorized_ins, "results/insertions_table_final_te_typed/headers_strand_2_uncategorized_ins.csv", quote=FALSE, row.names=FALSE)
+  write.csv(headers_strand_1_uncategorized_ins, 
+            paste0("results/insertions_table_final_te_typed/headers_strand_1_uncategorized_", insertion_table_name, ".csv"), 
+            quote=FALSE,
+            row.names=FALSE)
+  write.csv(headers_strand_2_uncategorized_ins, 
+            paste0("results/insertions_table_final_te_typed/headers_strand_2_uncategorized_", insertion_table_name, ".csv"), 
+            quote=FALSE,
+            row.names=FALSE)
 
 
 #for loop - input_list
-}
+#}
 
 message("All done!! ;D")
