@@ -19,8 +19,8 @@ assembly_report:
 ### using the GENERIC approach requires a samples.tsv file (under config/), with which sample names, SE vs. PE read type and optionally different conditions are inferred
 ### conditions in the generic approach allow for the parallel analysis of different sets of input data that should be kept seperate - seperate final output files (e.g. different treatments etc.)
 ## in either case please also provide location of your reads in your file system - read_dir:
-#approach: GRID
-approach: GENERIC
+approach: GRID
+#approach: GENERIC
 
 # this example implies that the user created a directory "rawreads" in the main workflow directory
 # any location on the file system works (be careful with relative paths!)
