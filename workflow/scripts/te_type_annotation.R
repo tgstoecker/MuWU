@@ -12,8 +12,14 @@ library(doParallel)
 #get snakemake variables
 message("Getting snakemake variables:")
 
-#samples <- snakemake@params[["samples"]]
-samples <- c('Row_01', 'Col_01')
+samples <- snakemake@params[["samples"]]
+#samples <- c('Row_01', 'Col_01',
+#             'Row_02', 'Col_02',
+#             'Row_03', 'Col_03',
+#             'Row_04', 'Col_04',
+#             'Row_05', 'Col_05',
+#             'Row_06', 'Col_06',
+#             'Row_07', 'Col_07')
 all_types <- snakemake@params[["all_types"]]
 te_typing_cluster_cores <- snakemake@params[["te_typing_cluster_cores"]]
 insertion_table_file <- snakemake@input[["insertion_table"]]
@@ -415,20 +421,27 @@ message("Getting insertion files:")
   #data.table fwrite can deal with coluns containing lists (elements become seperated by "|")
 
   if ( all(c("GeneID", "stock") %in% names(ait_annotated)) ) {
-    ait_annotated %>%
-    select(GeneID, Chr, GeneStart, GeneEnd, Sample, InsertionStart, InsertionEnd, StartReads, EndReads, Gene_length, stock,
-           perc_uncategorized, perc_best_type_of_types, all_candidates, type_candidates) %>%
-    head()
+    out <- ait_annotated %>%
+      select(GeneID, Chr, GeneStart, GeneEnd, Sample, InsertionStart, InsertionEnd, StartReads, EndReads, Gene_length, stock,
+             perc_uncategorized, perc_best_type_of_types, all_candidates, type_candidates)
+    data.table::fwrite(out,
+                       paste0("results/insertions_table_final_te_typed/short_", insertion_table_name, ".csv"), 
+                       row.names=F)
   } else if ( "GeneID" %in% names(ait_annotated) && !("stock" %in% names(ait_annotated)) ) {
-    ait_annotated %>%
-    select(GeneID, Chr, GeneStart, GeneEnd, Sample, InsertionStart, InsertionEnd, StartReads, EndReads, Gene_length,
-           perc_uncategorized, perc_best_type_of_types, all_candidates, type_candidates) %>%
-    head()
+    out <- ait_annotated %>%
+      select(GeneID, Chr, GeneStart, GeneEnd, Sample, InsertionStart, InsertionEnd, StartReads, EndReads, Gene_length,
+             perc_uncategorized, perc_best_type_of_types, all_candidates, type_candidates)
+    data.table::fwrite(out,
+                       paste0("results/insertions_table_final_te_typed/short_", insertion_table_name, ".csv"),
+                       row.names=F)
   } else {
     out <- ait_annotated %>%
-    select(Chr, Sample, InsertionStart, InsertionEnd, StartReads, EndReads,
-         perc_uncategorized, perc_best_type_of_types, all_candidates, type_candidates)
-#  head(out)
+      select(Chr, Sample, InsertionStart, InsertionEnd, StartReads, EndReads,
+             perc_uncategorized, perc_best_type_of_types, all_candidates, type_candidates)
+      data.table::fwrite(out,
+                         paste0("results/insertions_table_final_te_typed/short_", insertion_table_name, ".csv"),
+                         row.names=F)
+#    head(out)
 #  data.table::fwrite(out, 
 #            "results/insertions_table_final_te_typed/all_identified_insertions_annotated_te_typed.csv", 
 #                     "out_test.csv",
@@ -548,7 +561,7 @@ message("Getting insertion files:")
 
   #write table for all_uncategorized_ins
   write.csv(unc_ins, 
-            paste0("all_uncategorized_", insertion_table_name, ".csv"), 
+            paste0("results/insertions_table_final_te_typed/all_uncategorized_", insertion_table_name, ".csv"), 
             quote=FALSE, 
             row.names=FALSE)
 
