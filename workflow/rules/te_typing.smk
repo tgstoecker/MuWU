@@ -19,8 +19,8 @@ rule read_te_typing:
     conda: "../envs/te_typing.yaml"
     shell:
 #        "echo {params.type_seq}"
-        "zcat {input} | "
-        "seqkit grep --by-seq -m 0 -j {threads} -p {params.type_seq} | " 
+#        "zcat {input} | "
+        "seqkit grep --by-seq -m 0 -j {threads} -p {params.type_seq} {input} | " 
         "seqkit seq --name | " 
         "sed 's/\s.*$//' | "
         """awk '{{print $1,"{wildcards.paired}","{wildcards.te_type}"}}' OFS="\\t" > {output}"""
@@ -56,6 +56,10 @@ rule te_typing_annotation:
         insertion_table_name=lambda wildcards: wildcards.insertion_table,
         te_typing_cluster_cores=lambda wildcards: config["te_typing_cluster_cores"],
     conda: "../envs/annotation.yaml"
+    #stops parallel execution - for all (max. 4) insertion tables
+    #each table analysis will spawn parallel instances - as specified in the config.yaml
+    #this is based on foreach/doparallel with a FORK cluster which will copy the variables and leads to quite an extensive memory impact
+    threads: workflow.cores
     script:
         "../scripts/te_type_annotation.R"
 #    shell:
@@ -78,8 +82,8 @@ rule get_uncategorized_ins_reads_1:
     conda: "../envs/te_typing.yaml"
     shell:
         """
-        zcat {input.reads} |
-        seqkit grep -j {threads} --by-name -r -f {input.unc_headers} | 
+#        zcat {input.reads} |
+        seqkit grep -j {threads} --by-name -r -f {input.unc_headers} {input.reads} | 
         seqkit grep -j {threads} --by-seq -m 4 -p ATAATGGCAATTATCTC |
         seqkit seq --seq-type DNA --reverse --complement |
         seqkit fq2fa > {output}
@@ -95,8 +99,8 @@ rule get_uncategorized_ins_reads_2:
     conda: "../envs/te_typing.yaml"
     shell:
         """
-        zcat {input.reads} |
-        seqkit grep -j {threads} --by-name -r -f {input.unc_headers} |
+#        zcat {input.reads} |
+        seqkit grep -j {threads} --by-name -r -f {input.unc_headers} {input.reads} |
         seqkit grep -j {threads} --by-seq -m 4 -p ATAATGGCAATTATCTC |
         seqkit fq2fa > {output}
         """
