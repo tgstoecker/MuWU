@@ -121,12 +121,12 @@ SAMPLES: ['Row_01', 'Row_02', 'Row_03', 'Row_04',
 PAIRED: ['1', '2']
 
 
-INSERTION_TABLES_GRID: ["germinal_identified_insertions_annotated"]
+#INSERTION_TABLES_GRID: ["germinal_identified_insertions_annotated"]
 
-#INSERTION_TABLES_GRID: ["germinal_identified_insertions_annotated",
-#                        "germinal_identified_insertions",
-#                        "all_identified_insertions_annotated",
-#                        "all_identified_insertions"]
+INSERTION_TABLES_GRID: ["germinal_identified_insertions_annotated",
+                        "germinal_identified_insertions",
+                        "all_identified_insertions_annotated",
+                        "all_identified_insertions"]
 
 INSERTION_TABLES_GENERIC: ["all_identified_insertions_annotated",
                            "all_identified_insertions"]

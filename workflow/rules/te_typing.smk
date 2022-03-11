@@ -46,27 +46,39 @@ rule merging_read_te_typing:
 rule te_typing_annotation:
     input:
         read_typing=expand("results/te_typing/pre_sorting/{sample}/{sample}_te_types_merged.tsv", sample=SAMPLES),
-        insertion_table="results/insertions_table_final/{insertion_table}.csv",
+        all_identified_insertions="results/insertions_table_final/all_identified_insertions.csv",
     output:
-        "results/insertions_table_final_te_typed/headers_strand_1_uncategorized_{insertion_table}.csv",
-        "results/insertions_table_final_te_typed/headers_strand_2_uncategorized_{insertion_table}.csv",
+        "results/insertions_table_final_te_typed/complete_all_identified_insertions.csv",
+        "results/insertions_table_final_te_typed/short_all_identified_insertions.csv",
+        "results/insertions_table_final_te_typed/type_candidate_stats_all_identified_insertions.csv",
+        "results/insertions_table_final_te_typed/all_candidates_stats_all_identified_insertions.csv",
+        "results/insertions_table_final_te_typed/all_uncategorized_all_identified_insertions.csv",
+        "results/insertions_table_final_te_typed/headers_strand_1_uncategorized_all_identified_insertions.csv",
+        "results/insertions_table_final_te_typed/headers_strand_2_uncategorized_all_identified_insertions.csv",
     params:
         samples=lambda wildcards: list(config["SAMPLES"]),
         all_types=lambda wildcards: list(config["TE_types"].keys()), 
-        insertion_table_name=lambda wildcards: wildcards.insertion_table,
+#        insertion_table_name=lambda wildcards: wildcards.insertion_table,
         te_typing_cluster_cores=lambda wildcards: config["te_typing_cluster_cores"],
     conda: "../envs/annotation.yaml"
     #stops parallel execution - for all (max. 4) insertion tables
     #each table analysis will spawn parallel instances - as specified in the config.yaml
     #this is based on foreach/doparallel with a FORK cluster which will copy the variables and leads to quite an extensive memory impact
-    threads: workflow.cores
+    threads: lambda wildcards: config["te_typing_cluster_cores"],
     script:
         "../scripts/te_type_annotation.R"
-#    shell:
-#        """
-#        {params.samples}
-#        {params.all_types}
-#        """
+
+
+rule te_typing_annotation_propagation:
+    input:
+        complete_all_final="results/insertions_table_final_te_typed/complete_all_identified_insertions.csv",
+        germinal_identified_insertions="results/insertions_table_final/germinal_identified_insertions.csv",
+        all_identified_insertions_annotated="results/insertions_table_final/all_identified_insertions_annotated.csv",
+        germinal_identified_insertions_annotated="results/insertions_table_final/germinal_identified_insertions_annotated.csv",
+    output:
+    threads: 1
+    script:
+        "../scripts/te_type_annotation_propagation.R"
 
 
 ###### once done with annotation  ###########
