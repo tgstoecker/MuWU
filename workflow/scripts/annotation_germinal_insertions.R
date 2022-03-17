@@ -11,6 +11,9 @@ snake_extension <- snakemake@params[["extension"]]
 
 ## Read in tables with all identified insertions; 
 germinal_ins <- read.csv(snake_germinal_ins, header=TRUE)
+germinal_ins <- germinal_ins %>%
+  as_tibble() %>%
+  mutate(Chr = as.character(Chr))
 
 ## Read in stock matrix
 MY_STOCK <- list.files("config/stock_matrix/", pattern="\\.xlsx$")
