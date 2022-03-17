@@ -35,52 +35,29 @@ include: "rules/insertion_annotation.smk"
 include: "rules/te_typing.smk"
 
 #### ONLY FOR GRID DESIGN (STOCK MATRIX) BASED ANALYSIS ####
-if config["approach"] == "GRID":
+if config["approach"] == "GRID" and config["TE_TYPING"] != "perform":
     rule all:
         input:
-#OLD pipeline
-#        "multiqc/multiqc.html",
-#        expand("sorted_alignments/{sample}.sorted.bam.bai", sample=SAMPLES),
-#        expand("removed_duplicates_alignments/{sample}.dedup.bam.bai", sample=SAMPLES),
-#        "MuSeq_table_final/Mu_single_GeneIds_gene_lengths_and_stock.csv",
-#        "MuSeq_table_final/Mu_single_TranscriptIds_transcript_lengths_and_stock.csv"
-#        "works.txt",
-#        Checkpoint_GetReadType("checks/determine_read_type_check.{rt}.txt"),
-#        Checkpoint_GetReadType("{rt}.works.txt"),
-        #ref - fasta, annotation, (report)
-        #"resources/annotation",
-        #"resources/assembly_report.txt",
-        #"resources/annotation.gff3",
-        #"resources/split_annotation.gff3",
-        #"resources/split_genome.fa",
-        #"resources/renaming_scheme.txt",
-        # final otput for both reference download paths 
-        #"resources/genome.fa",
-        #"resources/annotation",
             # final annotation table reagrdless of rule path for annotation file
             "resources/final_annotation_table",
-        #cutadapt
-        #Checkpoint_ReadSampleSheet_GRID("cut_reads/{sample}.fq1.gz"),
-        #Checkpoint_ReadSampleSheet_GRID("cut_reads/{sample}.qc.txt"),
-        #trimmomatic
-        #Checkpoint_ReadSampleSheet_GRID("trimmed_reads/{sample}.forward_paired.fq.gz"),
-        #fastqc
-        #Checkpoint_ReadSampleSheet_GRID("results/fastqc/raw/{sample}_1_fastqc.html"),
-        #Checkpoint_ReadSampleSheet_GRID("results/fastqc/raw/{sample}_1_fastqc.zip"),
-        #trimmed fastqc 
-        #Checkpoint_ReadSampleSheet_GRID("results/fastqc/trimmed/{sample}_forward_paired_fastqc.html"),
-        #Checkpoint_ReadSampleSheet_GRID("results/fastqc/trimmed/{sample}_forward_paired_fastqc.zip"),
-        #bowtie 2 index
-        #multiext(
-        #    "resources/genome",
-        #    ".1.bt2", ".2.bt2", ".3.bt2", ".4.bt2", ".rev.1.bt2", ".rev.2.bt2",
-        #),
-        #bowtie2 align & convert to sorted bam
-        #Checkpoint_ReadSampleSheet_GRID("results/mapped/{sample}.sam"),
-        #Checkpoint_ReadSampleSheet_GRID("results/mapped/{sample}.sorted.bam"),
             Checkpoint_ReadSampleSheet_GRID("results/mapped/{sample}.sorted.bam.bai"),
-        # picard + samtools view conversion to SAM format
-        #Checkpoint_ReadSampleSheet_GRID("results/dedup/{sample}.dedup.bam"),
+            Checkpoint_ReadSampleSheet_GRID("results/dedup/{sample}.dedup.bam.bai"),
+            Checkpoint_ReadSampleSheet_GRID("results/dedup_sam/{sample}.dedup.sam"),
+            #multiqc
+            "results/multiqc/multiqc.html",
+            #insertion identification identification results
+            "results/insertions_table_final/all_identified_insertions.csv",
+            "results/insertions_table_final/germinal_identified_insertions.csv",
+            #insertion annotation
+            "results/insertions_table_final/all_identified_insertions_annotated.csv",
+            "results/insertions_table_final/germinal_identified_insertions_annotated.csv",
+
+elif config["approach"] == "GRID" and config["TE_TYPING"] == "perform":
+    rule all:
+        input:
+            # final annotation table reagrdless of rule path for annotation file
+            "resources/final_annotation_table",
+            Checkpoint_ReadSampleSheet_GRID("results/mapped/{sample}.sorted.bam.bai"),
             Checkpoint_ReadSampleSheet_GRID("results/dedup/{sample}.dedup.bam.bai"),
             Checkpoint_ReadSampleSheet_GRID("results/dedup_sam/{sample}.dedup.sam"),           
             #multiqc
@@ -92,7 +69,9 @@ if config["approach"] == "GRID":
             "results/insertions_table_final/all_identified_insertions_annotated.csv",
             "results/insertions_table_final/germinal_identified_insertions_annotated.csv",
             #te/element typing
-            expand("results/te_typing/uncategorized_clustered/final_clstr_file_{insertion_table}.tsv", insertion_table=INSERTION_TABLES_GRID),
+            "results/insertions_table_final_te_typed/headers_strand_1_uncategorized_all_identified_insertions.csv",
+#            expand("results/te_typing/uncategorized_clustered/final_clstr_file_{insertion_table}.tsv", insertion_table=INSERTION_TABLES_GRID),
+            "test.output"
 
 
 #### ONLY FOR GENERIC ANALYSIS - NO STOCK MATRIX ####

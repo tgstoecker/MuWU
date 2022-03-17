@@ -47,6 +47,7 @@ rule te_typing_annotation:
     input:
         read_typing=expand("results/te_typing/pre_sorting/{sample}/{sample}_te_types_merged.tsv", sample=SAMPLES),
         all_identified_insertions="results/insertions_table_final/all_identified_insertions.csv",
+        
     output:
         "results/insertions_table_final_te_typed/complete_all_identified_insertions.csv",
         "results/insertions_table_final_te_typed/short_all_identified_insertions.csv",
@@ -69,16 +70,36 @@ rule te_typing_annotation:
         "../scripts/te_type_annotation.R"
 
 
-rule te_typing_annotation_propagation:
-    input:
-        complete_all_final="results/insertions_table_final_te_typed/complete_all_identified_insertions.csv",
-        germinal_identified_insertions="results/insertions_table_final/germinal_identified_insertions.csv",
-        all_identified_insertions_annotated="results/insertions_table_final/all_identified_insertions_annotated.csv",
-        germinal_identified_insertions_annotated="results/insertions_table_final/germinal_identified_insertions_annotated.csv",
-    output:
-    threads: 1
-    script:
-        "../scripts/te_type_annotation_propagation.R"
+#### ONLY FOR GRID DESIGN (STOCK MATRIX) BASED ANALYSIS ####
+if config["approach"] == "GRID":
+    rule te_typing_annotation_propagation_GRID:
+        input:
+            complete_all_final="results/insertions_table_final_te_typed/complete_all_identified_insertions.csv",
+            germinal_identified_insertions="results/insertions_table_final/germinal_identified_insertions.csv",
+            all_identified_insertions_annotated="results/insertions_table_final/all_identified_insertions_annotated.csv",
+            germinal_identified_insertions_annotated="results/insertions_table_final/germinal_identified_insertions_annotated.csv",
+        output:
+            "test.output"
+        conda: "../envs/annotation.yaml"
+        threads: 1
+        script:
+            "../scripts/te_type_annotation_propagation_GRID.R"
+
+#### ONLY FOR GENERIC APPROACH BASED ANALYSIS ####
+if config["approach"] == "GENERIC":
+
+    rule te_typing_annotation_propagation_GENERIC:
+        input:
+            complete_all_final="results/insertions_table_final_te_typed/complete_all_identified_insertions.csv",
+            all_identified_insertions_annotated="results/insertions_table_final/all_identified_insertions_annotated.csv",
+        output:
+        conda: "../envs/annotation.yaml"
+        threads: 1
+        script:
+            "../scripts/te_type_annotation_propagation_GENERIC.R"
+
+
+
 
 
 ###### once done with annotation  ###########

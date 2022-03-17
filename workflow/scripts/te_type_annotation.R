@@ -13,6 +13,7 @@ library(doParallel)
 message("Getting snakemake variables:")
 
 samples <- snakemake@params[["samples"]]
+samples
 #samples <- c('Row_01', 'Col_01',
 #             'Row_02', 'Col_02',
 #             'Row_03', 'Col_03',
