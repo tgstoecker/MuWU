@@ -46,8 +46,7 @@ rule merging_read_te_typing:
 rule te_typing_annotation:
     input:
         read_typing=expand("results/te_typing/pre_sorting/{sample}/{sample}_te_types_merged.tsv", sample=SAMPLES),
-        all_identified_insertions="results/insertions_table_final/all_identified_insertions.csv",
-        
+        all_identified_insertions="results/insertions_table_final/all_identified_insertions.csv",        
     output:
         "results/insertions_table_final_te_typed/complete_all_identified_insertions.csv",
         "results/insertions_table_final_te_typed/short_all_identified_insertions.csv",
@@ -79,7 +78,12 @@ if config["approach"] == "GRID":
             all_identified_insertions_annotated="results/insertions_table_final/all_identified_insertions_annotated.csv",
             germinal_identified_insertions_annotated="results/insertions_table_final/germinal_identified_insertions_annotated.csv",
         output:
-            "test.output"
+            "results/insertions_table_final_te_typed/complete_germinal_identified_insertions.csv",
+            "results/insertions_table_final_te_typed/short_germinal_identified_insertions.csv",
+        params:
+            samples=lambda wildcards: list(config["SAMPLES"]),
+            all_types=lambda wildcards: list(config["TE_types"].keys()),
+            te_typing_cluster_cores=lambda wildcards: config["te_typing_cluster_cores"],
         conda: "../envs/annotation.yaml"
         threads: 1
         script:

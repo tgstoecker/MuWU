@@ -13,7 +13,7 @@ library(doParallel)
 message("Getting snakemake variables:")
 
 samples <- snakemake@params[["samples"]]
-samples
+#samples
 #samples <- c('Row_01', 'Col_01',
 #             'Row_02', 'Col_02',
 #             'Row_03', 'Col_03',
@@ -137,6 +137,9 @@ rm_cluster <- function(){
 
   lapply(X = socket_connections, 
          FUN = burn_socks)
+
+  ## some time before next command - making sure all sockets are completely wiped before new cluster start
+  Sys.sleep(60)
 }
 
 
@@ -204,7 +207,6 @@ list2env(sam_object_list, envir = .GlobalEnv)
 
 #get rid of cluster
 rm_cluster()
-
 
 
 ### Function to read SAM bitwise encoding - and return whether read is forward or reverse mate ###
@@ -315,6 +317,8 @@ pre_ait_annotated <- foreach(row = 1:nrow(insertions_typed)) %dopar% {
 
 #get rid of cluster
 rm_cluster()
+
+
 
 #combine to one dataframe
 ait_annotated <- bind_rows(pre_ait_annotated)
