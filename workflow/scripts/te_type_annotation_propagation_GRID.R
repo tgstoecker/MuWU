@@ -347,6 +347,302 @@ write.csv(headers_strand_2_uncategorized_ins,
 
 
 
+### 2 - All insertions annotated (subset in-, around genes)
+ 
+complete_all_annotated_ait_final <- dplyr::left_join(all_insertions_annotated,
+                        complete_all_final,
+                        keep = FALSE,
+                        na_matches = "never",
+                        by=c("Chr"="Chr",
+                             "InsertionStart"="InsertionStart",
+                             "InsertionEnd"="InsertionEnd",
+                             "Sample"="Sample",
+                             "StartReads"="StartReads",
+                             "EndReads"="EndReads")) %>%
+  #rows not also found in our big type annotated table will hava NA under TotalReads ;D
+  filter(!is.na(TotalReads))
+
+
+write.csv(complete_all_annotated_ait_final,
+          "results/insertions_table_final_te_typed/complete_all_identified_insertions_annotated.csv",
+          row.names=F,
+          quote=F)
+
+
+#short version of the table
+short_complete_all_annotated_ait_final <- complete_all_annotated_ait_final %>%
+  select(GeneID, Chr, InsertionStart, InsertionEnd, Sample, StartReads, EndReads, Gene_length,
+         perc_uncategorized, perc_best_type_of_types, all_candidates, type_candidates)
+
+data.table::fwrite(short_complete_all_annotated_ait_final,
+                   "results/insertions_table_final_te_typed/short_all_identified_insertions_annotated.csv",
+                   row.names=F)
+
+
+### create stats file for library run
+#- insertions categorized
+#- insertions uncategorized
+#- unclear vs clear
+
+type_candidates_stats <- complete_all_annotated_ait_final %>%
+  group_by(type_candidates) %>%
+  summarize(count = n()) %>%
+  arrange(desc(count))
+
+all_candidates_stats <- complete_all_annotated_ait_final %>%
+  group_by(all_candidates) %>%
+  summarize(count = n()) %>%
+  arrange(desc(count))
+
+
+data.table::fwrite(type_candidates_stats,
+                   "results/insertions_table_final_te_typed/type_candidate_stats_all_identified_insertions_annotated.csv",
+                   row.names=F)
+
+data.table::fwrite(all_candidates_stats, 
+                   "results/insertions_table_final_te_typed/all_candidates_stats_all_identified_insertions_annotated.csv",
+                   row.names=F)
+
+
+
+### create files for insertions with uncategorized reads ###
+
+#create subset df with only uncategorized insertions / or with a percentage cutoff
+all_annotated_unc_ait_annotated_final <- complete_all_annotated_ait_final %>%
+  filter(type_max_name == "NO READS")
+
+
+#loop through all rows
+setup_cluster()
+
+pre_unc_ins <- foreach(cur_row = 1:nrow(all_annotated_unc_ait_annotated_final)) %dopar% {
+
+    #match Sample with sam object
+    tmp_sam <- get(paste0("sam_", all_annotated_unc_ait_annotated_final[cur_row,]$Sample))
+
+    #match sample of insertion file with te typing file
+    tmp_type_file <- get(paste0(all_annotated_unc_ait_annotated_final[cur_row,]$Sample, "_type_file"))
+
+    # fuzzyjoin for overlap + end or start needs to match
+    tmp_merge_ins_sam <- fuzzyjoin::genome_inner_join(all_annotated_unc_ait_annotated_final[cur_row,],
+                                                      tmp_sam,
+                                                      by=c("Chr", "InsertionStart"="Start", "InsertionEnd"="End")
+                          ) %>%
+    select(Name, Flag, Chr.y, Start, End, Sample, InsertionStart, InsertionEnd) %>%
+    dplyr::rename(Chr=Chr.y) %>%
+    filter(Start == all_annotated_unc_ait_annotated_final[cur_row,]$InsertionStart |
+           #Start == unc_ait_annotated[cur_row,]$InsertionEnd | 
+           #End == unc_ait_annotated[cur_row,]$InsertionStart | 
+           End == all_annotated_unc_ait_annotated_final[cur_row,]$InsertionEnd
+          ) %>%
+    #translate Flag into forward (+) or reverse (-) strand mapping/read
+    rowwise() %>%
+    mutate(
+      Strand = case_when(
+        number2binary(Flag, 8)[7] == 1 & number2binary(Flag, 8)[8] == 0 ~ "1",
+        number2binary(Flag, 8)[7] == 0 & number2binary(Flag, 8)[8] == 1 ~ "2",
+        TRUE ~ "LOST"
+      )
+    ) %>%
+    select(-Flag) %>%
+    relocate(Strand, .after=Name)
+
+    return(tmp_merge_ins_sam)
+  }
+
+#merge to final dataframe
+all_annotated_unc_ins <- bind_rows(pre_unc_ins)
+
+
+#get rid of cluster
+rm_cluster()
+
+
+#split into forward and reverse reads
+strand_1_uncategorized_ins <- all_annotated_unc_ins %>%
+  filter(Strand == "1")
+
+strand_2_uncategorized_ins <- all_annotated_unc_ins %>%
+  filter(Strand == "2")
+
+
+#create files only with headers
+headers_all_uncategorized_ins <- all_annotated_unc_ins %>%
+  select(Name)
+
+headers_strand_1_uncategorized_ins <- strand_1_uncategorized_ins %>%
+  select(Name)
+
+headers_strand_2_uncategorized_ins <- strand_2_uncategorized_ins %>%
+  select(Name)
+
+#write table for all_uncategorized_ins
+write.csv(all_annotated_unc_ins,
+          "results/insertions_table_final_te_typed/all_uncategorized_all_identified_insertions_annotated.csv",
+          quote=FALSE,
+          row.names=FALSE)
+
+#header files for strand 1 and 2 seperate
+write.csv(headers_strand_1_uncategorized_ins,
+          "results/insertions_table_final_te_typed/headers_strand_1_uncategorized_all_identified_insertions_annotated.csv",
+          quote=FALSE,
+          row.names=FALSE)
+write.csv(headers_strand_2_uncategorized_ins,
+          "results/insertions_table_final_te_typed/headers_strand_2_uncategorized_all_identified_insertions_annotated.csv",
+          quote=FALSE,
+          row.names=FALSE)
+
+
+
+
+### 3 - Germinal insertions annotated (subset in-, around genes)
+
+complete_germinal_annotated_ait_final <- dplyr::left_join(germinal_insertions_annotated,
+                        complete_all_final,
+                        keep = FALSE,
+                        na_matches = "never",
+                        by=c("Chr"="Chr",
+                             "InsertionStart"="InsertionStart",
+                             "InsertionEnd"="InsertionEnd",
+                             "Sample"="Sample",
+                             "StartReads"="StartReads",
+                             "EndReads"="EndReads")) %>%
+  #rows not also found in our big type annotated table will hava NA under TotalReads ;D
+  filter(!is.na(TotalReads))
+
+
+write.csv(complete_germinal_annotated_ait_final,
+          "results/insertions_table_final_te_typed/complete_germinal_identified_insertions_annotated.csv",
+          row.names=F,
+          quote=F)
+
+
+#short version of the table
+short_complete_germinal_annotated_ait_final <- complete_germinal_annotated_ait_final %>%
+  select(GeneID, Chr, InsertionStart, InsertionEnd, Sample, StartReads, EndReads, Gene_length,
+         perc_uncategorized, perc_best_type_of_types, all_candidates, type_candidates)
+
+data.table::fwrite(short_complete_germinal_annotated_ait_final,
+                   "results/insertions_table_final_te_typed/short_germinal_identified_insertions_annotated.csv",
+                   row.names=F)
+
+
+### create stats file for library run
+#- insertions categorized
+#- insertions uncategorized
+#- unclear vs clear
+
+type_candidates_stats <- complete_germinal_annotated_ait_final %>%
+  group_by(type_candidates) %>%
+  summarize(count = n()) %>%
+  arrange(desc(count))
+
+all_candidates_stats <- complete_germinal_annotated_ait_final %>%
+  group_by(all_candidates) %>%
+  summarize(count = n()) %>%
+  arrange(desc(count))
+
+
+data.table::fwrite(type_candidates_stats,
+                   "results/insertions_table_final_te_typed/type_candidate_stats_germinal_identified_insertions_annotated.csv",
+                   row.names=F)
+
+data.table::fwrite(all_candidates_stats,
+                   "results/insertions_table_final_te_typed/all_candidates_stats_germinal_identified_insertions_annotated.csv",
+                   row.names=F)
+
+
+
+### create files for insertions with uncategorized reads ###
+
+#create subset df with only uncategorized insertions / or with a percentage cutoff
+germinal_annotated_unc_ait_annotated_final <- complete_germinal_annotated_ait_final %>%
+  filter(type_max_name == "NO READS")
+
+
+#loop through all rows
+setup_cluster()
+
+pre_unc_ins <- foreach(cur_row = 1:nrow(germinal_annotated_unc_ait_annotated_final)) %dopar% {
+
+    #match Sample with sam object
+    tmp_sam <- get(paste0("sam_", germinal_annotated_unc_ait_annotated_final[cur_row,]$Sample))
+
+    #match sample of insertion file with te typing file
+    tmp_type_file <- get(paste0(germinal_annotated_unc_ait_annotated_final[cur_row,]$Sample, "_type_file"))
+
+    # fuzzyjoin for overlap + end or start needs to match
+    tmp_merge_ins_sam <- fuzzyjoin::genome_inner_join(germinal_annotated_unc_ait_annotated_final[cur_row,],
+                                                      tmp_sam,
+                                                      by=c("Chr", "InsertionStart"="Start", "InsertionEnd"="End")
+                          ) %>%
+    select(Name, Flag, Chr.y, Start, End, Sample, InsertionStart, InsertionEnd) %>%
+    dplyr::rename(Chr=Chr.y) %>%
+    filter(Start == germinal_annotated_unc_ait_annotated_final[cur_row,]$InsertionStart |
+           #Start == unc_ait_annotated[cur_row,]$InsertionEnd | 
+           #End == unc_ait_annotated[cur_row,]$InsertionStart | 
+           End == germinal_annotated_unc_ait_annotated_final[cur_row,]$InsertionEnd
+          ) %>%
+    #translate Flag into forward (+) or reverse (-) strand mapping/read
+    rowwise() %>%
+    mutate(
+      Strand = case_when(
+        number2binary(Flag, 8)[7] == 1 & number2binary(Flag, 8)[8] == 0 ~ "1",
+        number2binary(Flag, 8)[7] == 0 & number2binary(Flag, 8)[8] == 1 ~ "2",
+        TRUE ~ "LOST"
+      )
+    ) %>%
+    select(-Flag) %>%
+    relocate(Strand, .after=Name)
+
+    return(tmp_merge_ins_sam)
+  }
+
+#merge to final dataframe
+germinal_annotated_unc_ins <- bind_rows(pre_unc_ins)
+
+
+#get rid of cluster
+rm_cluster()
+
+
+
+#split into forward and reverse reads
+strand_1_uncategorized_ins <- germinal_annotated_unc_ins %>%
+  filter(Strand == "1")
+
+strand_2_uncategorized_ins <- germinal_annotated_unc_ins %>%
+  filter(Strand == "2")
+
+
+#create files only with headers
+headers_all_uncategorized_ins <- germinal_annotated_unc_ins %>%
+  select(Name)
+
+headers_strand_1_uncategorized_ins <- strand_1_uncategorized_ins %>%
+  select(Name)
+
+headers_strand_2_uncategorized_ins <- strand_2_uncategorized_ins %>%
+  select(Name)
+
+#write table for all_uncategorized_ins
+write.csv(germinal_annotated_unc_ins,
+          "results/insertions_table_final_te_typed/all_uncategorized_germinal_identified_insertions_annotated.csv",
+          quote=FALSE,
+          row.names=FALSE)
+
+#header files for strand 1 and 2 seperate
+write.csv(headers_strand_1_uncategorized_ins,
+          "results/insertions_table_final_te_typed/headers_strand_1_uncategorized_germinal_identified_insertions_annotated.csv",
+          quote=FALSE,
+          row.names=FALSE)
+write.csv(headers_strand_2_uncategorized_ins,
+          "results/insertions_table_final_te_typed/headers_strand_2_uncategorized_germinal_identified_insertions_annotated.csv",
+          quote=FALSE,
+          row.names=FALSE)
+
+
+
 
 
 

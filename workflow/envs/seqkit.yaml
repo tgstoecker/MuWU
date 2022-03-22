@@ -1,5 +1,5 @@
 channels:
   - bioconda
 dependencies:
-  - seqkit==2.1.0
+  - seqkit==2.2.0
 #  - seqkit =0.16.1

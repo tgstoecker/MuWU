@@ -78,8 +78,21 @@ if config["approach"] == "GRID":
             all_identified_insertions_annotated="results/insertions_table_final/all_identified_insertions_annotated.csv",
             germinal_identified_insertions_annotated="results/insertions_table_final/germinal_identified_insertions_annotated.csv",
         output:
+            #germinal UN-annotated
             "results/insertions_table_final_te_typed/complete_germinal_identified_insertions.csv",
             "results/insertions_table_final_te_typed/short_germinal_identified_insertions.csv",
+            "results/insertions_table_final_te_typed/headers_strand_1_uncategorized_germinal_identified_insertions.csv",
+            "results/insertions_table_final_te_typed/headers_strand_2_uncategorized_germinal_identified_insertions.csv",
+            #all annotated
+            "results/insertions_table_final_te_typed/complete_all_identified_insertions_annotated.csv",
+            "results/insertions_table_final_te_typed/short_all_identified_insertions_annotated.csv",
+            "results/insertions_table_final_te_typed/headers_strand_1_uncategorized_all_identified_insertions_annotated.csv",
+            "results/insertions_table_final_te_typed/headers_strand_2_uncategorized_all_identified_insertions_annotated.csv",
+            #germinal annotated
+            "results/insertions_table_final_te_typed/complete_germinal_identified_insertions_annotated.csv",
+            "results/insertions_table_final_te_typed/short_germinal_identified_insertions_annotated.csv",
+            "results/insertions_table_final_te_typed/headers_strand_1_uncategorized_germinal_identified_insertions_annotated.csv",
+            "results/insertions_table_final_te_typed/headers_strand_2_uncategorized_germinal_identified_insertions_annotated.csv",
         params:
             samples=lambda wildcards: list(config["SAMPLES"]),
             all_types=lambda wildcards: list(config["TE_types"].keys()),
@@ -89,6 +102,7 @@ if config["approach"] == "GRID":
         script:
             "../scripts/te_type_annotation_propagation_GRID.R"
 
+
 #### ONLY FOR GENERIC APPROACH BASED ANALYSIS ####
 if config["approach"] == "GENERIC":
 
@@ -97,12 +111,15 @@ if config["approach"] == "GENERIC":
             complete_all_final="results/insertions_table_final_te_typed/complete_all_identified_insertions.csv",
             all_identified_insertions_annotated="results/insertions_table_final/all_identified_insertions_annotated.csv",
         output:
+            #all annotated
+            "results/insertions_table_final_te_typed/complete_all_identified_insertions_annotated.csv",
+            "results/insertions_table_final_te_typed/short_all_identified_insertions_annotated.csv",
+            "results/insertions_table_final_te_typed/headers_strand_1_uncategorized_all_identified_insertions_annotated.csv",
+            "results/insertions_table_final_te_typed/headers_strand_2_uncategorized_all_identified_insertions_annotated.csv",
         conda: "../envs/annotation.yaml"
         threads: 1
         script:
             "../scripts/te_type_annotation_propagation_GENERIC.R"
-
-
 
 
 
@@ -120,7 +137,7 @@ rule get_uncategorized_ins_reads_1:
     shell:
         """
 #        zcat {input.reads} |
-        seqkit grep -j {threads} --by-name -r -f {input.unc_headers} {input.reads} | 
+        seqkit grep -j {threads} -f {input.unc_headers} {input.reads} | 
         seqkit grep -j {threads} --by-seq -m 4 -p ATAATGGCAATTATCTC |
         seqkit seq --seq-type DNA --reverse --complement |
         seqkit fq2fa > {output}
@@ -137,7 +154,7 @@ rule get_uncategorized_ins_reads_2:
     shell:
         """
 #        zcat {input.reads} |
-        seqkit grep -j {threads} --by-name -r -f {input.unc_headers} {input.reads} |
+        seqkit grep -j {threads} -f {input.unc_headers} {input.reads} |
         seqkit grep -j {threads} --by-seq -m 4 -p ATAATGGCAATTATCTC |
         seqkit fq2fa > {output}
         """
