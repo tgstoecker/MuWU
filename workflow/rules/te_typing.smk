@@ -193,17 +193,20 @@ rule index_categorized_ins_reads:
         """
 
 #create bed file with information where in the read the more or less conserved motif is situated
-#use the same mismatch value (for now = 4) & mostly conserved motif ATAATGGCAATTATCTC
+#use the same mismatch value (for now = 4) & mostly conserved motif ATAATGGCAATTATCTC <- changeable in config.yaml
 rule locate_motif:
     input:
         fa="results/te_typing/uncategorized/merged/{paired}/merged_{paired}_unc_{insertion_table}.fa",
         fai="results/te_typing/uncategorized/merged/{paired}/merged_{paired}_unc_{insertion_table}.fa.fai"
     output: 
         "results/te_typing/uncategorized/merged/{paired}/merged_{paired}_unc_motif_info_{insertion_table}.bed"
+    params:
+        n_mismatch=config["N_MISMATCH"],
+        motif=config["MOTIF"],
     conda: "../envs/te_typing.yaml"
     shell:
         """
-        cat {input.fa} | seqkit locate -m 4 -p ATAATGGCAATTATCTC > {output}
+        cat {input.fa} | seqkit locate -m {params.n_mismatch} -p {params.motif} > {output}
         """
 
 

@@ -124,8 +124,8 @@ threads_identify_Mu_insertions: 48
 
 #### choose whether or not te/element typing should be performed
 #if yes; just set TE_TYPING to perform
-#TE_TYPING: perform
-TE_TYPING: no
+TE_TYPING: perform
+#TE_TYPING: no
 
 threads_te_typing_seqkit: 4
 te_typing_cluster_cores: 48
@@ -205,3 +205,9 @@ TE_types:
   Mu19_L: CTCTCTTCTTCCATAATGGCAATTATCTC
   Mu19_R: CTCTGTTGTTTCATAATGGCAATTGTCTC
 
+
+### uncategorized (untyped insertions) detection & clustering parameters
+#untargeted clustering (without motifs) curently not implemented
+#N_MISMATCH has to be <= length(MOTIF)
+N_MISMATCH: 4
+MOTIF: ATAATGGCAATTATCTC
