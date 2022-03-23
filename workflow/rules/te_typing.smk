@@ -1,9 +1,14 @@
 #for now this rule expects gzipped, paired data and GRID design
 #I can comeback sometime and implement it dynamically for every scenario
 
+#SEPERATOR = "."
+#SUFFIX = ".fq"
+
+
 rule read_te_typing:
     input:
-        "rawreads/{sample}_{paired}.fq.gz",
+        expand("rawreads/{{sample}}{sep}{{paired}}{suffix}", sep=config["SEPERATOR"], suffix=config["SUFFIX"]),
+#        "rawreads/{sample}_{paired}.fq.gz",
 #        check="checks/read_type.check",
 #        fastq_files=get_fastqs_GRID,
     output:
@@ -128,7 +133,7 @@ if config["approach"] == "GENERIC":
 
 rule get_uncategorized_ins_reads_1:
     input:
-        reads="rawreads/{sample}_1.fq.gz",
+        reads=expand("rawreads/{{sample}}{sep}1{suffix}", sep=config["SEPERATOR"], suffix=config["SUFFIX"]),
         unc_headers="results/insertions_table_final_te_typed/headers_strand_1_uncategorized_{insertion_table}.csv",
     output:
         "results/te_typing/uncategorized/{insertion_table}/{sample}/1/unc.fa",
@@ -145,7 +150,7 @@ rule get_uncategorized_ins_reads_1:
 
 rule get_uncategorized_ins_reads_2:
     input:
-        reads="rawreads/{sample}_2.fq.gz",
+        reads=expand("rawreads/{{sample}}{sep}2{suffix}", sep=config["SEPERATOR"], suffix=config["SUFFIX"]),
         unc_headers="results/insertions_table_final_te_typed/headers_strand_2_uncategorized_{insertion_table}.csv",
     output:
         "results/te_typing/uncategorized/{insertion_table}/{sample}/2/unc.fa",

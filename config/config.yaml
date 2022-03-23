@@ -23,10 +23,6 @@ approach: GRID
 #approach: GENERIC
 
 
-#### choose whether or not te/element typing should be performed
-#if not; just change/remove perform flag here
-TE_TYPING: perform
-
 # this example implies that the user created a directory "rawreads" in the main workflow directory
 # any location on the file system works (be careful with relative paths!)
 reads_dir: rawreads
@@ -101,10 +97,41 @@ threads_convert_bam_to_sam: 4
 #GRID approach -  set this to #Col + #Row
 #GENERIC approach set this to # samples
 threads_identify_Mu_insertions: 48
+
+
+
+
+######### TE typing ##########
+#This is an optional additional analysis allowing for an assessment of the sub-types or elements of the detected insertions/TEs.
+#Basically, we feed the workflow a set of sequences which are specific to a specific subtype/element of the particular transposon in question.
+#For this to work your input raw data reads have to contain this sequence - however the sequence can be cut/trimmed away during the MuWU run.
+#In our (BonnMu) case we use a 12-fold degenerate TIR primer which is trimmed away before the alignment step. 
+#Based on the subtype/element sequence association all matching reads are sorted into files for the specific subtype/element.
+#Once the insertions are identified we associate them via their corresponding reads to all respective subtypes/elements.
+#Since in our work we face the additional difiiculty that the TIR sequence of particular Mu element can very between the left and right end of the transposon,
+#both a "_L" as well as a "_R" sequence can be supplied.
+#If in your work this is not necessary or you only know one side you can simply pass a pseudosequence for one of the pairs,
+# so that the subtype/element is not counted double (example shown below).
+#Several output tables are produced summarizing the information, as well as extension tables: normal MuWU output + the typing information.
+
+#Insertions which can't be associated with a supplied type (no read matching) are addtionaly investigated.
+#Their reads are extracted and (optionally: based on a user supplied motif) clustered and their redundancy removed.
+#This allows for the detection of putative novel types or elements that either were not considered by the user or sequencing steps.
+
+#Note, that these additional steps are not extensively tested with non-BonnMu datasets and are currently not optimally implemented.
+#Currently, we demand paired-end reads and require to set information regarding the input data manually again - see the following options.
+
+
+#### choose whether or not te/element typing should be performed
+#if yes; just set TE_TYPING to perform
+#TE_TYPING: perform
+TE_TYPING: no
+
 threads_te_typing_seqkit: 4
 te_typing_cluster_cores: 48
 
-#### TE typing ####
+
+
 SAMPLES: ['Row_01', 'Row_02', 'Row_03', 'Row_04',
           'Row_05', 'Row_06', 'Row_07', 'Row_08',
           'Row_09', 'Row_10', 'Row_11', 'Row_12',
@@ -120,8 +147,11 @@ SAMPLES: ['Row_01', 'Row_02', 'Row_03', 'Row_04',
 
 PAIRED: ['1', '2']
 
+SEPERATOR: ['.']
 
-#INSERTION_TABLES_GRID: ["germinal_identified_insertions_annotated"]
+SUFFIX: ['.fq']
+
+
 
 INSERTION_TABLES_GRID: ["germinal_identified_insertions_annotated",
                         "germinal_identified_insertions",
