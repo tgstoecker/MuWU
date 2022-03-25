@@ -30,28 +30,28 @@ grid_table <- grid_table %>%
 annotation <- read.delim(snake_annotation, header=FALSE, comment.char="#")
 
 # add column names
-colnames(annotation) <- c("GeneID", "Chr", "Start", "End")
+colnames(annotation) <- c("GeneID", "Chr", "GeneStart", "GeneEnd")
 
 # reduce genes to ONE entry which is the longest
 # multiple entries per gene likely, since after gffread, transcripts of different lengths are included (share name)
 # we find the min and max positions (start & end coordinate with greatest distance) per gene and keep this record  
 annotation <- annotation %>%
   group_by(GeneID, Chr) %>%
-  summarise(Start = min(Start), End = max(End))
+  summarise(GeneStart = min(GeneStart), GeneEnd = max(GeneEnd))
 
 # compute gene_length
 annotation <- annotation %>%
-  mutate(Gene_length = End - Start + 1)
+  mutate(Gene_length = GeneEnd - GeneStart + 1)
 
 # add bp extension as defined in the config.yaml
 # this is useful for inclusion of upstream/downstream regions or if UTRs are poorly characterized
 annotation <- annotation %>%
-  mutate(Start = Start - snake_extension, End = End + snake_extension)
+  mutate(GeneStart = GeneStart - snake_extension, GeneEnd = GeneEnd + snake_extension)
 
 # join MuGerminal table with annotation
 germinal_ins_annotated <- fuzzyjoin::genome_inner_join(germinal_ins,
                                 annotation,
-                                by=c("Chr", "Start", "End")
+                                by=c("Chr", "InsertionStart"="GeneStart", "InsertionEnd"="GeneEnd")
                                 )
 
 
@@ -60,10 +60,10 @@ germinal_ins_annotated <- fuzzyjoin::genome_inner_join(germinal_ins,
 germinal_ins_annotated <- germinal_ins_annotated %>%
   dplyr::rename(
     Chr = "Chr.y",
-    Start = "Start.y",
-    End = "End.y",
-    InsertionStart = "Start.x",
-    InsertionEnd = "End.x"
+#    GeneStart = "GeneStart.y",
+#    GeneEnd = "GeneEnd.y",
+#    InsertionStart = "GeneStart.x",
+#    InsertionEnd = "GeneEnd.x"
   ) %>%
   relocate(
     Sample, InsertionStart, InsertionEnd, StartReads, EndReads, .before = Gene_length
@@ -78,7 +78,7 @@ germinal_ins_grid_info <- merge(germinal_ins_annotated, grid_table, by.x = "Samp
 
 # order the table as to have intersecting samples next to one another
 germinal_ins_grid_info <- germinal_ins_grid_info %>%
-  arrange(., Chr, Start, InsertionStart)
+  arrange(., Chr, GeneStart, InsertionStart)
 
 
 ## assigning Stock
@@ -90,6 +90,18 @@ just_row <- germinal_ins_grid_info %>%
 just_col <- germinal_ins_grid_info %>%
   filter(dim == "col") %>%
   select(-dim)
+
+
+#str(stock)
+#summary(stock)
+#head(stock)
+#nrow(stock)
+
+#head(just_row)
+#head(just_col)
+#nrow(just_row)
+#nrow(just_row)
+
 
 full <- c()
 for (i in 1:nrow(just_row))  {
@@ -103,9 +115,10 @@ germinal_ins_annotated_stocks <- rbind(just_row, just_col)
 
 # order the table as to have intersecting samples next to one another; again..
 germinal_ins_annotated_stocks <- germinal_ins_annotated_stocks %>%
-  arrange(., Chr, Start, InsertionStart) %>%
+  arrange(., Chr, GeneStart, InsertionStart) %>%
   relocate(Sample, .before = InsertionStart)
 
 write.csv(germinal_ins_annotated_stocks,
           snakemake@output[[1]],
-          row.names=F)
+          row.names=F,
+          quote=F)
