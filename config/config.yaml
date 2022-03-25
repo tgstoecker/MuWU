@@ -208,6 +208,7 @@ TE_types:
 
 ### uncategorized (untyped insertions) detection & clustering parameters
 #untargeted clustering (without motifs) curently not implemented
+#if need be, just change rule "locate_motif" in workflow/rules/te_typing.smk
 #N_MISMATCH has to be <= length(MOTIF)
 N_MISMATCH: 4
 MOTIF: ATAATGGCAATTATCTC
