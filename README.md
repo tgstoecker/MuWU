@@ -1,5 +1,5 @@
 # MuWU - Mu-seq Workflow Utility  
-[![Snakemake](https://img.shields.io/badge/snakemake-=6.4.1-brightgreen.svg)](https://snakemake.readthedocs.io) [![DOI](https://zenodo.org/badge/203787663.svg)](https://zenodo.org/badge/latestdoi/203787663)
+[![Snakemake](https://img.shields.io/badge/snakemake->=7.0.0-brightgreen.svg)](https://snakemake.readthedocs.io) [![DOI](https://zenodo.org/badge/203787663.svg)](https://zenodo.org/badge/latestdoi/203787663)
 
 
 
@@ -22,6 +22,24 @@ Stöcker, Tyll, et al. "MuWU: Mutant-seq library analysis and annotation." Bioin
 - Link: [https://academic.oup.com/bioinformatics/advance-article/doi/10.1093/bioinformatics/btab679/6377773](https://academic.oup.com/bioinformatics/advance-article/doi/10.1093/bioinformatics/btab679/6377773)  
 
 <br>  
+
+**Novel features MuWU v1.5:**  
+With the release of MuWU v1.5 it is now possible to perform an **additional downstream analysis** with which **sub-types/ specific elements** of the detected insertions/TEs can be determined.  
+Basically, the user can supply a set of sequences which are specific to a specific subtype/element of the particular transposon in question.  
+For this to work your input raw data reads have to contain this sequence - however the sequence can be cut/trimmed away during the MuWU run.  
+In our (BonnMu) data we use a 12-fold degenerate TIR primer which is trimmed away before the alignment step.  
+Based on the subtype/element sequence association all matching reads are sorted into files for the specific subtype/element.  
+Once the insertions are identified we associate them via their corresponding reads to all respective subtypes/elements.  
+Since in our work we face the additional difiiculty that the TIR sequence of particular Mu element can very between the left and right end of the transposon, both a "\_L" (left side) as well as a "\_R" (right side) sequence can be supplied.  
+If in your work this is not necessary or you only know one side, you can simply pass a pseudosequence for one of the pairs, so that the subtype/element is not counted double (example given in config.yaml).  
+Several output tables are produced summarizing the information, as well as extension tables: normal MuWU output + the typing information.  
+  
+Insertions which can't be associated with a supplied type (no read matching) are addtionaly investigated.  
+Their reads are extracted and - based on a user supplied motif - clustered and their redundancy removed.  
+This allows for the **detection of putative novel types or elements** that either were not considered by the user or sequencing steps.  
+For further details & options see the config.yaml.
+
+<br>
 
 # :control_knobs: Two modes - GRID and GENERIC:
 
@@ -68,7 +86,7 @@ Answer yes to the question whether conda shall be put into your PATH environment
 
 Then, you can install mamba and Snakemake with
 
-`conda install -c conda-forge -c bioconda mamba snakemake=6.4.1`  
+`conda install -c conda-forge -c bioconda mamba "snakemake>=7.0.0"`  
 
 ### Step 2 - Preparing the working directory:
 
@@ -206,9 +224,11 @@ These results are also displayed in the respective README.md of the test directo
 - bioconductor-iranges ==2.26.0
 - biopython =1.78
 - bowtie2 ==2.4.1
+- cd-hit ==4.8.1
 - coreutils =8.31
 - cutadapt ==2.10
 - fastqc ==0.11.9
+- findutils ==4.6
 - gffread =0.12.1
 - grep =3.4
 - mamba ==0.14.1
@@ -219,13 +239,17 @@ These results are also displayed in the respective README.md of the test directo
 - pigz ==2.3.4
 - python >=3.6
 - r-base ==4.1.0
+- r-data-table ==1.14.2
+- r-doparallel ==1.0.17
 - r-dplyr ==1.0.6
+- r-foreach ==1.5.2
 - r-fuzzyjoin ==0.1.6
 - r-readxl ==1.3.1
 - r-stringr ==1.4.0
+- r-tibble ==3.1.6
 - samtools ==1.10
-- seqkit =0.16.1
-- snakemake ==6.4.1
-- snakemake-wrapper-utils ==0.2.0
+- seqkit ==2.2.0
+- snakemake >=7.0.0
+- snakemake-wrapper-utils >=0.2.0
 - tbb ==2020.2
 - trimmomatic ==0.36
