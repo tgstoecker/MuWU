@@ -192,8 +192,16 @@ These results are also displayed in the respective README.md of the test directo
 
 <br>  
 
-![Alt text](./rulegraph_GRID.svg)
+![Alt text](./rulegraph_GRID.svg)  
+  
+### GRID workflow + TE/element typing (as snakemake rulegraph):
+`snakemake --rulegraph | dot -Tsvg > rulegraph.svg`
 
+<br>  
+
+![Alt text](./rulegraph_GRID_te_typing.svg)  
+  
+  
 # :scroll: Complete list of software
 - bioconductor-iranges ==2.26.0
 - biopython =1.78
