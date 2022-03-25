@@ -126,5 +126,3 @@ elif config["approach"] == "GENERIC":
             "logs/multiqc/multiqc.log"
         wrapper:
             "v1.1.0/bio/multiqc"
-
-

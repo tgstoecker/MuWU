@@ -8,8 +8,8 @@
 ###                 Finally, in case of GenBank format we also require an assembly_report.txt to be submitted under "report:".
 ###                 This is required so that we can rename the chromosome column entries to a proper chromosome name instead of the Assigned-Molecule name.
 ### Please provide absolute file paths if local files are provided:
-fasta: ftp://ftp.ensemblgenomes.org/pub/plants/release-50/fasta/zea_mays/dna/Zea_mays.B73_RefGen_v4.dna.toplevel.fa.gz
-annotation: ftp://ftp.ensemblgenomes.org/pub/plants/release-50/gtf/zea_mays/Zea_mays.B73_RefGen_v4.50.gtf.gz
+fasta: http://ftp.ensemblgenomes.org/pub/plants/release-52/fasta/zea_mays/dna/Zea_mays.Zm-B73-REFERENCE-NAM-5.0.dna.toplevel.fa.gz
+annotation: http://ftp.ensemblgenomes.org/pub/plants/release-52/gtf/zea_mays/Zea_mays.Zm-B73-REFERENCE-NAM-5.0.52.gtf.gz
 #annotation: https://ftp.ncbi.nlm.nih.gov/genomes/refseq/plant/Zea_mays/all_assembly_versions/suppressed/GCF_000005005.2_B73_RefGen_v4/GCF_000005005.2_B73_RefGen_v4_genomic.gbff.gz
 #assembly_report: https://ftp.ncbi.nlm.nih.gov/genomes/refseq/plant/Zea_mays/all_assembly_versions/suppressed/GCF_000005005.2_B73_RefGen_v4/GCF_000005005.2_B73_RefGen_v4_assembly_report.txt
 assembly_report:
@@ -21,6 +21,7 @@ assembly_report:
 ## in either case please also provide location of your reads in your file system - read_dir:
 approach: GRID
 #approach: GENERIC
+
 
 # this example implies that the user created a directory "rawreads" in the main workflow directory
 # any location on the file system works (be careful with relative paths!)
@@ -95,4 +96,119 @@ threads_convert_bam_to_sam: 4
 #for optimal performance
 #GRID approach -  set this to #Col + #Row
 #GENERIC approach set this to # samples
-threads_identify_Mu_insertions: 24
+threads_identify_Mu_insertions: 48
+
+
+
+
+######### TE typing ##########
+#This is an optional additional analysis allowing for an assessment of the sub-types or elements of the detected insertions/TEs.
+#Basically, we feed the workflow a set of sequences which are specific to a specific subtype/element of the particular transposon in question.
+#For this to work your input raw data reads have to contain this sequence - however the sequence can be cut/trimmed away during the MuWU run.
+#In our (BonnMu) case we use a 12-fold degenerate TIR primer which is trimmed away before the alignment step. 
+#Based on the subtype/element sequence association all matching reads are sorted into files for the specific subtype/element.
+#Once the insertions are identified we associate them via their corresponding reads to all respective subtypes/elements.
+#Since in our work we face the additional difiiculty that the TIR sequence of particular Mu element can very between the left and right end of the transposon,
+#both a "_L" as well as a "_R" sequence can be supplied.
+#If in your work this is not necessary or you only know one side you can simply pass a pseudosequence for one of the pairs,
+# so that the subtype/element is not counted double (example shown below).
+#Several output tables are produced summarizing the information, as well as extension tables: normal MuWU output + the typing information.
+
+#Insertions which can't be associated with a supplied type (no read matching) are addtionaly investigated.
+#Their reads are extracted and (optionally: based on a user supplied motif) clustered and their redundancy removed.
+#This allows for the detection of putative novel types or elements that either were not considered by the user or sequencing steps.
+
+#Note, that these additional steps are not extensively tested with non-BonnMu datasets and are currently not optimally implemented.
+#Currently, we demand paired-end reads and require to set information regarding the input data manually again - see the following options.
+
+
+#### choose whether or not te/element typing should be performed
+#if yes; just set TE_TYPING to perform
+#TE_TYPING: perform
+TE_TYPING: no
+
+threads_te_typing_seqkit: 4
+te_typing_cluster_cores: 48
+
+
+
+SAMPLES: ['Row_01', 'Row_02', 'Row_03', 'Row_04',
+          'Row_05', 'Row_06', 'Row_07', 'Row_08',
+          'Row_09', 'Row_10', 'Row_11', 'Row_12',
+          'Row_13', 'Row_14', 'Row_15', 'Row_16',
+          'Row_17', 'Row_18', 'Row_19', 'Row_20',
+          'Row_21', 'Row_22', 'Row_23', 'Row_24',
+          'Col_01', 'Col_02', 'Col_03', 'Col_04',
+          'Col_05', 'Col_06', 'Col_07', 'Col_08',
+          'Col_09', 'Col_10', 'Col_11', 'Col_12',
+          'Col_13', 'Col_14', 'Col_15', 'Col_16',
+          'Col_17', 'Col_18', 'Col_19', 'Col_20',
+          'Col_21', 'Col_22', 'Col_23', 'Col_24']
+
+PAIRED: ['1', '2']
+
+SEPERATOR: ['.']
+
+SUFFIX: ['.fq']
+
+
+
+INSERTION_TABLES_GRID: ["germinal_identified_insertions_annotated",
+                        "germinal_identified_insertions",
+                        "all_identified_insertions_annotated",
+                        "all_identified_insertions"]
+
+INSERTION_TABLES_GENERIC: ["all_identified_insertions_annotated",
+                           "all_identified_insertions"]
+
+
+# TE (sub-)types - Mu6_R unknown
+#if unknown or _L and _R TIR of same type the same then add pseudosequence for either _L or _R
+#TTTTAAAAATTTTAAGGGCTCTCTCTCTCTCGGGGCGCGCGCGCGCGTTTTTGGGCCCGCGCGCGCGCGCGTTTCTCTCTCTCCTCTCTCTCTCTCTCTCTTGGGCGC
+TE_types:
+  Mu1_L: CCCTCTTCGTCCATAATGGCAATTATCTC
+  Mu1_R: CTCTCTTCGTCCATAATGGCAATTATCTC
+  Mu2_L: CCCTCTTCGTCCATAATAGCACTTATCTC
+  Mu2_R: CCCTCTTCGTCCATAATGGCAATTATCTC
+  Mu3_L: GTCTCTTCTTCCATAATGGCAATTATCTC
+  Mu3_R: CTCTCTTCTTCTATAATGGCAATTATCTC
+  Mu4_L: CTCTCTTCTTCTATAATGGCAATTATCTC
+  Mu4_R: TTTTAAAAATTTTAAGGGCTCTCTCTCTCTCGGGGCGCGCGCGCGCGTTTTTGGGCCCGCGCGCGCGCGCGTTTCTCTCTCTCCTCTCTCTCTCTCTCTCTTGGGCGC
+  Mu5_L: CTCTCCTCGTCCATAATGACAATTATCTC
+  Mu5_R: CTCTCTTCGTCCATAATGGCAATTATCTC
+  Mu6_L: CTCTTTGTCTATAATGGCAATTATCTC
+  Mu6_R: TTTTAAAAATTTTAAGGGCTCTCTCTCTCTCGGGGCGCGCGCGCGCGTTTTTGGGCCCGCGCGCGCGCGCGTTTCTCTCTCTCCTCTCTCTCTCTCTCTCTTGGGCGC
+  Mu7_L: CTCTCTTCGTCCATAATGGCAATTATCTC
+  Mu7_R: TTTTAAAAATTTTAAGGGCTCTCTCTCTCTCGGGGCGCGCGCGCGCGTTTTTGGGCCCGCGCGCGCGCGCGTTTCTCTCTCTCCTCTCTCTCTCTCTCTCTTGGGCGC
+  Mu8_L: CGCTCTTCGTCTATAATGACAATTATCTC
+  Mu8_R: CGCTCTTCGTCTATAATGGCAATTATCTC
+  MuDR_L: CGCTCTTCGTCTATAATGGCAATTATCTC
+  MuDR_R: TTTTAAAAATTTTAAGGGCTCTCTCTCTCTCGGGGCGCGCGCGCGCGTTTTTGGGCCCGCGCGCGCGCGCGTTTCTCTCTCTCCTCTCTCTCTCTCTCTCTTGGGCGC
+  Mu10_L: GTCTTTTGTTTCATAATGGCAATTGTCTC
+  Mu10_R: GTCTGGTGTTTTATAATGGCAATTGTCTC
+  Mu11_L: CTCTCTTCTTCCATAATGGCAATTATCTC
+  Mu11_R: CTCTCTTCGTCTATAATCGCAATTGTCTC
+  Mu12_L: CCGTCGTGTTTCATAATACCAAATTTCTC
+  Mu12_R: TTTTAAAAATTTTAAGGGCTCTCTCTCTCTCGGGGCGCGCGCGCGCGTTTTTGGGCCCGCGCGCGCGCGCGTTTCTCTCTCTCCTCTCTCTCTCTCTCTCTTGGGCGC
+  Mu13_L: CTCTCTTCTTCCATAATGACAATTATCTC
+  Mu13_R: CTCTCTTCTTCCATAATGTCAATTATCTC
+  Mu14_L: CTCTCTTCTTCCATAATGGCAATTATCTC
+  Mu14_R: CTCTCTTCTTCCATAATAGCAATTATCTC
+  Mu15_L: CTTTCTTCTTTCATAATGGCAATTATCTC
+  Mu15_R: CTCTCTTCTTCTATAATAGCAATTATCTC
+  Mu16_L: CTCTCTTCTTCCATAATGGCAATTATCTC
+  Mu16_R: CTTCTTTCTTCCATAATGGCAATTATCTC
+  Mu17_L: CTCTCTTCGTCCATAATGGCAATTATCTC
+  Mu17_R: TTTTAAAAATTTTAAGGGCTCTCTCTCTCTCGGGGCGCGCGCGCGCGTTTTTGGGCCCGCGCGCGCGCGCGTTTCTCTCTCTCCTCTCTCTCTCTCTCTCTTGGGCGC
+  Mu18_L: GTCTGTTGTTTCATAATGGCAATTGTCTC
+  Mu18_R: GTCTGTTGTTTCATAACGGCAATTGTCTC
+  Mu19_L: CTCTCTTCTTCCATAATGGCAATTATCTC
+  Mu19_R: CTCTGTTGTTTCATAATGGCAATTGTCTC
+
+
+### uncategorized (untyped insertions) detection & clustering parameters
+#untargeted clustering (without motifs) curently not implemented
+#if need be, just change rule "locate_motif" in workflow/rules/te_typing.smk
+#N_MISMATCH has to be <= length(MOTIF)
+N_MISMATCH: 4
+MOTIF: ATAATGGCAATTATCTC

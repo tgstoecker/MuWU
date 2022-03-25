@@ -13,6 +13,14 @@ configfile: "config/config.yaml"
 # assign directory containing sequencing reads as specified in config.yaml
 reads_dir = config["reads_dir"]
 
+#for the quick-hacked typing of insertions -> statically defined variables
+SAMPLES=config["SAMPLES"]
+PAIRED=config["PAIRED"]
+TE_TYPES=config["TE_types"]
+INSERTION_TABLES_GRID=config["INSERTION_TABLES_GRID"]
+INSERTION_TABLES_GENERIC=config["INSERTION_TABLES_GENERIC"]
+
+
 include: "rules/common_utils.smk"
 include: "rules/common.smk"
 include: "rules/ref_utils.smk"
@@ -24,57 +32,17 @@ include: "rules/duplicate_removal.smk"
 include: "rules/indexes_bam2sam.smk"
 include: "rules/insertion_identification.smk"
 include: "rules/insertion_annotation.smk"
-
+include: "rules/te_typing.smk"
 
 #### ONLY FOR GRID DESIGN (STOCK MATRIX) BASED ANALYSIS ####
-if config["approach"] == "GRID":
+if config["approach"] == "GRID" and config["TE_TYPING"] != "perform":
     rule all:
         input:
-#OLD pipeline
-#        "multiqc/multiqc.html",
-#        expand("sorted_alignments/{sample}.sorted.bam.bai", sample=SAMPLES),
-#        expand("removed_duplicates_alignments/{sample}.dedup.bam.bai", sample=SAMPLES),
-#        "MuSeq_table_final/Mu_single_GeneIds_gene_lengths_and_stock.csv",
-#        "MuSeq_table_final/Mu_single_TranscriptIds_transcript_lengths_and_stock.csv"
-#        "works.txt",
-#        Checkpoint_GetReadType("checks/determine_read_type_check.{rt}.txt"),
-#        Checkpoint_GetReadType("{rt}.works.txt"),
-        #ref - fasta, annotation, (report)
-        #"resources/annotation",
-        #"resources/assembly_report.txt",
-        #"resources/annotation.gff3",
-        #"resources/split_annotation.gff3",
-        #"resources/split_genome.fa",
-        #"resources/renaming_scheme.txt",
-        # final otput for both reference download paths 
-        #"resources/genome.fa",
-        #"resources/annotation",
             # final annotation table reagrdless of rule path for annotation file
             "resources/final_annotation_table",
-        #cutadapt
-        #Checkpoint_ReadSampleSheet_GRID("cut_reads/{sample}.fq1.gz"),
-        #Checkpoint_ReadSampleSheet_GRID("cut_reads/{sample}.qc.txt"),
-        #trimmomatic
-        #Checkpoint_ReadSampleSheet_GRID("trimmed_reads/{sample}.forward_paired.fq.gz"),
-        #fastqc
-        #Checkpoint_ReadSampleSheet_GRID("results/fastqc/raw/{sample}_1_fastqc.html"),
-        #Checkpoint_ReadSampleSheet_GRID("results/fastqc/raw/{sample}_1_fastqc.zip"),
-        #trimmed fastqc 
-        #Checkpoint_ReadSampleSheet_GRID("results/fastqc/trimmed/{sample}_forward_paired_fastqc.html"),
-        #Checkpoint_ReadSampleSheet_GRID("results/fastqc/trimmed/{sample}_forward_paired_fastqc.zip"),
-        #bowtie 2 index
-        #multiext(
-        #    "resources/genome",
-        #    ".1.bt2", ".2.bt2", ".3.bt2", ".4.bt2", ".rev.1.bt2", ".rev.2.bt2",
-        #),
-        #bowtie2 align & convert to sorted bam
-        #Checkpoint_ReadSampleSheet_GRID("results/mapped/{sample}.sam"),
-        #Checkpoint_ReadSampleSheet_GRID("results/mapped/{sample}.sorted.bam"),
             Checkpoint_ReadSampleSheet_GRID("results/mapped/{sample}.sorted.bam.bai"),
-        # picard + samtools view conversion to SAM format
-        #Checkpoint_ReadSampleSheet_GRID("results/dedup/{sample}.dedup.bam"),
             Checkpoint_ReadSampleSheet_GRID("results/dedup/{sample}.dedup.bam.bai"),
-            Checkpoint_ReadSampleSheet_GRID("results/dedup_sam/{sample}.dedup.sam"),           
+            Checkpoint_ReadSampleSheet_GRID("results/dedup_sam/{sample}.dedup.sam"),
             #multiqc
             "results/multiqc/multiqc.html",
             #insertion identification identification results
@@ -85,10 +53,68 @@ if config["approach"] == "GRID":
             "results/insertions_table_final/germinal_identified_insertions_annotated.csv",
 
 
+elif config["approach"] == "GRID" and config["TE_TYPING"] == "perform":
+    rule all:
+        input:
+            # final annotation table reagrdless of rule path for annotation file
+            "resources/final_annotation_table",
+            Checkpoint_ReadSampleSheet_GRID("results/mapped/{sample}.sorted.bam.bai"),
+            Checkpoint_ReadSampleSheet_GRID("results/dedup/{sample}.dedup.bam.bai"),
+            Checkpoint_ReadSampleSheet_GRID("results/dedup_sam/{sample}.dedup.sam"),           
+            #multiqc
+            "results/multiqc/multiqc.html",
+            #insertion identification identification results
+            "results/insertions_table_final/all_identified_insertions.csv",
+            "results/insertions_table_final/germinal_identified_insertions.csv",
+            #insertion annotation
+            "results/insertions_table_final/all_identified_insertions_annotated.csv",
+            "results/insertions_table_final/germinal_identified_insertions_annotated.csv",
+            #te/element typing
+            "results/insertions_table_final_te_typed/headers_strand_1_uncategorized_all_identified_insertions.csv",
+            expand("results/te_typing/uncategorized_clustered/final_clstr_file_{insertion_table}.tsv", insertion_table=INSERTION_TABLES_GRID),
+#            "results/insertions_table_final_te_typed/short_germinal_identified_insertions.csv",
+
+
 #### ONLY FOR GENERIC ANALYSIS - NO STOCK MATRIX ####
 elif config["approach"] == "GENERIC":
 
-    if not is_single_end_GENERIC_experiment(SAMPLES):
+    if not is_single_end_GENERIC_experiment(SAMPLES) and config["TE_TYPING"] != "perform":
+
+        rule all:
+            input:
+                #fastqc
+                expand("results/fastqc/raw/{sample}_1_fastqc.html", sample=SAMPLES),
+                expand("results/fastqc/raw/{sample}_1_fastqc.zip", sample=SAMPLES),
+                expand("results/fastqc/raw/{sample}_2_fastqc.html", sample=SAMPLES),
+                expand("results/fastqc/raw/{sample}_2_fastqc.zip", sample=SAMPLES),
+                #cutadapt
+#                expand("results/cut_reads/{sample}.1.fq.gz", sample=SAMPLES),
+#                expand("results/cut_reads/{sample}.2.fq.gz", sample=SAMPLES),
+#                expand("results/cut_reads/{sample}.qc.txt", sample=SAMPLES),
+                #trimmomatic
+                expand("results/trimmed_reads/{sample}.1.fq.gz", sample=SAMPLES),
+                expand("results/trimmed_reads/{sample}.2.fq.gz", sample=SAMPLES),
+                #fastqc trimmed
+                expand("results/fastqc/trimmed/{sample}_1_fastqc.html", sample=SAMPLES),
+                expand("results/fastqc/trimmed/{sample}_1_fastqc.zip", sample=SAMPLES),
+                expand("results/fastqc/trimmed/{sample}_2_fastqc.html", sample=SAMPLES),
+                expand("results/fastqc/trimmed/{sample}_2_fastqc.zip", sample=SAMPLES),
+                #bowtie2 align
+                expand("results/mapped/{sample}.sam", sample=SAMPLES),
+                #samtools; SAM to sorted BAM
+                expand("results/mapped/{sample}.sorted.bam", sample=SAMPLES),
+                #picard + samtools view conversion to SAM format
+                expand("results/dedup_sam/{sample}.dedup.sam", sample=SAMPLES),
+                expand("results/dedup/{sample}.dedup.bam", sample=SAMPLES),
+                #indexes
+                expand("results/mapped/{sample}.sorted.bam.bai", sample=SAMPLES),
+                expand("results/dedup/{sample}.dedup.bam.bai", sample=SAMPLES),
+                #multiqc
+                "results/multiqc/multiqc.html",
+                #insertion identification
+                "results/insertions_table_final/all_identified_insertions.csv",
+
+    elif not is_single_end_GENERIC_experiment(SAMPLES) and config["TE_TYPING"] == "perform":
 
         rule all:
             input:
@@ -125,9 +151,11 @@ elif config["approach"] == "GENERIC":
                 "results/insertions_table_final/all_identified_insertions.csv",
                 #insertion annotation
                 "results/insertions_table_final/all_identified_insertions_annotated.csv",
+                #te/element typing
+                expand("results/te_typing/uncategorized_clustered/final_clstr_file_{insertion_table}.tsv", insertion_table=INSERTION_TABLES_GENERIC),
 
 
-    elif is_single_end_GENERIC_experiment(SAMPLES):
+    elif is_single_end_GENERIC_experiment(SAMPLES) and config["TE_TYPING"] != "perform":
 
         rule all:
             input:
@@ -159,4 +187,36 @@ elif config["approach"] == "GENERIC":
                 #insertion annotation
                 "results/insertions_table_final/all_identified_insertions_annotated.csv",
 
-       
+    elif is_single_end_GENERIC_experiment(SAMPLES) and config["TE_TYPING"] == "perform":
+
+        rule all:
+            input:
+                #fastqc
+                expand("results/fastqc/raw/{sample}_1_fastqc.html", sample=SAMPLES),
+                expand("results/fastqc/raw/{sample}_1_fastqc.zip", sample=SAMPLES),
+                #cutadapt
+#                expand("results/cut_reads/{sample}.1.fq.gz", sample=SAMPLES),
+#                expand("results/cut_reads/{sample}.qc.txt", sample=SAMPLES),
+                #trimmomatic
+                expand("results/trimmed_reads/{sample}.1.fq.gz", sample=SAMPLES),
+                #trimmed fastqc
+                expand("results/fastqc/trimmed/{sample}_1_fastqc.html", sample=SAMPLES),
+                expand("results/fastqc/trimmed/{sample}_1_fastqc.zip", sample=SAMPLES),
+                #bowtie2 align
+                expand("results/mapped/{sample}.sam", sample=SAMPLES),
+                #samtools; SAM to sorted BAM
+                expand("results/mapped/{sample}.sorted.bam", sample=SAMPLES),
+                #picard + samtools view conversion to SAM format
+                expand("results/dedup_sam/{sample}.dedup.sam", sample=SAMPLES),
+                expand("results/dedup/{sample}.dedup.bam", sample=SAMPLES),
+                #indexes
+                expand("results/mapped/{sample}.sorted.bam.bai", sample=SAMPLES),
+                expand("results/dedup/{sample}.dedup.bam.bai", sample=SAMPLES),
+                #multiqc
+                "results/multiqc/multiqc.html",
+                #insertion identification
+                "results/insertions_table_final/all_identified_insertions.csv",
+                #insertion annotation
+                "results/insertions_table_final/all_identified_insertions_annotated.csv",
+                #te/element typing
+                expand("results/te_typing/uncategorized_clustered/final_clstr_file_{insertion_table}.tsv", insertion_table=INSERTION_TABLES_GENERIC),

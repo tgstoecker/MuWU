@@ -11,6 +11,9 @@ snake_extension <- snakemake@params[["extension"]]
 
 ## Read in tables with all identified insertions; 
 all_ins <- read.csv(snake_all_ins, header=TRUE)
+all_ins <- all_ins %>%
+  as_tibble() %>%
+  mutate(Chr = as.character(Chr))  
 
 ## Read Annotation File
 annotation <- read.delim(snake_annotation, header=FALSE, comment.char="#")
@@ -36,13 +39,16 @@ annotation <- annotation %>%
   mutate(GeneStart = GeneStart - snake_extension, GeneEnd = GeneEnd + snake_extension)
 
 
+head(as_tibble(all_ins))
+head(annotation)
+
 # join MuGerminal table with annotation
 all_ins_annotated <- fuzzyjoin::genome_inner_join(all_ins, 
                                 annotation, 
                                 by=c("Chr", "InsertionStart"="GeneStart", "InsertionEnd"="GeneEnd") 
                                 )
 
-
+print("all good!")
 
 # rename, relocate and drop the columns to create a useful table
 all_ins_annotated <- all_ins_annotated %>%
