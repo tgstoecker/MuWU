@@ -29,8 +29,8 @@ Basically, the user can supply a set of sequences which are specific to a specif
 For this to work your input raw data reads have to contain this sequence - however the sequence can be cut/trimmed away during the MuWU run.  
 In our (BonnMu) data we use a 12-fold degenerate TIR primer which is trimmed away before the alignment step.  
 Based on the subtype/element sequence association all matching reads are sorted into files for the specific subtype/element.  
-Once the insertions are identified we associate them via their corresponding reads to all respective subtypes/elements.  
-Since in our work we face the additional difiiculty that the TIR sequence of particular Mu element can very between the left and right end of the transposon, both a "\_L" (left side) as well as a "\_R" (right side) sequence can be supplied.  
+Once the insertions are identified we associate them via their corresponding reads with all respective subtypes/elements.  
+Since in our work we face the additional difficulty that the TIR sequence of particular Mu element can very between the left and right end of the transposon, both a "\_L" (left side) as well as a "\_R" (right side) sequence can be supplied.  
 If in your work this is not necessary or you only know one side, you can simply pass a pseudosequence for one of the pairs, so that the subtype/element is not counted double (example given in config.yaml).  
 Several output tables are produced summarizing the information, as well as extension tables: normal MuWU output + the typing information.  
   
@@ -97,7 +97,7 @@ Clone the current release of the MuWU pipeline.
 With conda and the included YAML files all required software and dependencies are downloaded and prepared into conda environment during runtime of the workflow.
 
 
-## Option 2. Singularity container
+## Option 2. Singularity container (does currently not incl. optional TE typing)
 ### Step 1 - Set up Singularity on your system: 
 Install the Python 3 version of Miniconda.
 you can get it here: https://docs.conda.io/en/latest/miniconda.html
