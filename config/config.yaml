@@ -128,6 +128,9 @@ threads_identify_Mu_insertions: 48
 TE_TYPING: no
 
 threads_te_typing_seqkit: 4
+#during the type/element annotation steps we create FORK clusters (R language)
+#this creates temporary copies of all variables/data and can be quite RAM exhaustive
+#be careful setting this to high! (running tests is strongly recommended)
 te_typing_cluster_cores: 48
 
 

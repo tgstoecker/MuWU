@@ -159,11 +159,16 @@ Change thread options for individual rules in the config.yaml file.
 Check the workflow (dryrun; testbuild of DAG):  
 `snakemake --use-conda --cores xx -np`
   
-Run the workflow:  
-`snakemake --use-conda --cores xx` or  
-`snakemake --cores xx`  (when using the singularity container)
+Run the workflow - 3 options:  
+- `snakemake --use-conda --cores xx` or  
 
-Using the latter command (without `--use-conda`) will expect all software to be readily available and in your $PATH.  
+- `snakemake --use-singularity --use-conda --cores xx` or 
+
+- `snakemake --cores xx`  (when using the interactive singularity container)
+  
+Using the second option (incl. `--use-singularity`) is a cool option combining Conda package management with containers. Snakemake will first pull the defined container image (docker://tgstoecker/muwu_v1.5), and then create the requested conda environment from within the container. Please note however, that the user has to make sure that singularity needs to be set up correctly set up and have all required permissions which depending on the specific circumstances can be tricky (especially if you don't have sudo rights).  
+  
+Using the third option (without `--use-conda`) will expect all software to be readily available and in your $PATH.  
 This is the intended command if you use the singuarity container - here the main software and test folder all have their respective environments **already installed**.  
 If you omit this parameter snakemake/conda will try to download & install all required software which the container was specifically build for to already to contain.  
 Of course this is exactly the behaviour you want if you cloned MuWU here from github and want all the dependencies to be installed at runtime.  
