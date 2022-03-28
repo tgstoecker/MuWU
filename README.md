@@ -166,7 +166,7 @@ Run the workflow - 3 options:
 
 - `snakemake --cores xx`  (when using the interactive singularity container)
   
-Using the second option (incl. `--use-singularity`) is a cool option combining Conda package management with containers. Snakemake will first pull the defined container image (docker://tgstoecker/muwu_v1.5), and then create the requested conda environment from within the container. Please note however, that the user has to make sure that singularity needs to be set up correctly set up and have all required permissions which depending on the specific circumstances can be tricky (especially if you don't have sudo rights).  
+Using the second option (incl. `--use-singularity`) is a cool option combining Conda package management with containers. Snakemake will first pull the defined container image (docker://tgstoecker/muwu_v1.5), and then create the requested conda environment from within the container. Please note however, that the user has to make sure that singularity needs to be set up correctly and have all required permissions which - depending on the specific circumstances - can be tricky (especially if you don't have sudo rights).  
   
 Using the third option (without `--use-conda`) will expect all software to be readily available and in your $PATH.  
 This is the intended command if you use the singuarity container - here the main software and test folder all have their respective environments **already installed**.  
