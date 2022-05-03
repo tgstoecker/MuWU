@@ -10,6 +10,10 @@ from os import path
 configfile: "config/config.yaml"
 
 
+#Docker container
+containerized: "docker://tgstoecker/muwu_v1.5"
+
+
 # assign directory containing sequencing reads as specified in config.yaml
 reads_dir = config["reads_dir"]
 

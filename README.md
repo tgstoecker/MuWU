@@ -29,8 +29,8 @@ Basically, the user can supply a set of sequences which are specific to a specif
 For this to work your input raw data reads have to contain this sequence - however the sequence can be cut/trimmed away during the MuWU run.  
 In our (BonnMu) data we use a 12-fold degenerate TIR primer which is trimmed away before the alignment step.  
 Based on the subtype/element sequence association all matching reads are sorted into files for the specific subtype/element.  
-Once the insertions are identified we associate them via their corresponding reads to all respective subtypes/elements.  
-Since in our work we face the additional difiiculty that the TIR sequence of particular Mu element can very between the left and right end of the transposon, both a "\_L" (left side) as well as a "\_R" (right side) sequence can be supplied.  
+Once the insertions are identified we associate them via their corresponding reads with all respective subtypes/elements.  
+Since in our work we face the additional difficulty that the TIR sequence of particular Mu element can very between the left and right end of the transposon, both a "\_L" (left side) as well as a "\_R" (right side) sequence can be supplied.  
 If in your work this is not necessary or you only know one side, you can simply pass a pseudosequence for one of the pairs, so that the subtype/element is not counted double (example given in config.yaml).  
 Several output tables are produced summarizing the information, as well as extension tables: normal MuWU output + the typing information.  
   
@@ -97,7 +97,7 @@ Clone the current release of the MuWU pipeline.
 With conda and the included YAML files all required software and dependencies are downloaded and prepared into conda environment during runtime of the workflow.
 
 
-## Option 2. Singularity container
+## Option 2. Singularity container (does currently not incl. optional TE typing)
 ### Step 1 - Set up Singularity on your system: 
 Install the Python 3 version of Miniconda.
 you can get it here: https://docs.conda.io/en/latest/miniconda.html
@@ -159,11 +159,16 @@ Change thread options for individual rules in the config.yaml file.
 Check the workflow (dryrun; testbuild of DAG):  
 `snakemake --use-conda --cores xx -np`
   
-Run the workflow:  
-`snakemake --use-conda --cores xx` or  
-`snakemake --cores xx`  (when using the singularity container)
+Run the workflow - 3 options:  
+- `snakemake --use-conda --cores xx` or  
 
-Using the latter command (without `--use-conda`) will expect all software to be readily available and in your $PATH.  
+- `snakemake --use-singularity --use-conda --cores xx` or 
+
+- `snakemake --cores xx`  (when using the interactive singularity container)
+  
+Using the second option (incl. `--use-singularity`) is a cool option combining Conda package management with containers. Snakemake will first pull the defined container image (docker://tgstoecker/muwu_v1.5), and then create the requested conda environment from within the container. Please note however, that the user has to make sure that singularity needs to be set up correctly and have all required permissions which - depending on the specific circumstances - can be tricky (especially if you don't have sudo rights).  
+  
+Using the third option (without `--use-conda`) will expect all software to be readily available and in your $PATH.  
 This is the intended command if you use the singuarity container - here the main software and test folder all have their respective environments **already installed**.  
 If you omit this parameter snakemake/conda will try to download & install all required software which the container was specifically build for to already to contain.  
 Of course this is exactly the behaviour you want if you cloned MuWU here from github and want all the dependencies to be installed at runtime.  
