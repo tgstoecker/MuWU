@@ -117,9 +117,11 @@ just_row$stock <- full
 germinal_ins_annotated_stocks <- rbind(just_row, just_col)
 
 # order the table as to have intersecting samples next to one another; again..
+# + remove extension so as to have correct gene coordinates for start & end
 germinal_ins_annotated_stocks <- germinal_ins_annotated_stocks %>%
   arrange(., Chr, GeneStart, InsertionStart) %>%
-  relocate(Sample, .before = InsertionStart)
+  relocate(Sample, .before = InsertionStart) %>%
+  mutate(GeneStart = GeneStart + snake_extension, GeneEnd = GeneEnd - snake_extension)
 
 write.csv(germinal_ins_annotated_stocks,
           snakemake@output[[1]],

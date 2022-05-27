@@ -39,8 +39,8 @@ annotation <- annotation %>%
   mutate(GeneStart = GeneStart - snake_extension, GeneEnd = GeneEnd + snake_extension)
 
 
-head(as_tibble(all_ins))
-head(annotation)
+#head(as_tibble(all_ins))
+#head(annotation)
 
 # join MuGerminal table with annotation
 all_ins_annotated <- fuzzyjoin::genome_inner_join(all_ins, 
@@ -69,8 +69,10 @@ all_ins_annotated <- all_ins_annotated %>%
 
 
 # order the table as to have intersecting samples next to one another
+# + remove extension so as to have correct gene coordinates for start & end
 all_ins_annotated <- all_ins_annotated %>%
-  arrange(., Chr, GeneStart, InsertionStart)
+  arrange(., Chr, GeneStart, InsertionStart) %>%
+  mutate(GeneStart = GeneStart + snake_extension, GeneEnd = GeneEnd - snake_extension)
 
 
 write.csv(all_ins_annotated, 
