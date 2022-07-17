@@ -2,9 +2,10 @@ import os
 import posixpath
 import gzip
 import shutil
+import requests
 
-from urllib.request import urlretrieve
-from urllib.request import urlcleanup
+#from urllib.request import urlretrieve
+#from urllib.request import urlcleanup
 
 
 extensions=[".gff", ".gff3", ".gbff", ".gtf", ".dat", ".gff.gz", ".gff3.gz", ".gbff.gz", ".gtf.gz", ".dat.gz"]
@@ -43,13 +44,19 @@ def handle_fasta(fasta, annotation):
         if is_url(fasta):
             print("Downloading fasta")
             if is_gzipped(fasta):
-                urlretrieve(fasta,'resources/genome.fa.gz')
+                fasta = requests.get(fasta)
+                with open('resources/genome.fa.gz', 'wb') as outfile:
+                    outfile.write(fasta.content)
+#                urlretrieve(fasta,'resources/genome.fa.gz')
                 print("Unpacking fasta")
                 with gzip.open('resources/genome.fa.gz', 'rb') as f_in:
                     with open('resources/genome.fa', 'wb') as f_out:
                         shutil.copyfileobj(f_in, f_out)
             else:
-                urlretrieve(fasta,'resources/genome.fa')
+#                urlretrieve(fasta,'resources/genome.fa')
+                fasta = requests.get(fasta)
+                with open('resources/genome.fa', 'wb') as outfile:
+                    outfile.write(fasta.content) 
         elif not is_url(fasta):
             print("Gunzipping or linking fasta file already on file system to resources/ dir")
             if is_gzipped(fasta):
@@ -66,18 +73,24 @@ def gunzip_annotation(annotation_file):
 
 
 def handle_annotation(annotation):
-    urlcleanup()
+#    urlcleanup()
     if is_valid_annotation_file(annotation) and not is_gzipped(annotation):
         if is_url(annotation):
             print("Downloading annotation")
-            urlretrieve(annotation, 'resources/annotation')
+            annotation = requests.get(annotation)
+            with open('resources/annotation', 'wb') as outfile:
+                outfile.write(annotation.content)
+#            urlretrieve(annotation, 'resources/annotation')
         elif not is_url(annotation):
             print("Linking annotation")
             os.symlink(annotation, 'resources/annotation')
     if is_valid_annotation_file(annotation) and is_gzipped(annotation):
         if is_url(annotation):
             print("Downloading annotation")
-            urlretrieve(annotation, 'resources/annotation.gz')
+            annotation = requests.get(annotation)
+            with open('resources/annotation.gz', 'wb') as outfile:
+                outfile.write(annotation.content)
+#            urlretrieve(annotation, 'resources/annotation.gz')
         elif not is_url(annotation):
             print("Linking annotation")
             os.symlink(annotation, "resources/annotation.gz")
@@ -98,7 +111,10 @@ def fasta_annotation_handling(fasta, annotation, assembly_report):
         if is_gbff(annotation):
             print("Supplied annotation in GenBank format - also getting assembly report.")
             if is_url(assembly_report):
-                urlretrieve(assembly_report, 'resources/assembly_report.txt')
+#                urlretrieve(assembly_report, 'resources/assembly_report.txt')
+                assembly_report = requests.get(assembly_report)
+                with open('resources/assembly_report.txt', 'wb') as outfile:
+                    outfile.write(assembly_report.content)
             else:
                 os.symlink(assembly_report, "resources/assembly_report.txt")
         print("All done!")
