@@ -1,7 +1,7 @@
 # MuWU - Mu-seq Workflow Utility  
 [![Snakemake](https://img.shields.io/badge/snakemake->=7.0.0-brightgreen.svg)](https://snakemake.readthedocs.io) [![DOI](https://zenodo.org/badge/203787663.svg)](https://zenodo.org/badge/latestdoi/203787663)
 
-
+## **02.11.2023: MuWU is is no longer maintained in this repository - all future development will happen in [https://github.com/groupschoof/MuWU](https://github.com/groupschoof/MuWU)**
 
 <br>
 
