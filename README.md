@@ -157,10 +157,10 @@ Both the GRID & GENERIC methods require:
 ## Once everything is set up - run the workflow:  
 Change thread options for individual rules in the config.yaml file.  
 Check the workflow (dryrun; testbuild of DAG):  
-`snakemake --use-conda --cores xx -np`
+`snakemake --use-conda --cores xx --default-resources 'tmpdir="./tmp/"' -np`
   
 Run the workflow - 3 options:  
-- `snakemake --use-conda --cores xx` or  
+- `snakemake --use-conda --cores xx --default-resources 'tmpdir="./tmp/"'` or  
 
 - `snakemake --use-singularity --use-conda --cores xx` or 
 
