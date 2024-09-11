@@ -125,4 +125,3 @@ def fasta_annotation_handling(fasta, annotation, assembly_report):
 
 
 #fasta_annotation_handling(fasta, annotation, report)
-

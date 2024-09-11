@@ -80,4 +80,4 @@ rule samtools_sort:
     threads:  # Samtools takes additional threads through its option -@
         config["threads_sam_to_sorted_bam"]     # This value - 1 will be sent to -@.
     wrapper:
-        "0.74.0/bio/samtools/sort"
+        "v4.2.0/bio/samtools/sort"
