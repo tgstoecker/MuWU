@@ -39,6 +39,7 @@ if config["approach"] == "GRID":
             Checkpoint_ReadSampleSheet_GRID("logs/trimmomatic/{sample}.overall.log"),
             Checkpoint_ReadSampleSheet_GRID("logs/bowtie2_align/{sample}.log"),
             Checkpoint_ReadSampleSheet_GRID("results/dedup/{sample}.dedup.bam"),
+            Checkpoint_ReadSampleSheet_GRID("logs/sambamba-markdup/{sample}.dedup.log")
         output:
             "results/multiqc/multiqc.html"
         params:
@@ -46,7 +47,7 @@ if config["approach"] == "GRID":
         log:
             "logs/multiqc/multiqc.log"
         wrapper:
-            "v1.1.0/bio/multiqc"
+            "v4.5.0/bio/multiqc"
 
 
 #### ONLY FOR GENERIC ANALYSIS - NO STOCK MATRIX ####

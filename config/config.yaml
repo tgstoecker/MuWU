@@ -8,8 +8,8 @@
 ###                 Finally, in case of GenBank format we also require an assembly_report.txt to be submitted under "report:".
 ###                 This is required so that we can rename the chromosome column entries to a proper chromosome name instead of the Assigned-Molecule name.
 ### Please provide absolute file paths if local files are provided:
-fasta: https://download.maizegdb.org/Zm-EP1-REFERENCE-TUM-1.0/Zm-EP1-REFERENCE-TUM-1.0.fa.gz
-annotation: https://download.maizegdb.org/Zm-EP1-REFERENCE-TUM-1.0/Zm-EP1-REFERENCE-TUM-1.0_Zm00010a.1.gff3.gz
+fasta: http://ftp.ensemblgenomes.org/pub/plants/release-52/fasta/zea_mays/dna/Zea_mays.Zm-B73-REFERENCE-NAM-5.0.dna.toplevel.fa.gz
+annotation: http://ftp.ensemblgenomes.org/pub/plants/release-52/gtf/zea_mays/Zea_mays.Zm-B73-REFERENCE-NAM-5.0.52.gtf.gz
 #annotation: https://ftp.ncbi.nlm.nih.gov/genomes/refseq/plant/Zea_mays/all_assembly_versions/suppressed/GCF_000005005.2_B73_RefGen_v4/GCF_000005005.2_B73_RefGen_v4_genomic.gbff.gz
 #assembly_report: https://ftp.ncbi.nlm.nih.gov/genomes/refseq/plant/Zea_mays/all_assembly_versions/suppressed/GCF_000005005.2_B73_RefGen_v4/GCF_000005005.2_B73_RefGen_v4_assembly_report.txt
 assembly_report:
